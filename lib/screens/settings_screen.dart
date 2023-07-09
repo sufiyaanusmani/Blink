@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/components/setting_switch.dart';
-import 'package:food_delivery/components/bottom_nav.dart';
+import 'package:food_delivery/components/title_button.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String id = 'settings_screen';
@@ -73,6 +73,34 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 color: Colors.grey,
                 thickness: 1,
               ),
+              Column(
+                children: [
+                  TitleButton(
+                    title: "Title",
+                    onPressed: () {
+                      print('pressed');
+                    },
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  TitleButton(
+                    title: "Title",
+                    onPressed: () {
+                      print('pressed');
+                    },
+                  ),
+                  SizedBox(
+                    height: 10.0,
+                  ),
+                  TitleButton(
+                    title: "Title",
+                    onPressed: () {
+                      print('pressed');
+                    },
+                  ),
+                ],
+              )
             ],
           ),
         ),
