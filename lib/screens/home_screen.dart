@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
+import 'package:food_delivery/components/restaurant_card.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -17,7 +18,15 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Headline'),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Welcome, Sufiyaan',
+              style: TextStyle(
+                fontSize: 40,
+              ),
+            ),
             SizedBox(
               height: 10,
             ),
@@ -31,6 +40,31 @@ class _HomeScreenState extends State<HomeScreen> {
                   SmallRestaurantCard(imageID: 'kfc'),
                   SmallRestaurantCard(imageID: 'mac'),
                   SmallRestaurantCard(imageID: 'pizzahut'),
+                ],
+              ),
+            ),
+            Divider(),
+            Expanded(
+              child: ListView(
+                scrollDirection: Axis.vertical,
+                // itemCount: 5,
+                padding: EdgeInsets.all(10.0),
+                children: [
+                  RestaurantCard(
+                    name: 'KFC',
+                    caption: 'Caption',
+                    reviews: '00:00',
+                    description:
+                        'Second line of text in here for this card element or component',
+                  ),
+                  Divider(),
+                  RestaurantCard(
+                    name: 'Mc Donalds',
+                    caption: 'Caption',
+                    reviews: '00:00',
+                    description:
+                        'Second line of text in here for this card element or component',
+                  ),
                 ],
               ),
             ),
