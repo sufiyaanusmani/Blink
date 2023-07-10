@@ -21,13 +21,15 @@ class _NavigationExampleState extends State<NavigationExample> {
 
   @override
   Widget build(BuildContext context) {
-    return NavigationBar(
+    return
+     NavigationBar(
       onDestinationSelected: (int index) {
         setState(() {
           currentPageIndex = index;
         });
       },
       selectedIndex: currentPageIndex,
+      height: 20,
       destinations: const <Widget>[
         NavigationDestination(
           icon: Icon(Icons.home),
@@ -48,6 +50,8 @@ class _NavigationExampleState extends State<NavigationExample> {
           label: 'Profile',
         ),
       ],
+      
+
     );
   }
 }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/services/navigator.dart';
+import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:food_delivery/splashscreen/screen.dart';
+
 
 void main() {
   runApp(FoodDelivery());
@@ -7,6 +11,8 @@ void main() {
 
 class FoodDelivery extends StatelessWidget {
   const FoodDelivery({super.key});
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +35,8 @@ class FoodDelivery extends StatelessWidget {
       //   SettingsScreen.id: (context) => SettingsScreen(),
       // },
 
-      home: MainNavigator(),
+      // home: MainNavigator(),
+      home: OnboardingScreen(),
     );
   }
 }
