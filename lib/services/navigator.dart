@@ -5,6 +5,7 @@ import 'package:food_delivery/screens/settings_screen.dart';
 import 'package:food_delivery/screens/cart_screen.dart';
 import 'package:food_delivery/screens/search_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:food_delivery/screens/login_screen.dart';
 
 class MainNavigator extends StatefulWidget {
   const MainNavigator({super.key});
@@ -56,7 +57,6 @@ class _MainNavigatorState extends State<MainNavigator> {
   //   );
   // }
 
-
   // https://pub.dev/packages/google_nav_bar/install
   @override
   Widget build(BuildContext context) {
@@ -71,41 +71,38 @@ class _MainNavigatorState extends State<MainNavigator> {
         duration: Duration(milliseconds: 400),
         tabBackgroundColor: Colors.grey[100]!,
         color: Colors.black,
-        onTabChange:  (int index) {
+        onTabChange: (int index) {
           setState(() {
             currentPageIndex = index;
           });
         },
         selectedIndex: currentPageIndex,
         tabs: const [
-                GButton(
-                  icon: Icons.home,
-                  text: 'Home',
-                ),
-                GButton(
-                  icon: Icons.search,
-                  text: 'Search',
-                ),
-                GButton(
-                  icon: Icons.shopping_cart,
-                  text: 'Cart',
-                ),
-                GButton(
-                  icon: Icons.account_circle,
-                  text: 'Profile',
-                ),
+          GButton(
+            icon: Icons.home,
+            text: 'Home',
+          ),
+          GButton(
+            icon: Icons.search,
+            text: 'Search',
+          ),
+          GButton(
+            icon: Icons.shopping_cart,
+            text: 'Cart',
+          ),
+          GButton(
+            icon: Icons.account_circle,
+            text: 'Profile',
+          ),
         ],
       ),
       body: <Widget>[
         HomeScreen(),
-        SearchScreen(),
+        // SearchScreen(),
+        LoginScreen(),
         CartScreen(),
         SettingsScreen(),
       ][currentPageIndex],
     );
   }
-
-
-
-
 }

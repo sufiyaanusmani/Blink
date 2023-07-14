@@ -4,15 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:food_delivery/splashscreen/screen.dart';
 
-
 void main() {
   runApp(FoodDelivery());
 }
 
 class FoodDelivery extends StatelessWidget {
   const FoodDelivery({super.key});
-
-
 
   @override
   Widget build(BuildContext context) {
