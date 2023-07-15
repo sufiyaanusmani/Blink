@@ -5,10 +5,15 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:food_delivery/components/plain_text_field.dart';
 import 'package:food_delivery/components/password_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
+import 'package:food_delivery/components/bottom_container.dart';
 
 class LoginScreen extends StatelessWidget {
   static const id = 'login_screen';
   const LoginScreen({super.key});
+
+  Widget buildBottomSheet(BuildContext context) {
+    return BottomContainer();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +79,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    print('pressed');
+                    showModalBottomSheet(
+                        context: context, builder: buildBottomSheet);
                   },
                 ),
                 SizedBox(
