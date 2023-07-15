@@ -96,7 +96,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   TitleButton(
                     title: "Title",
                     onPressed: () {
-                      print('pressed');
+                      Navigator.pop(context);
                     },
                   ),
                 ],

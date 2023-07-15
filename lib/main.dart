@@ -3,6 +3,12 @@ import 'package:food_delivery/services/navigator.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:food_delivery/splashscreen/screen.dart';
+import 'package:food_delivery/screens/cart_screen.dart';
+import 'package:food_delivery/screens/home_screen.dart';
+import 'package:food_delivery/screens/login_screen.dart';
+import 'package:food_delivery/screens/restaurant_screen.dart';
+import 'package:food_delivery/screens/search_screen.dart';
+import 'package:food_delivery/screens/settings_screen.dart';
 
 void main() {
   runApp(FoodDelivery());
@@ -25,14 +31,16 @@ class FoodDelivery extends StatelessWidget {
         ),
       ),
 
-      // initialRoute: SettingsScreen.id,
-      // routes: {
-      //   HomeScreen.id: (context) => HomeScreen(),
-      //   RestaurantScreen.id: (context) => RestaurantScreen(),
-      //   SettingsScreen.id: (context) => SettingsScreen(),
-      // },
+      initialRoute: LoginScreen.id,
+      routes: {
+        LoginScreen.id: (context) => LoginScreen(),
+        MainNavigator.id: (context) => MainNavigator(),
+        HomeScreen.id: (context) => HomeScreen(),
+        RestaurantScreen.id: (context) => RestaurantScreen(),
+        SettingsScreen.id: (context) => SettingsScreen(),
+      },
 
-      home: MainNavigator(),
+      // home: MainNavigator(),
       // home: OnboardingScreen(),
     );
   }

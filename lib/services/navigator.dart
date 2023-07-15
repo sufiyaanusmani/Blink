@@ -8,6 +8,7 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:food_delivery/screens/login_screen.dart';
 
 class MainNavigator extends StatefulWidget {
+  static const id = 'main-navigator';
   const MainNavigator({super.key});
 
   @override

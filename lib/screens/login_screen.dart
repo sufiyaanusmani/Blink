@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:food_delivery/services/navigator.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const id = 'login_screen';
   const LoginScreen({super.key});
 
   @override
@@ -110,10 +112,10 @@ class LoginScreen extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    print('pressed');
+                    Navigator.pushNamed(context, MainNavigator.id);
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: Colors.lightBlue,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -165,16 +167,19 @@ class LoginScreen extends StatelessWidget {
                     print('pressed');
                   },
                   style: TextButton.styleFrom(
-                    backgroundColor: Colors.redAccent,
+                    backgroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
                   ),
                   child: Container(
                     padding: EdgeInsets.symmetric(
-                      vertical: 15,
+                      vertical: 10,
                     ),
-                    child: Icon(Icons.g_mobiledata),
+                    child: Image.asset(
+                      'images/google.png',
+                      height: 40,
+                    ),
                   ),
                 ),
               ],
