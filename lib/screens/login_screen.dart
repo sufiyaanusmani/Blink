@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/services/navigator.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class LoginScreen extends StatelessWidget {
   static const id = 'login_screen';
@@ -21,15 +22,19 @@ class LoginScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Hello Again!',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 40,
+                AnimatedTextKit(
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      'Hello Again!',
+                      textAlign: TextAlign.center,
+                      textStyle: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
                 SizedBox(
                   height: 15,
