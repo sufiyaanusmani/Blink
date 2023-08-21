@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:slide_to_act_reborn/slide_to_act_reborn.dart';
+import 'package:food_delivery/components/time_selector.dart';
+
 
 class CartScreen extends StatefulWidget {
   static const String id = 'cart_screen';
@@ -164,6 +166,7 @@ class _CartScreenState extends State<CartScreen> {
             ),
             Expanded(
               child: ListView.builder(
+                physics: BouncingScrollPhysics(),
                 itemCount: itemList.length,
                 itemBuilder: (context, index) {
                   final item = itemList[index];
@@ -204,6 +207,8 @@ class _CartScreenState extends State<CartScreen> {
                                 color: Colors.grey[400]!),
                           ],
                         ),
+
+
                         // ListView row
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -300,7 +305,10 @@ class _CartScreenState extends State<CartScreen> {
               ),
             ),
 
+
+
             // preorder
+
             Row(
               children: [
                 const SizedBox(
@@ -311,7 +319,7 @@ class _CartScreenState extends State<CartScreen> {
                     child: Container(
                       height: 120,
                       decoration: BoxDecoration(
-                        color: Colors.pinkAccent,
+                        color: const Color.fromARGB(255, 64, 140, 255),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Column(
@@ -338,7 +346,9 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                           SizedBox(height: 30),
                           TextButton(
-                            onPressed: () {},
+                             onPressed: () {
+                                _showTimeSelectionPopup();
+                              },
                             child: Container(
                               alignment: Alignment.center,
                               // width: 20,
@@ -361,6 +371,8 @@ class _CartScreenState extends State<CartScreen> {
                 const SizedBox(
                   width: 10,
                 ),
+
+
 
                 // Amount
                 Expanded(
@@ -399,7 +411,10 @@ class _CartScreenState extends State<CartScreen> {
               height: 10,
             ),
 
+
+
             // bottom Slider
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               //https://pub.dev/packages/slide_to_act_reborn
@@ -408,9 +423,12 @@ class _CartScreenState extends State<CartScreen> {
                 innerColor: Colors.white,
                 outerColor: Colors.grey,
                 elevation: 0,
-                sliderButtonIcon: const Icon(
-                  Icons.shopping_basket,
-                  color: Colors.black,
+                sliderButtonIcon:  Container(
+                  width: 60,
+                  child: const Icon(
+                    Icons.shopping_basket,
+                    color: Colors.black,
+                  ),
                 ),
                 text: 'Slide to place order',
                 textStyle: const TextStyle(
@@ -433,4 +451,83 @@ class _CartScreenState extends State<CartScreen> {
       ),
     );
   }
+
+
+  void _showTimeSelectionPopup() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Select preorder time'),
+        content: Container(
+          width: MediaQuery.of(context).size.width*0.4,
+          height: 300,
+          child: HomePage(),
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        actions: [
+          Row(
+            children: [
+              Expanded(
+                flex: 1,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    height: 40,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: const Text(
+                      'Close',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: 10),
+              Expanded(
+                flex: 1,
+                child: InkWell(
+                  onTap: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Container(
+                    height: 40,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: const Text(
+                      'Save',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),                    
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
+    },
+  );
 }
+
+}
+
+
+
