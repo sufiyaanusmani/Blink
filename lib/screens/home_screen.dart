@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
+import 'package:food_delivery/mysql.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -11,6 +12,17 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var db = new Mysql();
+
+  void _getStudent() async {
+    var conn = await db.getConnection();
+    await conn.connect();
+    var results = await conn.execute('SELECT roll_no, name FROM User;');
+    for (var row in results.rows) {
+      print(row.assoc());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -26,6 +38,16 @@ class _HomeScreenState extends State<HomeScreen> {
               style: TextStyle(
                 fontSize: 40,
               ),
+            ),
+            GestureDetector(
+              child: Container(
+                width: 60,
+                height: 60,
+                color: Colors.blue,
+              ),
+              onTap: () {
+                _getStudent();
+              },
             ),
             SizedBox(
               height: 10,
