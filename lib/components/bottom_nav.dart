@@ -15,7 +15,7 @@ class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 0;
 
   List<Widget> _screens = [
-    HomeScreen(),
+    // HomeScreen(),
     RestaurantScreen(),
     SettingsScreen(),
   ];
