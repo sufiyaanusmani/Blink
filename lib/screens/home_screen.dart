@@ -55,26 +55,26 @@ class _HomeScreenState extends State<HomeScreen> {
             SizedBox(
               height: 10,
             ),
-            SizedBox(
-              height: 200,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                // itemCount: 5,
-                padding: EdgeInsets.all(10.0),
-                children: [
-                  SmallRestaurantCard(imageID: 'kfc'),
-                  SmallRestaurantCard(imageID: 'mac'),
-                  SmallRestaurantCard(imageID: 'pizzahut'),
-                ],
-              ),
-            ),
-            Divider(),
             Expanded(
               child: ListView(
                 scrollDirection: Axis.vertical,
                 // itemCount: 5,
                 padding: EdgeInsets.all(10.0),
                 children: [
+                  SizedBox(
+                    height: 200,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      // itemCount: 5,
+                      padding: EdgeInsets.all(10.0),
+                      children: [
+                        SmallRestaurantCard(imageID: 'kfc'),
+                        SmallRestaurantCard(imageID: 'mac'),
+                        SmallRestaurantCard(imageID: 'pizzahut'),
+                      ],
+                    ),
+                  ),
+                  Divider(),
                   RestaurantCard(
                     name: 'KFC',
                     caption: 'Caption',
