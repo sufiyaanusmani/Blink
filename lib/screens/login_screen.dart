@@ -6,13 +6,40 @@ import 'package:food_delivery/components/plain_text_field.dart';
 import 'package:food_delivery/components/password_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
+import 'package:food_delivery/mysql.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
-  const LoginScreen({super.key});
+
+  LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late String username;
+
+  late String password;
+  bool loginValid = true;
+  String loginFailedMessage = '';
 
   Widget buildBottomSheet(BuildContext context) {
     return BottomContainer();
+  }
+
+  var db = Mysql();
+
+  Future<bool> _login(String username, String password) async {
+    var conn = await db.getConnection();
+    await conn.connect();
+    var results = await conn.execute(
+        'SELECT * FROM User WHERE username="$username" AND password="$password";');
+    if (results.rows.length == 1) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   @override
@@ -59,13 +86,34 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(
                   height: 50,
                 ),
-                PlainTextField(hintText: 'Enter Username'),
+                PlainTextField(
+                  hintText: 'Enter Username',
+                  onChange: (text) {
+                    username = text;
+                  },
+                ),
                 SizedBox(
                   height: 25,
                 ),
-                PasswordTextField(hintText: 'Enter Password'),
+                PasswordTextField(
+                  hintText: 'Enter Password',
+                  onChange: (text) {
+                    password = text;
+                  },
+                ),
                 SizedBox(
                   height: 20,
+                ),
+                Text(
+                  loginFailedMessage,
+                  textAlign: TextAlign.start,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
                 GestureDetector(
                   child: Text(
@@ -87,8 +135,19 @@ class LoginScreen extends StatelessWidget {
                   height: 20,
                 ),
                 LargeButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, MainNavigator.id);
+                  onPressed: () async {
+                    if (await _login(username, password)) {
+                      setState(() {
+                        loginFailedMessage = '';
+                      });
+                      Navigator.pushNamed(context, MainNavigator.id);
+                    } else {
+                      setState(
+                        () {
+                          loginFailedMessage = 'Invalid username or password';
+                        },
+                      );
+                    }
                   },
                   color: Colors.lightBlue,
                   verticalPadding: 15,
@@ -130,9 +189,7 @@ class LoginScreen extends StatelessWidget {
                   height: 20,
                 ),
                 LargeButton(
-                  onPressed: () {
-                    print('pressed');
-                  },
+                  onPressed: () {},
                   color: Colors.white,
                   verticalPadding: 10,
                   buttonChild: Image.asset(
