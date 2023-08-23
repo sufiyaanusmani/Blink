@@ -327,27 +327,35 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                       child: Column(
                         children: [
-                          SizedBox(height: 15),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
+                              
+                                  Container(
+                                      margin: EdgeInsets.only(top:15, left:15),
+                                      padding:EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color.fromARGB(136, 255, 255, 255), // Adjust color as needed
+                                      ),
+                                      child: Image.asset(
+                                        'assets/icons/preorder.png',
+                                        width: 25,
+                                        height: 25,
+                                      ),
+                                  
+                                
+                                  ),
                               Expanded(
                                 child: Container(
-                                  padding:EdgeInsets.all(10),
-                                   decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color.fromARGB(136, 255, 255, 255), // Adjust color as needed
+                                  alignment: Alignment.topRight,
+                                  margin: EdgeInsets.only(right:15),
+                                  padding: EdgeInsets.only(bottom:5),
+                                  child:Text(
+                                    'Preorder',
+                                    style: TextStyle(                                      
+                                      fontSize: 15,
+                                    ),
                                   ),
-                                  child: Image.asset(
-                                    'assets/icons/preorder.png',
-                                    width: 25,
-                                    height: 25,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  'Preorder',
                                 ),
                               ),
                             ],
@@ -359,7 +367,7 @@ class _CartScreenState extends State<CartScreen> {
                               },
                             child: Container(
                               alignment: Alignment.center,
-                              // width: 20,
+                              margin: EdgeInsets.only(left:4, right:4),
                               height: 30,
                               child: Text(
                                 '11:00 am',
@@ -389,36 +397,54 @@ class _CartScreenState extends State<CartScreen> {
                     child: Container(
                       height: 120,
                       decoration: BoxDecoration(
-                        color: Color.fromARGB(115, 158, 158, 158),
+                        color: const Color.fromARGB(115, 158, 158, 158),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Column(
+                      child: Row(
+                        
                         children: [
-                          SizedBox(height: 15),
+                          Container(
+                            padding:EdgeInsets.all(10),
+                            margin:EdgeInsets.only(bottom: 45, left: 15),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromARGB(136, 255, 255, 255),                              
+                            ),
+                            child: Image.asset(
+                              'assets/icons/layer.png',
+                              width: 25,
+                              height: 30,
+                            ),
+                          ),        
                           Expanded(
                             child: Container(
-                              padding:EdgeInsets.all(10),
-                                decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color.fromARGB(136, 255, 255, 255), // Adjust color as needed
-                              ),
-                              child: Image.asset(
-                                'assets/icons/layer.png',
-                                width: 25,
-                                height: 30,
+                              margin:EdgeInsets.only(top:20, bottom:5, right: 15),
+                              child: Column(
+                                children: [
+                                  const Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      'amount',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 34),
+                                  Align(                              
+                                    alignment: Alignment.bottomRight,
+                                    child: const Text(
+                                      'Rs 540',
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                        fontSize: 50,  
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          SizedBox(height: 10),
-                          const Text(
-                            'Rs 540',
-                            style: TextStyle(
-                              color: Color.fromARGB(255, 0, 0, 0),
-                              fontSize: 20,  
-                            ),
-                          ),
-                          Text('amount'),
-                          SizedBox(height: 20),
                         ],
                       ),
                     )),
@@ -435,34 +461,57 @@ class _CartScreenState extends State<CartScreen> {
 
             // bottom Slider
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            Container(
+              // decoration: BoxDecoration(
+              //   color: Color.fromARGB(255, 161, 120, 172),
+              // ),
+              margin: const EdgeInsets.symmetric(horizontal: 15.0),
               //https://pub.dev/packages/slide_to_act_reborn
               child: SlideAction(
-                borderRadius: 20,
-                innerColor: Colors.white,
-                outerColor: Colors.grey,
+                // borderRadius: 30,
+                innerColor: Color.fromARGB(255, 0, 0, 0),
+                outerColor: Color.fromARGB(255, 171, 90, 194),
                 elevation: 0,
                 sliderButtonIcon:  Container(
-                  width: 60,
-                  child: Image.asset(
-                    'assets/icons/shoppingbag.png',
-                    width: 35,
-                    height: 27,
+                  child: Text(
+                      'ORDER',
+                      style: TextStyle(
+                        fontFamily: 'Gruppo',
+                        fontSize: 25,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
                   ),
-                ),
-                text: 'Slide to place order',
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
                 ),
                 sliderRotate: false,
                 onSubmit: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Row(  
+                  mainAxisAlignment: MainAxisAlignment.center,                
                   children: [
-                    Text('>>>'),
-                    Text(' Slide to place order'),
+                    Text(
+                      '> ',
+                      style: TextStyle(
+                        fontFamily: 'Gruppo',
+                        fontSize: 55,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '> ',
+                      style: TextStyle(
+                        fontFamily: 'Gruppo',
+                        fontSize: 55,
+                        color: Color.fromARGB(171, 255, 255, 255),
+                      ),
+                    ),
+                    Text(
+                      '>',
+                      style: TextStyle(
+                        fontFamily: 'Gruppo',
+                        fontSize: 55,
+                        color: Color.fromARGB(111, 255, 255, 255),
+                      ),
+                    ),
                   ],
                 ),
               ),
