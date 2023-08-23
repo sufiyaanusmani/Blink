@@ -6,6 +6,7 @@ import 'package:food_delivery/screens/cart_screen.dart';
 import 'package:food_delivery/screens/search_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:food_delivery/screens/login_screen.dart';
+import 'package:food_delivery/user.dart';
 
 class MainNavigator extends StatefulWidget {
   static const id = 'main-navigator';
@@ -17,50 +18,9 @@ class MainNavigator extends StatefulWidget {
 
 class _MainNavigatorState extends State<MainNavigator> {
   int currentPageIndex = 0;
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   return Scaffold(
-  //     bottomNavigationBar: NavigationBar(
-  //       onDestinationSelected: (int index) {
-  //         setState(() {
-  //           currentPageIndex = index;
-  //         });
-  //       },
-  //       selectedIndex: currentPageIndex,
-  //       destinations: const <Widget>[
-  //         NavigationDestination(
-  //           icon: Icon(Icons.home),
-  //           label: 'Home',
-  //         ),
-  //         NavigationDestination(
-  //           icon: Icon(Icons.search),
-  //           label: 'Search',
-  //         ),
-  //         NavigationDestination(
-  //           // selectedIcon: Icon(Icons.bookmark), // jab is par click karain gai to yeh icon show hoga phir
-  //           icon: Icon(Icons.shopping_cart),
-  //           label: 'Cart',
-  //         ),
-  //         NavigationDestination(
-  //           // selectedIcon: Icon(Icons.bookmark),
-  //           icon: Icon(Icons.account_circle),
-  //           label: 'Profile',
-  //         ),
-  //       ],
-  //     ),
-  //     body: <Widget>[
-  //       HomeScreen(),
-  //       SearchScreen(),
-  //       CartScreen(),
-  //       SettingsScreen(),
-  //     ][currentPageIndex],
-  //   );
-  // }
-
-  // https://pub.dev/packages/google_nav_bar/install
   @override
   Widget build(BuildContext context) {
+    User user = ModalRoute.of(context)!.settings.arguments as User;
     return Scaffold(
       bottomNavigationBar: GNav(
         rippleColor: Colors.grey[300]!,
@@ -98,8 +58,7 @@ class _MainNavigatorState extends State<MainNavigator> {
         ],
       ),
       body: <Widget>[
-        HomeScreen(),
-        // SearchScreen(),
+        HomeScreen(user: user),
         LoginScreen(),
         CartScreen(),
         SettingsScreen(),

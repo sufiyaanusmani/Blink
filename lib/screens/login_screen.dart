@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/screens/home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/services/navigator.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -7,6 +8,7 @@ import 'package:food_delivery/components/password_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
 import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/user.dart';
 
 class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
@@ -23,6 +25,8 @@ class _LoginScreenState extends State<LoginScreen> {
   late String password;
   bool loginValid = true;
   String loginFailedMessage = '';
+  late int loginID;
+  late String name;
 
   Widget buildBottomSheet(BuildContext context) {
     return BottomContainer();
@@ -35,7 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
     await conn.connect();
     var results = await conn.execute(
         'SELECT * FROM User WHERE username="$username" AND password="$password";');
+    conn.close();
     if (results.rows.length == 1) {
+      for (var row in results.rows) {
+        loginID = int.parse(row.assoc()['id']!);
+        name = row.assoc()['name']!;
+      }
       return true;
     } else {
       return false;
@@ -140,7 +149,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() {
                         loginFailedMessage = '';
                       });
-                      Navigator.pushNamed(context, MainNavigator.id);
+                      Navigator.pushNamed(context, MainNavigator.id,
+                          arguments: User(id: loginID, name: name));
                     } else {
                       setState(
                         () {

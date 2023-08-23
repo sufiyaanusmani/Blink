@@ -2,29 +2,42 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/user.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
-  const HomeScreen({super.key});
+  int loginID = -1;
+  User user;
+  HomeScreen({super.key, required this.user});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var db = new Mysql();
+  var db = Mysql();
+  String name = '';
 
-  void _getStudent() async {
+  void _getStudent(int loginID) async {
     var conn = await db.getConnection();
     await conn.connect();
-    var results = await conn.execute('SELECT roll_no, name FROM User;');
+    var results =
+        await conn.execute('SELECT name FROM User WHERE id=$loginID;');
     for (var row in results.rows) {
-      print(row.assoc());
+      setState(() {
+        name = row.assoc()['name']!;
+      });
     }
+    conn.close();
   }
 
   @override
   Widget build(BuildContext context) {
+    // User user = ModalRoute.of(context)!.settings.arguments as User;
+    // widget.loginID = user.id;
+    // if (widget.loginID != -1) {
+    //   _getStudent(widget.loginID);
+    // }
     return SafeArea(
       child: Scaffold(
         body: Column(
@@ -34,20 +47,10 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 20,
             ),
             Text(
-              'Welcome, Sufiyaan',
+              'Welcome, ${widget.user.name}',
               style: TextStyle(
-                fontSize: 40,
+                fontSize: 30,
               ),
-            ),
-            GestureDetector(
-              child: Container(
-                width: 60,
-                height: 60,
-                color: Colors.blue,
-              ),
-              onTap: () {
-                _getStudent();
-              },
             ),
             SizedBox(
               height: 10,
