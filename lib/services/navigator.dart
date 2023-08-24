@@ -7,6 +7,7 @@ import 'package:food_delivery/screens/search_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:food_delivery/screens/login_screen.dart';
 import 'package:food_delivery/user.dart';
+import 'package:food_delivery/arguments/home_screen_arguments.dart';
 
 class MainNavigator extends StatefulWidget {
   static const id = 'main-navigator';
@@ -20,7 +21,8 @@ class _MainNavigatorState extends State<MainNavigator> {
   int currentPageIndex = 0;
   @override
   Widget build(BuildContext context) {
-    User user = ModalRoute.of(context)!.settings.arguments as User;
+    HomeScreenArguments homeScreenArguments =
+        ModalRoute.of(context)!.settings.arguments as HomeScreenArguments;
     return Scaffold(
       bottomNavigationBar: GNav(
         rippleColor: Colors.grey[300]!,
@@ -58,7 +60,10 @@ class _MainNavigatorState extends State<MainNavigator> {
         ],
       ),
       body: <Widget>[
-        HomeScreen(user: user),
+        HomeScreen(
+          user: homeScreenArguments.user,
+          restaurants: homeScreenArguments.restaurants,
+        ),
         LoginScreen(),
         CartScreen(),
         SettingsScreen(),

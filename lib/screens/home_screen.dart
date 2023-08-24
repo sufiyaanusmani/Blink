@@ -3,13 +3,17 @@ import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:mysql_client/mysql_client.dart';
+import 'package:food_delivery/restaurant.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
   int loginID = -1;
   User user;
-  HomeScreen({super.key, required this.user});
+  List<Restaurant> restaurants;
+
+  HomeScreen({super.key, required this.user, required this.restaurants});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -33,6 +37,22 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  List<RestaurantCard> getRestaurantsCards() {
+    List<RestaurantCard> res = [];
+    for (Restaurant r in widget.restaurants) {
+      res.add(
+        RestaurantCard(
+          name: r.name,
+          caption: r.ownerName,
+          reviews: '00:00',
+          description:
+              'Second line of text in here for this card element or component',
+        ),
+      );
+    }
+    return res;
+  }
+
   @override
   Widget build(BuildContext context) {
     // User user = ModalRoute.of(context)!.settings.arguments as User;
@@ -40,61 +60,64 @@ class _HomeScreenState extends State<HomeScreen> {
     // if (widget.loginID != -1) {
     //   _getStudent(widget.loginID);
     // }
+    // getRestaurants();
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        body: ListView(
+          scrollDirection: Axis.vertical,
+          // itemCount: 5,
+          padding: EdgeInsets.all(10.0),
           children: [
             SizedBox(
-              height: 20,
+              height: 10,
             ),
-            Text(
-              'Welcome, ${widget.user.firstName}',
-              style: TextStyle(
-                fontSize: 30,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 17),
+              child: Text(
+                'Welcome, ${widget.user.firstName}',
+                style: GoogleFonts.caveat(
+                  textStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 45,
+                    color: Colors.deepOrange,
+                  ),
+                ),
               ),
             ),
             SizedBox(
               height: 10,
             ),
-            Expanded(
+            SizedBox(
+              height: 200,
               child: ListView(
-                scrollDirection: Axis.vertical,
+                scrollDirection: Axis.horizontal,
                 // itemCount: 5,
                 padding: EdgeInsets.all(10.0),
                 children: [
-                  SizedBox(
-                    height: 200,
-                    child: ListView(
-                      scrollDirection: Axis.horizontal,
-                      // itemCount: 5,
-                      padding: EdgeInsets.all(10.0),
-                      children: [
-                        SmallRestaurantCard(imageID: 'kfc'),
-                        SmallRestaurantCard(imageID: 'mac'),
-                        SmallRestaurantCard(imageID: 'pizzahut'),
-                      ],
-                    ),
-                  ),
-                  Divider(),
-                  RestaurantCard(
-                    name: 'KFC',
-                    caption: 'Caption',
-                    reviews: '00:00',
-                    description:
-                        'Second line of text in here for this card element or component',
-                  ),
-                  Divider(),
-                  RestaurantCard(
-                    name: 'Mc Donalds',
-                    caption: 'Caption',
-                    reviews: '00:00',
-                    description:
-                        'Second line of text in here for this card element or component',
-                  ),
+                  SmallRestaurantCard(imageID: 'kfc'),
+                  SmallRestaurantCard(imageID: 'mac'),
+                  SmallRestaurantCard(imageID: 'pizzahut'),
                 ],
               ),
             ),
+            Divider(),
+            Column(
+              children: getRestaurantsCards(),
+            ),
+            // ListView.builder(
+            //   itemBuilder: (context, index) {
+            //     return RestaurantCard(
+            //       name: widget.restaurants[index].name,
+            //       caption: widget.restaurants[index].ownerName,
+            //       reviews: '00:00',
+            //       description:
+            //           'Second line of text in here for this card element or component',
+            //     );
+            //   },
+            //   itemCount: widget.restaurants.length,
+            //   scrollDirection: Axis.vertical,
+            //   shrinkWrap: true,
+            // ),
           ],
         ),
       ),

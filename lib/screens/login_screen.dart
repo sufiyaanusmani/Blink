@@ -9,6 +9,8 @@ import 'package:food_delivery/components/bottom_container.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
 import 'package:mysql_client/mysql_client.dart';
+import 'package:food_delivery/restaurant.dart';
+import 'package:food_delivery/arguments/home_screen_arguments.dart';
 
 class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
@@ -21,7 +23,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   late String username;
-
+  List<Restaurant> restaurants = [];
   late String password;
   bool loginValid = true;
   String loginFailedMessage = '';
@@ -50,6 +52,17 @@ class _LoginScreenState extends State<LoginScreen> {
       return true;
     } else {
       return false;
+    }
+  }
+
+  void getRestaurants() async {
+    Iterable<ResultSetRow> rows = await db
+        .getResults('SELECT restaurant_id, name, owner_name FROM Restaurant;');
+    for (var row in rows) {
+      restaurants.add(Restaurant(
+          restaurantID: int.parse(row.assoc()['restaurant_id']!),
+          name: row.assoc()['name']!,
+          ownerName: row.assoc()['owner_name']!));
     }
   }
 
@@ -151,8 +164,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() {
                         loginFailedMessage = '';
                       });
+                      getRestaurants();
                       Navigator.pushNamed(context, MainNavigator.id,
-                          arguments: User(id: loginID, firstName: firstName));
+                          arguments: HomeScreenArguments(
+                            user: User(id: loginID, firstName: firstName),
+                            restaurants: restaurants,
+                          ));
                     } else {
                       setState(
                         () {
