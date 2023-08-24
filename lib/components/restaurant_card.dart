@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class RestaurantCard extends StatelessWidget {
   final String name;
@@ -16,9 +17,10 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        height: 330,
+        height: 370,
+        padding: EdgeInsets.only(bottom: 0, right: 10, left: 10, top: 10),
         margin: EdgeInsets.symmetric(
-          vertical: 10,
+          vertical: 2,
           horizontal: 10,
         ),
         decoration: BoxDecoration(
@@ -30,7 +32,15 @@ class RestaurantCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(name),
+                Text(
+                  name,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
                 CircleAvatar(
                   child: Text('SU'),
                   backgroundColor: Colors.white,
@@ -58,10 +68,10 @@ class RestaurantCard extends StatelessWidget {
                 Text(reviews),
               ],
             ),
-            SizedBox(
-              height: 15,
-            ),
+            SizedBox(height: 10),
             Text(description),
+            SizedBox(height: 10),
+            Divider(),
           ],
         ),
       ),

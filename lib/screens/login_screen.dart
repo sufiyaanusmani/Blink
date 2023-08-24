@@ -6,13 +6,64 @@ import 'package:food_delivery/components/plain_text_field.dart';
 import 'package:food_delivery/components/password_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
+import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/user.dart';
+import 'package:mysql_client/mysql_client.dart';
+import 'package:food_delivery/restaurant.dart';
+import 'package:food_delivery/arguments/home_screen_arguments.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
-  const LoginScreen({super.key});
+
+  LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  late String username;
+  List<Restaurant> restaurants = [];
+  late String password;
+  bool loginValid = true;
+  String loginFailedMessage = '';
+  late int loginID;
+  late String firstName;
 
   Widget buildBottomSheet(BuildContext context) {
     return BottomContainer();
+  }
+
+  var db = Mysql();
+
+  Future<bool> _login(String username, String password) async {
+    // var conn = await db.getConnection();
+    // await conn.connect();
+    // var results = await conn.execute(
+    //     'SELECT * FROM Customer WHERE username="$username" AND password="$password";');
+    // conn.close();
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT * FROM Customer WHERE username="$username" AND password="$password";');
+    if (rows.length == 1) {
+      for (var row in rows) {
+        loginID = int.parse(row.assoc()['customer_id']!);
+        firstName = row.assoc()['first_name']!;
+      }
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void getRestaurants() async {
+    Iterable<ResultSetRow> rows = await db
+        .getResults('SELECT restaurant_id, name, owner_name FROM Restaurant;');
+    for (var row in rows) {
+      restaurants.add(Restaurant(
+          restaurantID: int.parse(row.assoc()['restaurant_id']!),
+          name: row.assoc()['name']!,
+          ownerName: row.assoc()['owner_name']!));
+    }
   }
 
   @override
@@ -59,13 +110,34 @@ class LoginScreen extends StatelessWidget {
                 SizedBox(
                   height: 50,
                 ),
-                PlainTextField(hintText: 'Enter Username'),
+                PlainTextField(
+                  hintText: 'Enter Username',
+                  onChange: (text) {
+                    username = text;
+                  },
+                ),
                 SizedBox(
                   height: 25,
                 ),
-                PasswordTextField(hintText: 'Enter Password'),
+                PasswordTextField(
+                  hintText: 'Enter Password',
+                  onChange: (text) {
+                    password = text;
+                  },
+                ),
                 SizedBox(
                   height: 20,
+                ),
+                Text(
+                  loginFailedMessage,
+                  textAlign: TextAlign.start,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                      color: Colors.red,
+                    ),
+                  ),
                 ),
                 GestureDetector(
                   child: Text(
@@ -87,8 +159,24 @@ class LoginScreen extends StatelessWidget {
                   height: 20,
                 ),
                 LargeButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, MainNavigator.id);
+                  onPressed: () async {
+                    if (await _login(username, password)) {
+                      setState(() {
+                        loginFailedMessage = '';
+                      });
+                      getRestaurants();
+                      Navigator.pushNamed(context, MainNavigator.id,
+                          arguments: HomeScreenArguments(
+                            user: User(id: loginID, firstName: firstName),
+                            restaurants: restaurants,
+                          ));
+                    } else {
+                      setState(
+                        () {
+                          loginFailedMessage = 'Invalid username or password';
+                        },
+                      );
+                    }
                   },
                   color: Colors.lightBlue,
                   verticalPadding: 15,
@@ -130,9 +218,7 @@ class LoginScreen extends StatelessWidget {
                   height: 20,
                 ),
                 LargeButton(
-                  onPressed: () {
-                    print('pressed');
-                  },
+                  onPressed: () {},
                   color: Colors.white,
                   verticalPadding: 10,
                   buttonChild: Image.asset(

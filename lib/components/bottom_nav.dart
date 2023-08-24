@@ -15,7 +15,7 @@ class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 0;
 
   List<Widget> _screens = [
-    HomeScreen(),
+    // HomeScreen(),
     RestaurantScreen(),
     SettingsScreen(),
   ];
@@ -51,17 +51,14 @@ class _NavigationExampleState extends State<NavigationExample> {
   //         label: 'Profile',
   //       ),
   //     ],
-      
 
   //   );
   // }
 
-
-
   @override
   Widget build(BuildContext context) {
     return GNav(
-      onTabChange:  (int index) {
+      onTabChange: (int index) {
         setState(() {
           currentPageIndex = index;
         });
@@ -77,32 +74,23 @@ class _NavigationExampleState extends State<NavigationExample> {
       tabBackgroundColor: Colors.grey[100]!,
       color: Colors.black,
       tabs: [
-                GButton(
-                  icon: Icons.home,
-                  text: 'Home',
-                ),
-                GButton(
-                  icon: Icons.search,
-                  text: 'Search',
-                ),
-                GButton(
-                  icon: Icons.shopping_cart,
-                  text: 'Cart',
-                ),
-                GButton(
-                  icon: Icons.account_circle,
-                  text: 'Profile',
-                ),
+        GButton(
+          icon: Icons.home,
+          text: 'Home',
+        ),
+        GButton(
+          icon: Icons.search,
+          text: 'Search',
+        ),
+        GButton(
+          icon: Icons.shopping_cart,
+          text: 'Cart',
+        ),
+        GButton(
+          icon: Icons.account_circle,
+          text: 'Profile',
+        ),
       ],
     );
   }
-
-
-
-
-
-
-
-
-
 }

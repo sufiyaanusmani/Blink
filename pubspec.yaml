@@ -43,6 +43,8 @@ dependencies:
   flutter_slidable: ^3.0.0
   slide_to_act: ^2.0.1
   slide_to_act_reborn: ^3.0.0
+  mysql1: ^0.20.0
+  mysql_client: ^0.0.27
 
 dev_dependencies:
   flutter_test:
