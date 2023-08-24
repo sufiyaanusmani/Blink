@@ -91,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 200,
               child: ListView(
                 scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
                 // itemCount: 5,
                 padding: EdgeInsets.all(10.0),
                 children: [
