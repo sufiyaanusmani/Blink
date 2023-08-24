@@ -39,12 +39,12 @@ class _CartScreenState extends State<CartScreen> {
   final itemList = [
     {
       'image': 'assets/icons/cancel.png',
-      'title': 'Item 1',
-      'desc': 'price',
+      'title': 'Chicken mayo boti roll',
+      'desc': 'priaaa',
     },
     {
       'image': 'assets/icons/cancel.png',
-      'title': 'Item 2',
+      'title': 'biryani',
       'desc': 'price',
     },
     {
@@ -224,77 +224,80 @@ class _CartScreenState extends State<CartScreen> {
                               ),
                             ),
                             const SizedBox(width: 10.0),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  item['title']!,
-                                  style: const TextStyle(
-                                    fontSize: 18.0,
-                                    fontWeight: FontWeight.bold,
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    item['title']!,
+                                    style: const TextStyle(
+                                      fontSize: 18.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10.0),
+                                  Text(
+                                    item['desc']!,
+                                    style: const TextStyle(
+                                      fontSize: 14.0,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Row(
+                              children:[
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: 20,
+                                    height: 50,
+                                    child: Text(
+                                      '-',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 10.0),
-                                Text(
-                                  item['desc']!,
-                                  style: const TextStyle(
-                                    fontSize: 14.0,
-                                    color: Colors.grey,
+                                Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black,
+                                  ),
+                                  padding: EdgeInsets.all(10),
+                                  child: Text(
+                                    ' 3 ',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 18),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () {},
+                                  child: Container(
+                                    alignment: Alignment.center,
+                                    width: 20,
+                                    height: 50,
+                                    child: Text(
+                                      '+',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ),
                               ],
-                            ),
-                            const SizedBox(
-                              width: 40,
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: 20,
-                                height: 20,
-                                child: Text(
-                                  '-',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              padding: EdgeInsets.all(10),
-                              child: Text(
-                                ' 3 ',
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 18),
-                              ),
-                            ),
-                            TextButton(
-                              onPressed: () {},
-                              child: Container(
-                                alignment: Alignment.center,
-                                width: 20,
-                                height: 20,
-                                child: Text(
-                                  '+',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                              ),
                             ),
                           ],
                         ),
@@ -324,39 +327,53 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                       child: Column(
                         children: [
-                          SizedBox(height: 10),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  child: Image.asset(
-                                    'assets/icons/save.png',
-                                    width: 32,
-                                    height: 32,
+                              
+                                  Container(
+                                      margin: EdgeInsets.only(top:15, left:15),
+                                      padding:EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color.fromARGB(136, 255, 255, 255), // Adjust color as needed
+                                      ),
+                                      child: Image.asset(
+                                        'assets/icons/preorder.png',
+                                        width: 25,
+                                        height: 25,
+                                      ),
+                                  
+                                
                                   ),
-                                ),
-                              ),
                               Expanded(
-                                child: Text(
-                                  'Preorder',
+                                child: Container(
+                                  alignment: Alignment.topRight,
+                                  margin: EdgeInsets.only(right:15),
+                                  padding: EdgeInsets.only(bottom:5),
+                                  child:Text(
+                                    'Preorder',
+                                    style: TextStyle(                                      
+                                      fontSize: 15,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ],
                           ),
-                          SizedBox(height: 30),
+                          SizedBox(height: 12),
                           TextButton(
                              onPressed: () {
                                 _showTimeSelectionPopup();
                               },
                             child: Container(
                               alignment: Alignment.center,
-                              // width: 20,
+                              margin: EdgeInsets.only(left:4, right:4),
                               height: 30,
                               child: Text(
                                 '11:00 am',
                                 style: TextStyle(
                                   color: Colors.white,
+                                  
                                 ),
                               ),
                               decoration: BoxDecoration(
@@ -380,25 +397,54 @@ class _CartScreenState extends State<CartScreen> {
                     child: Container(
                       height: 120,
                       decoration: BoxDecoration(
-                        color: Colors.grey,
+                        color: const Color.fromARGB(115, 158, 158, 158),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Column(
+                      child: Row(
+                        
                         children: [
-                          SizedBox(height: 30),
+                          Container(
+                            padding:EdgeInsets.all(10),
+                            margin:EdgeInsets.only(bottom: 45, left: 15),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromARGB(136, 255, 255, 255),                              
+                            ),
+                            child: Image.asset(
+                              'assets/icons/layer.png',
+                              width: 25,
+                              height: 30,
+                            ),
+                          ),        
                           Expanded(
-                            child: GestureDetector(
-                              child: Image.asset(
-                                'assets/icons/save.png',
-                                width: 32,
-                                height: 32,
+                            child: Container(
+                              margin:EdgeInsets.only(top:20, bottom:5, right: 15),
+                              child: Column(
+                                children: [
+                                  const Align(
+                                    alignment: Alignment.topRight,
+                                    child: Text(
+                                      'amount',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 34),
+                                  Align(                              
+                                    alignment: Alignment.bottomRight,
+                                    child: const Text(
+                                      'Rs 540',
+                                      style: TextStyle(
+                                        color: Color.fromARGB(255, 0, 0, 0),
+                                        fontSize: 50,  
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                          SizedBox(height: 10),
-                          Text('Rs 540'),
-                          Text('amount'),
-                          SizedBox(height: 20),
                         ],
                       ),
                     )),
@@ -415,33 +461,57 @@ class _CartScreenState extends State<CartScreen> {
 
             // bottom Slider
 
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15.0),
+            Container(
+              // decoration: BoxDecoration(
+              //   color: Color.fromARGB(255, 161, 120, 172),
+              // ),
+              margin: const EdgeInsets.symmetric(horizontal: 15.0),
               //https://pub.dev/packages/slide_to_act_reborn
               child: SlideAction(
-                borderRadius: 20,
-                innerColor: Colors.white,
-                outerColor: Colors.grey,
+                // borderRadius: 30,
+                innerColor: Color.fromARGB(255, 0, 0, 0),
+                outerColor: Color.fromARGB(255, 171, 90, 194),
                 elevation: 0,
                 sliderButtonIcon:  Container(
-                  width: 60,
-                  child: const Icon(
-                    Icons.shopping_basket,
-                    color: Colors.black,
+                  child: Text(
+                      'ORDER',
+                      style: TextStyle(
+                        fontFamily: 'Gruppo',
+                        fontSize: 25,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.white,
+                      ),
                   ),
-                ),
-                text: 'Slide to place order',
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
                 ),
                 sliderRotate: false,
                 onSubmit: () {},
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: Row(  
+                  mainAxisAlignment: MainAxisAlignment.center,                
                   children: [
-                    Text('>>>'),
-                    Text(' Slide to place order'),
+                    Text(
+                      '> ',
+                      style: TextStyle(
+                        fontFamily: 'Gruppo',
+                        fontSize: 55,
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(
+                      '> ',
+                      style: TextStyle(
+                        fontFamily: 'Gruppo',
+                        fontSize: 55,
+                        color: Color.fromARGB(171, 255, 255, 255),
+                      ),
+                    ),
+                    Text(
+                      '>',
+                      style: TextStyle(
+                        fontFamily: 'Gruppo',
+                        fontSize: 55,
+                        color: Color.fromARGB(111, 255, 255, 255),
+                      ),
+                    ),
                   ],
                 ),
               ),
