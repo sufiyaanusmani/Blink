@@ -11,13 +11,6 @@ class Mysql {
   Mysql();
 
   Future<MySQLConnection> getConnection() async {
-    // final pool = MySQLConnectionPool(
-    //   host: host,
-    //   port: port,
-    //   userName: user,
-    //   password: password,
-    //   databaseName: db,
-    // );
     return await MySQLConnection.createConnection(
       host: host,
       port: port,
@@ -25,5 +18,13 @@ class Mysql {
       password: password,
       databaseName: db,
     );
+  }
+
+  Future<Iterable<ResultSetRow>> getResults(String query) async {
+    var conn = await getConnection();
+    await conn.connect();
+    var results = await conn.execute(query);
+    conn.close();
+    return results.rows;
   }
 }

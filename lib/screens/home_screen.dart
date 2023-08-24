@@ -3,6 +3,7 @@ import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
+import 'package:mysql_client/mysql_client.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -19,16 +20,17 @@ class _HomeScreenState extends State<HomeScreen> {
   String firstName = '';
 
   void _getStudent(int loginID) async {
-    var conn = await db.getConnection();
-    await conn.connect();
-    var results = await conn
-        .execute('SELECT first_name FROM Customer WHERE id=$loginID;');
-    for (var row in results.rows) {
+    // var conn = await db.getConnection();
+    // await conn.connect();
+    // var results = await conn
+    //     .execute('SELECT first_name FROM Customer WHERE id=$loginID;');
+    Iterable<ResultSetRow> rows = await db
+        .getResults('SELECT first_name FROM Customer WHERE id=$loginID;');
+    for (var row in rows) {
       setState(() {
         firstName = row.assoc()['first_name']!;
       });
     }
-    conn.close();
   }
 
   @override

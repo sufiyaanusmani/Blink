@@ -8,6 +8,7 @@ import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
+import 'package:mysql_client/mysql_client.dart';
 
 class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
@@ -34,13 +35,15 @@ class _LoginScreenState extends State<LoginScreen> {
   var db = Mysql();
 
   Future<bool> _login(String username, String password) async {
-    var conn = await db.getConnection();
-    await conn.connect();
-    var results = await conn.execute(
+    // var conn = await db.getConnection();
+    // await conn.connect();
+    // var results = await conn.execute(
+    //     'SELECT * FROM Customer WHERE username="$username" AND password="$password";');
+    // conn.close();
+    Iterable<ResultSetRow> rows = await db.getResults(
         'SELECT * FROM Customer WHERE username="$username" AND password="$password";');
-    conn.close();
-    if (results.rows.length == 1) {
-      for (var row in results.rows) {
+    if (rows.length == 1) {
+      for (var row in rows) {
         loginID = int.parse(row.assoc()['customer_id']!);
         firstName = row.assoc()['first_name']!;
       }
