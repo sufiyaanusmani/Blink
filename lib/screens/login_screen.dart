@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/screens/home_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/services/navigator.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -26,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bool loginValid = true;
   String loginFailedMessage = '';
   late int loginID;
-  late String name;
+  late String firstName;
 
   Widget buildBottomSheet(BuildContext context) {
     return BottomContainer();
@@ -38,12 +37,12 @@ class _LoginScreenState extends State<LoginScreen> {
     var conn = await db.getConnection();
     await conn.connect();
     var results = await conn.execute(
-        'SELECT * FROM User WHERE username="$username" AND password="$password";');
+        'SELECT * FROM Customer WHERE username="$username" AND password="$password";');
     conn.close();
     if (results.rows.length == 1) {
       for (var row in results.rows) {
-        loginID = int.parse(row.assoc()['id']!);
-        name = row.assoc()['name']!;
+        loginID = int.parse(row.assoc()['customer_id']!);
+        firstName = row.assoc()['first_name']!;
       }
       return true;
     } else {
@@ -150,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         loginFailedMessage = '';
                       });
                       Navigator.pushNamed(context, MainNavigator.id,
-                          arguments: User(id: loginID, name: name));
+                          arguments: User(id: loginID, firstName: firstName));
                     } else {
                       setState(
                         () {

@@ -16,16 +16,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   var db = Mysql();
-  String name = '';
+  String firstName = '';
 
   void _getStudent(int loginID) async {
     var conn = await db.getConnection();
     await conn.connect();
-    var results =
-        await conn.execute('SELECT name FROM User WHERE id=$loginID;');
+    var results = await conn
+        .execute('SELECT first_name FROM Customer WHERE id=$loginID;');
     for (var row in results.rows) {
       setState(() {
-        name = row.assoc()['name']!;
+        firstName = row.assoc()['first_name']!;
       });
     }
     conn.close();
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 20,
             ),
             Text(
-              'Welcome, ${widget.user.name}',
+              'Welcome, ${widget.user.firstName}',
               style: TextStyle(
                 fontSize: 30,
               ),
