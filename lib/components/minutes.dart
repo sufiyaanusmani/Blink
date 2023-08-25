@@ -16,7 +16,7 @@ class MyMinutes extends StatelessWidget {
             style: TextStyle(
               fontSize: 40,
               color: const Color.fromARGB(255, 0, 0, 0),
-              fontWeight: FontWeight.bold,
+              // fontWeight: FontWeight.bold,
             ),
           ),
         ),

@@ -12,11 +12,11 @@ class MyHours extends StatelessWidget {
       child: Container(
         child: Center(
           child: Text(
-            hours.toString(),
+            hours < 10 ? '0' + hours.toString() : hours.toString(),
             style: TextStyle(
               fontSize: 40,
               color: const Color.fromARGB(255, 2, 2, 2),
-              fontWeight: FontWeight.bold,
+              // fontWeight: FontWeight.bold,
             ),
           ),
         ),
