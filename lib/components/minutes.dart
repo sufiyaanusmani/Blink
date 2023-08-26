@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class MyMinutes extends StatelessWidget {
-  int mins;
+  final int mins;
 
-  MyMinutes({required this.mins});
+  const MyMinutes({required this.mins});
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +13,9 @@ class MyMinutes extends StatelessWidget {
         child: Center(
           child: Text(
             mins < 10 ? '0' + mins.toString() : mins.toString(),
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 40,
-              color: const Color.fromARGB(255, 0, 0, 0),
-              // fontWeight: FontWeight.bold,
+              color: Color.fromARGB(255, 0, 0, 0),
             ),
           ),
         ),

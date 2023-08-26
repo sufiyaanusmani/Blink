@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+
 class SmallRestaurantCard extends StatelessWidget {
   final String imageID;
 
@@ -20,6 +21,9 @@ class SmallRestaurantCard extends StatelessWidget {
       ),
       onTap: () {
         print('Pressed $imageID');
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => RestaurantScreen()));
+        // print("aa");
       },
     );
   }
