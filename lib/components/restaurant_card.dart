@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:food_delivery/screens/home_screen.dart';
+import 'package:food_delivery/screens/restaurant_screen.dart';
 
 class RestaurantCard extends StatelessWidget {
   final String name;
@@ -11,7 +13,7 @@ class RestaurantCard extends StatelessWidget {
       {required this.name,
       required this.caption,
       required this.reviews,
-      required this.description});
+      required this.description,});
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +79,17 @@ class RestaurantCard extends StatelessWidget {
       ),
       onTap: () {
         print('pressed $name');
+        Navigator.push(
+          context,
+          PageRouteBuilder(
+            pageBuilder: ( _, animation, __) => FadeTransition(
+              opacity: animation,
+              child: RestaurantScreen(
+                screenHeight: MediaQuery.of(context).size.height.toDouble()
+              ),
+            )
+          )
+        );
       },
     );
   }

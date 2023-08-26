@@ -37,6 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+
   List<RestaurantCard> getRestaurantsCards() {
     List<RestaurantCard> res = [];
     for (Restaurant r in widget.restaurants) {
