@@ -14,11 +14,11 @@ class NavigationExample extends StatefulWidget {
 class _NavigationExampleState extends State<NavigationExample> {
   int currentPageIndex = 0;
 
-  List<Widget> _screens = [
-    // HomeScreen(),
-    RestaurantScreen(),
-    SettingsScreen(),
-  ];
+  // List<Widget> _screens = [
+  //   // HomeScreen(),
+  //   RestaurantScreen(),
+  //   SettingsScreen(),
+  // ];
 
   // @override
   // Widget build(BuildContext context) {
