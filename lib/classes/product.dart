@@ -6,7 +6,7 @@ class Product {
   String name;
   int restraunt_id;
   int category_id;
-  double price;
+  int price;
 
   Product(
       {required this.id,
@@ -28,7 +28,7 @@ class Product {
           name: row.assoc()['name']!,
           restraunt_id: int.parse(row.assoc()['restaurant_id']!),
           category_id: int.parse(row.assoc()['category_id']!),
-          price: double.parse(row.assoc()['price']!));
+          price: int.parse(row.assoc()['price']!));
       products.add(product);
     }
 

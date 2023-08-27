@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:food_delivery/screens/home_screen.dart';
 import 'package:food_delivery/classes/restaurant.dart';
-import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/components/animated_detail_header.dart';
 import 'package:food_delivery/classes/product.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:food_delivery/classes/cart.dart';
 
 class RestaurantScreen extends StatefulWidget {
   static const String id = 'restaurant_screen';
@@ -341,11 +338,18 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                                       ),
                                                     ),
                                                     ElevatedButton(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        Cart.addNewProduct(
+                                                            item);
+                                                        print(
+                                                            'pressed ${item.name}');
+                                                      },
                                                       style: ElevatedButton
                                                           .styleFrom(
-                                                        primary: Colors.blue,
-                                                        onPrimary: Colors.white,
+                                                        backgroundColor:
+                                                            Colors.blue,
+                                                        foregroundColor:
+                                                            Colors.white,
                                                         shape:
                                                             RoundedRectangleBorder(
                                                           borderRadius:

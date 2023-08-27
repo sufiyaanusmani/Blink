@@ -12,7 +12,6 @@ class HomeScreen extends StatefulWidget {
   int loginID = -1;
   User user;
   List<Restaurant> restaurants;
-  List<RestaurantCard> restaurantCards = [];
 
   HomeScreen({super.key, required this.user, required this.restaurants});
 
@@ -23,6 +22,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var db = Mysql();
   String firstName = '';
+  List<RestaurantCard> restaurantCards = [];
 
   void _getStudent(int loginID) async {
     // var conn = await db.getConnection();
@@ -47,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     setState(() {
-      widget.restaurantCards = tempRestaurantCards;
+      restaurantCards = tempRestaurantCards;
     });
   }
 
@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    if (widget.restaurantCards.isEmpty) {
+    if (restaurantCards.isEmpty) {
       getRestaurants();
     }
     // TODO: implement initState
@@ -122,7 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Divider(),
             Column(
-              children: widget.restaurantCards,
+              children: restaurantCards,
             ),
             // ListView.builder(
             //   itemBuilder: (context, index) {
