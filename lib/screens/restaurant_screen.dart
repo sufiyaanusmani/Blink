@@ -192,7 +192,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                               borderRadius: expanded
                                   ? BorderRadius.only(topRight: Radius.circular(20))
                                   : BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)),
-                              color: Colors.amber,
+                              color: Colors.black,
                             ),
                             child: Center(
                               child: Text(
@@ -229,7 +229,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                     borderRadius: expanded
                                         ? BorderRadius.only(topRight: Radius.circular(20))
                                         : BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)),
-                                    color: Colors.amber,
+                                    color: Colors.black,
                                   ),
                                   child: const Center(
                                     child: Text(
@@ -254,13 +254,17 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                     height: 500.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(bottomRight: Radius.circular(20)),                                      
-                                      color: Colors.amber,
+                                      color: Colors.black,
                                     ),             
                                     child: Center(
                                       child: Text(
                                         'Categories',
                                         style: TextStyle(
-                                            color: Colors.white, fontSize: 20.0),
+                                            color: Colors.white,
+                                            fontSize:expanded ? 20 : 0,
+                                          
+                                        ),
+                                          
                                       ),
                                     ),
                                   ),
@@ -276,7 +280,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                             AnimatedContainer(
                               duration: Duration(milliseconds: 150),
                               alignment: Alignment.topLeft,
-                              color: Colors.amber,
+                              color: Colors.black,
                               width: expanded ? 0 : 20,
                               height: 40.0,
                               child: ClipRRect(
