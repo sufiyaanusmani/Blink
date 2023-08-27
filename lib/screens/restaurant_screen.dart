@@ -4,7 +4,7 @@ import 'package:food_delivery/screens/home_screen.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/components/animated_detail_header.dart';
-
+import 'package:food_delivery/classes/product.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 class RestaurantScreen extends StatefulWidget {
@@ -39,8 +39,19 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     bottomPercentNotifier.value = (percent / .3).clamp(0.0, 1.0);
   }
 
+  late List<Product> itemList = [];
+
+  void getProducts() async {
+    List<Product> items =
+        await Product.getProducts(widget.restaurant.restaurantID);
+    setState(() {
+      itemList = items;
+    });
+  }
+
   @override
   void initState() {
+    getProducts();
     _controller =
         ScrollController(initialScrollOffset: widget.screenHeight * .3);
     _controller.addListener(_scrollListener);
@@ -53,89 +64,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     _controller.dispose();
     super.dispose();
   }
-
-  final itemList = [
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Chicken mayo boti roll',
-      'desc': 'priaaa',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'biryani',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 1',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 2',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    }
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -361,7 +289,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                                             BorderRadius
                                                                 .circular(10.0),
                                                         child: Image.asset(
-                                                          item['image']!,
+                                                          'images/mac.jpg',
                                                           width: expanded
                                                               ? 0
                                                               : 70.0,
@@ -384,7 +312,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                                                   .start,
                                                           children: [
                                                             Text(
-                                                              item['title']!,
+                                                              item.name,
                                                               style: TextStyle(
                                                                 fontSize:
                                                                     expanded
@@ -398,7 +326,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                                             const SizedBox(
                                                                 height: 10.0),
                                                             Text(
-                                                              item['desc']!,
+                                                              '${item.price}',
                                                               style: TextStyle(
                                                                 fontSize:
                                                                     expanded
