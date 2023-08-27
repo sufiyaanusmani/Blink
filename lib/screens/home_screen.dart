@@ -5,7 +5,7 @@ import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mysql_client/mysql_client.dart';
-import 'package:food_delivery/restaurant.dart';
+import 'package:food_delivery/classes/restaurant.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -42,11 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
     for (Restaurant r in widget.restaurants) {
       res.add(
         RestaurantCard(
-          name: r.name,
-          caption: r.ownerName,
-          reviews: '00:00',
-          description:
-              'Second line of text in here for this card element or component',
+          restaurant: r,
         ),
       );
     }

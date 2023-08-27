@@ -1,20 +1,23 @@
 import 'dart:ui';
-
+import 'package:food_delivery/classes/restaurant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/classes/menu.dart';
 
 class AnimatedDetailHeader extends StatelessWidget {
-  const AnimatedDetailHeader({
-    Key? key,
-    required this.topPercent,
-    required this.bottomPercent,
-    // required this.menu,
-  }) : super(key: key);
+  const AnimatedDetailHeader(
+      {Key? key,
+      required this.topPercent,
+      required this.bottomPercent,
+      required this.restaurant
+      // required this.menu,
+      })
+      : super(key: key);
 
   // final restraunt menu;
   final double topPercent;
   final double bottomPercent;
+  final Restaurant restaurant;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +29,7 @@ class AnimatedDetailHeader extends StatelessWidget {
       children: [
         ClipRect(
           child: Stack(
-            children:[
+            children: [
               Padding(
                 padding: EdgeInsets.only(
                   top: (20 + topPadding) * (1 - bottomPercent),
@@ -38,41 +41,39 @@ class AnimatedDetailHeader extends StatelessWidget {
                 ),
               ),
               Positioned(
-                top: topPadding,
-                left: -60 * (1 - bottomPercent),
-                child: BackButton(
-                  color: Colors.white,
-                )
-              ),
-              Positioned(
-                top: topPadding,
-                right: -60 * (1 - bottomPercent),
-                child: IconButton(
-                  onPressed: (){},
-                  icon: Icon(
-                    Icons.more_horiz,
+                  top: topPadding,
+                  left: -60 * (1 - bottomPercent),
+                  child: BackButton(
                     color: Colors.white,
-                  ),
-                  color: Colors.white,
-                )
-              ),
+                  )),
               Positioned(
-                top: lerpDouble(-30, 140, topPercent)!.clamp(topPadding + 10, 140),
-                left: lerpDouble(60, 20, topPercent)!.clamp(20.0, 50.0),
-                right: 20,
-                child: AnimatedOpacity(
-                  duration: kThemeAnimationDuration,
-                  opacity: bottomPercent < 1 ? 0 : 1,
-                  child: Text(
-                    "Dhaaba",
-                    style: TextStyle(
+                  top: topPadding,
+                  right: -60 * (1 - bottomPercent),
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.more_horiz,
                       color: Colors.white,
-                      fontSize: lerpDouble(30, 40, 2*topPercent),
-                      fontWeight: FontWeight.bold,
                     ),
-                  ),
-                )
-              ),
+                    color: Colors.white,
+                  )),
+              Positioned(
+                  top: lerpDouble(-30, 140, topPercent)!
+                      .clamp(topPadding + 10, 140),
+                  left: lerpDouble(60, 20, topPercent)!.clamp(20.0, 50.0),
+                  right: 20,
+                  child: AnimatedOpacity(
+                    duration: kThemeAnimationDuration,
+                    opacity: bottomPercent < 1 ? 0 : 1,
+                    child: Text(
+                      restaurant.name,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: lerpDouble(30, 40, 2 * topPercent),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )),
               Positioned(
                 left: 20,
                 top: 200,
@@ -82,7 +83,7 @@ class AnimatedDetailHeader extends StatelessWidget {
                   child: Opacity(
                     opacity: topPercent,
                     child: Text(
-                      "Custom widget",
+                      restaurant.ownerName,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -94,7 +95,6 @@ class AnimatedDetailHeader extends StatelessWidget {
             ],
           ),
         ),
-
         Positioned.fill(
           top: null,
           bottom: -140 * (1 - topPercent),

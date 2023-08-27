@@ -1,5 +1,5 @@
 import 'package:food_delivery/user.dart';
-import 'package:food_delivery/restaurant.dart';
+import 'package:food_delivery/classes/restaurant.dart';
 
 class HomeScreenArguments {
   User user;
