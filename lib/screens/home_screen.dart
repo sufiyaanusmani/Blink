@@ -12,6 +12,7 @@ class HomeScreen extends StatefulWidget {
   int loginID = -1;
   User user;
   List<Restaurant> restaurants;
+  List<RestaurantCard> restaurantCards = [];
 
   HomeScreen({super.key, required this.user, required this.restaurants});
 
@@ -37,16 +38,38 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  List<RestaurantCard> getRestaurantsCards() {
-    List<RestaurantCard> res = [];
-    for (Restaurant r in widget.restaurants) {
-      res.add(
-        RestaurantCard(
-          restaurant: r,
-        ),
-      );
+  void getRestaurants() async {
+    List<Restaurant> r = await Restaurant.getRestaurants();
+    List<RestaurantCard> tempRestaurantCards = [];
+    for (Restaurant res in r) {
+      print('got a card');
+      tempRestaurantCards.add(RestaurantCard(restaurant: res));
     }
-    return res;
+
+    setState(() {
+      widget.restaurantCards = tempRestaurantCards;
+    });
+  }
+
+  // void getRestaurantsCards() {
+  //   for (Restaurant r in widget.restaurants) {
+  //     setState(() {
+  //       restaurantCards.add(
+  //         RestaurantCard(
+  //           restaurant: r,
+  //         ),
+  //       );
+  //     });
+  //   }
+  // }
+
+  @override
+  void initState() {
+    if (widget.restaurantCards.isEmpty) {
+      getRestaurants();
+    }
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -99,19 +122,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Divider(),
             Column(
-              children: getRestaurantsCards(),
+              children: widget.restaurantCards,
             ),
             // ListView.builder(
             //   itemBuilder: (context, index) {
-            //     return RestaurantCard(
-            //       name: widget.restaurants[index].name,
-            //       caption: widget.restaurants[index].ownerName,
-            //       reviews: '00:00',
-            //       description:
-            //           'Second line of text in here for this card element or component',
-            //     );
+            //     return RestaurantCard(restaurant: restaurants[index]);
             //   },
-            //   itemCount: widget.restaurants.length,
+            //   itemCount: restaurants.length,
             //   scrollDirection: Axis.vertical,
             //   shrinkWrap: true,
             // ),
