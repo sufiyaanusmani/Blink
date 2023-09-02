@@ -74,16 +74,17 @@ class RestaurantCard extends StatelessWidget {
       onTap: () {
         print('pressed ${restaurant.name}');
         Navigator.push(
-            context,
-            PageRouteBuilder(
-                pageBuilder: (_, animation, __) => FadeTransition(
-                      opacity: animation,
-                      child: RestaurantScreen(
-                        screenHeight:
-                            MediaQuery.of(context).size.height.toDouble(),
-                        restaurant: restaurant,
-                      ),
-                    )));
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, animation, __) => FadeTransition(
+              opacity: animation,
+              child: RestaurantScreen(
+                screenHeight: MediaQuery.of(context).size.height.toDouble(),
+                restaurant: restaurant,
+              ),
+            ),
+          ),
+        );
       },
     );
   }

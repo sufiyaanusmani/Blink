@@ -46,10 +46,11 @@ class _HomeScreenState extends State<HomeScreen> {
       print('got a card');
       tempRestaurantCards.add(RestaurantCard(restaurant: res));
     }
-
-    setState(() {
-      restaurantCards = tempRestaurantCards;
-    });
+    if (this.mounted) {
+      setState(() {
+        restaurantCards = tempRestaurantCards;
+      });
+    }
   }
 
   // void getRestaurantsCards() {

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:food_delivery/classes/cart_product.dart';
+import 'package:food_delivery/classes/order.dart';
 import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/screens/order_status_screen.dart';
+import 'package:mysql_client/mysql_client.dart';
 import 'package:slide_to_act_reborn/slide_to_act_reborn.dart';
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:food_delivery/classes/cart.dart';
@@ -12,6 +15,7 @@ class YourCartScreen extends StatefulWidget {
 }
 
 class _YourCartScreenState extends State<YourCartScreen> {
+  late CartProduct item;
   void getCartItems() {
     setState(() {
       itemList = Cart.cart;
@@ -51,7 +55,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                 physics: BouncingScrollPhysics(),
                 itemCount: itemList.length,
                 itemBuilder: (context, index) {
-                  CartProduct item = itemList[index];
+                  item = itemList[index];
                   return Padding(
                     padding: (index == 0)
                         ? const EdgeInsets.symmetric(vertical: 15.0)
@@ -360,13 +364,42 @@ class _YourCartScreenState extends State<YourCartScreen> {
                   ),
                 ),
                 sliderRotate: false,
-                onSubmit: () {
+                onSubmit: () async {
                   var db = Mysql();
                   db.placeOrder(Cart.customerID, Cart.restaurantID, totalPrice);
+                  Cart temp = Cart();
                   setState(() {
                     Cart.cart = [];
                     totalPrice = 0;
                   });
+                  Iterable<ResultSetRow> rows = await db.getResults(
+                      'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=1 ORDER BY placed_at DESC LIMIT 1;');
+                  int orderID = 0;
+                  int price = 0;
+                  String restaurantName = '';
+                  String status = '';
+                  if (rows.length == 1) {
+                    for (var row in rows) {
+                      orderID = int.parse(row.assoc()['order_id']!);
+                      restaurantName = row.assoc()['name']!;
+                      status = row.assoc()['status']!;
+                      price = int.parse(row.assoc()['price']!);
+                    }
+                    Order order = Order(
+                        orderID: orderID,
+                        restaurantName: restaurantName,
+                        status: status,
+                        price: price);
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, animation, __) => FadeTransition(
+                          opacity: animation,
+                          child: OrderStatusScreen(order: order),
+                        ),
+                      ),
+                    );
+                  }
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
