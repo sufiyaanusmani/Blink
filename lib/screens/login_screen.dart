@@ -12,6 +12,7 @@ import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
 import 'package:food_delivery/screens/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
@@ -23,9 +24,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late String username;
+  var username;
   List<Restaurant> restaurants = [];
-  late String password;
+  var password;
   bool loginValid = true;
   String loginFailedMessage = '';
   late int loginID;
@@ -65,6 +66,39 @@ class _LoginScreenState extends State<LoginScreen> {
           name: row.assoc()['name']!,
           ownerName: row.assoc()['owner_name']!));
     }
+  }
+
+  TextEditingController _usernameTextController = TextEditingController();
+  TextEditingController _passwordTextController = TextEditingController();
+  void getSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      username = prefs.getString('username')!;
+      password = prefs.getString('password')!;
+    });
+  }
+
+  Future<String> getUsername() async {
+    SharedPreferences signPrefs = await SharedPreferences.getInstance();
+    username = signPrefs.get('username');
+    return username;
+  }
+
+  Future<String> getPassword() async {
+    SharedPreferences signPrefs = await SharedPreferences.getInstance();
+    password = signPrefs.get('password');
+    return password;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // getSharedPreferences();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      _usernameTextController.text = await getUsername();
+      _passwordTextController.text = await getPassword();
+    });
   }
 
   @override
@@ -116,6 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onChange: (text) {
                     username = text;
                   },
+                  controller: _usernameTextController,
                 ),
                 SizedBox(
                   height: 25,
@@ -125,6 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onChange: (text) {
                     password = text;
                   },
+                  controller: _passwordTextController,
                 ),
                 SizedBox(
                   height: 20,
@@ -165,6 +201,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() {
                         loginFailedMessage = '';
                       });
+                      final SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      await prefs.setString('username', username);
+                      await prefs.setString('password', password);
                       getRestaurants();
                       Navigator.pushNamed(context, MainNavigator.id,
                           arguments: HomeScreenArguments(

@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 class PlainTextField extends StatelessWidget {
   final String hintText;
   final Function(String) onChange;
-  PlainTextField({required this.hintText, required this.onChange});
+  TextEditingController controller;
+  PlainTextField(
+      {required this.hintText,
+      required this.onChange,
+      required this.controller});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +24,11 @@ class PlainTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: TextField(
+          controller: controller,
           decoration: InputDecoration(
-            hintText: this.hintText,
-            border: InputBorder.none,
-          ),
+              hintText: this.hintText,
+              border: InputBorder.none,
+              labelText: 'Username'),
           onChanged: onChange,
         ),
       ),
