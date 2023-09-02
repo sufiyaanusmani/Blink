@@ -3,11 +3,14 @@ import 'package:food_delivery/classes/product.dart';
 
 class Cart {
   static List<CartProduct> cart = [];
+  static int restaurantID = -1;
+  static int customerID = -1;
 
   static void addNewProduct(Product product) {
     bool exists = false;
     if (cart.length == 0) {
       cart.add(CartProduct(product: product));
+      restaurantID = product.restraunt_id;
       print('added new');
     } else {
       for (int i = 0; i < cart.length; i++) {

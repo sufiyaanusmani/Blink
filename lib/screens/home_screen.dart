@@ -4,8 +4,8 @@ import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/classes/restaurant.dart';
+import 'package:food_delivery/classes/cart.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -24,19 +24,20 @@ class _HomeScreenState extends State<HomeScreen> {
   String firstName = '';
   List<RestaurantCard> restaurantCards = [];
 
-  void _getStudent(int loginID) async {
-    // var conn = await db.getConnection();
-    // await conn.connect();
-    // var results = await conn
-    //     .execute('SELECT first_name FROM Customer WHERE id=$loginID;');
-    Iterable<ResultSetRow> rows = await db
-        .getResults('SELECT first_name FROM Customer WHERE id=$loginID;');
-    for (var row in rows) {
-      setState(() {
-        firstName = row.assoc()['first_name']!;
-      });
-    }
-  }
+  // void _getStudent(int loginID) async {
+  //   // var conn = await db.getConnection();
+  //   // await conn.connect();
+  //   // var results = await conn
+  //   //     .execute('SELECT first_name FROM Customer WHERE id=$loginID;');
+  //   Iterable<ResultSetRow> rows = await db.getResults(
+  //       'SELECT customer_id, first_name FROM Customer WHERE id=$loginID;');
+  //   for (var row in rows) {
+  //     setState(() {
+  //       firstName = row.assoc()['first_name']!;
+  //       Cart.customerID = int.parse(row.assoc()['customer_id']!);
+  //     });
+  //   }
+  // }
 
   void getRestaurants() async {
     List<Restaurant> r = await Restaurant.getRestaurants();
@@ -68,6 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (restaurantCards.isEmpty) {
       getRestaurants();
     }
+    Cart.customerID = widget.user.id;
     // TODO: implement initState
     super.initState();
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:food_delivery/classes/cart_product.dart';
+import 'package:food_delivery/mysql.dart';
 import 'package:slide_to_act_reborn/slide_to_act_reborn.dart';
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:food_delivery/classes/cart.dart';
@@ -319,7 +320,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                       'Rs $totalPrice',
                                       style: TextStyle(
                                         color: Color.fromARGB(255, 0, 0, 0),
-                                        fontSize: 50,
+                                        fontSize: 30,
                                       ),
                                     ),
                                   ),
@@ -359,7 +360,14 @@ class _YourCartScreenState extends State<YourCartScreen> {
                   ),
                 ),
                 sliderRotate: false,
-                onSubmit: () {},
+                onSubmit: () {
+                  var db = Mysql();
+                  db.placeOrder(Cart.customerID, Cart.restaurantID, totalPrice);
+                  setState(() {
+                    Cart.cart = [];
+                    totalPrice = 0;
+                  });
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -506,10 +514,5 @@ class _YourCartScreenState extends State<YourCartScreen> {
             ],
           );
         });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
