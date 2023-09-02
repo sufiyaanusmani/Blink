@@ -110,7 +110,7 @@ class AnimatedDetailHeader extends StatelessWidget {
           top: null,
           child: TranslateAnimation(
             child: Container(
-              height: 70,
+              height: 50,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.vertical(
@@ -133,7 +133,7 @@ class MenuInfoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 140,
+        height: 100,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: Colors.blue.shade50,
