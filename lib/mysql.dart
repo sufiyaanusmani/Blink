@@ -37,4 +37,14 @@ class Mysql {
     await stmt.deallocate();
     conn.close();
   }
+
+  void addOrderDetail(int orderID, int productID, int quantity) async {
+    var conn = await getConnection();
+    await conn.connect();
+    var stmt = await conn.prepare(
+        'INSERT INTO OrderDetail (order_id, product_id, quantity) VALUES (?, ?, ?)');
+    await stmt.execute([orderID, productID, quantity]);
+    await stmt.deallocate();
+    conn.close();
+  }
 }

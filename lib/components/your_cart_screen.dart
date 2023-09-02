@@ -8,6 +8,7 @@ import 'package:mysql_client/mysql_client.dart';
 import 'package:slide_to_act_reborn/slide_to_act_reborn.dart';
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:food_delivery/classes/cart.dart';
+import 'package:food_delivery/classes/order_detail.dart';
 
 class YourCartScreen extends StatefulWidget {
   @override
@@ -367,11 +368,6 @@ class _YourCartScreenState extends State<YourCartScreen> {
                 onSubmit: () async {
                   var db = Mysql();
                   db.placeOrder(Cart.customerID, Cart.restaurantID, totalPrice);
-                  Cart temp = Cart();
-                  setState(() {
-                    Cart.cart = [];
-                    totalPrice = 0;
-                  });
                   Iterable<ResultSetRow> rows = await db.getResults(
                       'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=1 ORDER BY placed_at DESC LIMIT 1;');
                   int orderID = 0;
@@ -390,6 +386,16 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         restaurantName: restaurantName,
                         status: status,
                         price: price);
+                    for (CartProduct product in Cart.cart) {
+                      print(product.product.id);
+                      db.addOrderDetail(
+                          orderID, product.product.id, product.quantity);
+                    }
+                    setState(() {
+                      Cart.cart = [];
+                      totalPrice = 0;
+                    });
+
                     Navigator.push(
                       context,
                       PageRouteBuilder(
