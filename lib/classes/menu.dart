@@ -1,24 +1,19 @@
 import 'package:food_delivery/classes/product.dart';
 
-
 // a re-implementaion of restraunt.dart
 // this class is wes never used
 
-class menu {
+class Menu {
   int rating;
   String restraunt_name;
   String description;
   int time;
-  List<product> products;
+  List<Product> products;
 
-
-
-  menu(
-    {
-      required this.rating,
+  Menu(
+      {required this.rating,
       required this.restraunt_name,
       required this.description,
       required this.time,
-      required this.products
-    });
+      required this.products});
 }

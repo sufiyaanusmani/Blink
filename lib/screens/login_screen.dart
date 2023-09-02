@@ -9,7 +9,7 @@ import 'package:food_delivery/components/bottom_container.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
 import 'package:mysql_client/mysql_client.dart';
-import 'package:food_delivery/restaurant.dart';
+import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
 import 'package:food_delivery/screens/home_screen.dart';
 

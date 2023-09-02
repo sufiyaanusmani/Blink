@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/screens/home_screen.dart';
 import 'package:food_delivery/screens/restaurant_screen.dart';
+import 'package:food_delivery/classes/restaurant.dart';
 
 class RestaurantCard extends StatelessWidget {
-  final String name;
-  final String caption;
-  final String reviews;
-  final String description;
+  final Restaurant restaurant;
 
-  RestaurantCard(
-      {required this.name,
-      required this.caption,
-      required this.reviews,
-      required this.description,});
+  RestaurantCard({required this.restaurant});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +29,7 @@ class RestaurantCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  name,
+                  restaurant.name,
                   style: GoogleFonts.lato(
                     textStyle: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -66,30 +60,30 @@ class RestaurantCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(caption),
-                Text(reviews),
+                Text(restaurant.ownerName),
+                Text(restaurant.ownerName),
               ],
             ),
             SizedBox(height: 10),
-            Text(description),
+            Text(restaurant.ownerName),
             SizedBox(height: 10),
             Divider(),
           ],
         ),
       ),
       onTap: () {
-        print('pressed $name');
+        print('pressed ${restaurant.name}');
         Navigator.push(
-          context,
-          PageRouteBuilder(
-            pageBuilder: ( _, animation, __) => FadeTransition(
-              opacity: animation,
-              child: RestaurantScreen(
-                screenHeight: MediaQuery.of(context).size.height.toDouble()
-              ),
-            )
-          )
-        );
+            context,
+            PageRouteBuilder(
+                pageBuilder: (_, animation, __) => FadeTransition(
+                      opacity: animation,
+                      child: RestaurantScreen(
+                        screenHeight:
+                            MediaQuery.of(context).size.height.toDouble(),
+                        restaurant: restaurant,
+                      ),
+                    )));
       },
     );
   }

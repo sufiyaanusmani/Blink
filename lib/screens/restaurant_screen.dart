@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:food_delivery/screens/home_screen.dart';
-import 'package:food_delivery/restaurant.dart';
-import 'package:food_delivery/components/restaurant_card.dart';
+import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/components/animated_detail_header.dart';
-
-
-import 'package:flutter_slidable/flutter_slidable.dart';
-
-
+import 'package:food_delivery/classes/product.dart';
+import 'package:food_delivery/classes/cart.dart';
 
 class RestaurantScreen extends StatefulWidget {
   static const String id = 'restaurant_screen';
 
-  const RestaurantScreen({
-    Key? key,
-    required this.screenHeight,
-  }) : super(key: key);
+  const RestaurantScreen(
+      {Key? key, required this.screenHeight, required this.restaurant})
+      : super(key: key);
 
   final double screenHeight;
+  final Restaurant restaurant;
 
   @override
   State<RestaurantScreen> createState() => _RestaurantScreenState();
@@ -42,8 +36,19 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     bottomPercentNotifier.value = (percent / .3).clamp(0.0, 1.0);
   }
 
+  late List<Product> itemList = [];
+
+  void getProducts() async {
+    List<Product> items =
+        await Product.getProducts(widget.restaurant.restaurantID);
+    setState(() {
+      itemList = items;
+    });
+  }
+
   @override
   void initState() {
+    getProducts();
     _controller =
         ScrollController(initialScrollOffset: widget.screenHeight * .3);
     _controller.addListener(_scrollListener);
@@ -57,96 +62,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     super.dispose();
   }
 
-
-
-
-  final itemList = [
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Chicken mayo boti roll',
-      'desc': 'priaaa',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'biryani',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 1',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 2',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    }
-
-  ];
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -156,18 +71,19 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
           controller: _controller,
           slivers: [
             SliverPersistentHeader(
-              pinned: true,
-              delegate: BuilderPersistentDelegate(
-                  maxExtent: MediaQuery.of(context).size.height,
-                  minExtent: 240,
-                  builder: (percent) {
-                    final bottomPercent = (percent / .3).clamp(0.0, 1.0);
-                    return AnimatedDetailHeader(
-                      topPercent: ((1 - percent) / .7).clamp(0.0, 1.0),
-                      bottomPercent: bottomPercent,
-                    );
-                  })),
-            
+                pinned: true,
+                delegate: BuilderPersistentDelegate(
+                    maxExtent: MediaQuery.of(context).size.height,
+                    minExtent: 240,
+                    builder: (percent) {
+                      final bottomPercent = (percent / .3).clamp(0.0, 1.0);
+                      return AnimatedDetailHeader(
+                        topPercent: ((1 - percent) / .7).clamp(0.0, 1.0),
+                        bottomPercent: bottomPercent,
+                        restaurant: widget.restaurant,
+                      );
+                    })),
+
             // const SliverToBoxAdapter(child: Placeholder()),
 
             SliverToBoxAdapter(
@@ -206,6 +122,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                           ),
                         ),
                       ),
+                    ),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -242,7 +159,8 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                   ),
                                 ),
                               ),
-                            
+                            ),
+
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -250,12 +168,16 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                   alignment: Alignment.topCenter,
                                   child: AnimatedContainer(
                                     duration: Duration(milliseconds: 150),
-                                    width: expanded ? MediaQuery.of(context).size.width*0.3 : MediaQuery.of(context).size.width*0.025,
+                                    width: expanded
+                                        ? MediaQuery.of(context).size.width *
+                                            0.3
+                                        : MediaQuery.of(context).size.width *
+                                            0.025,
                                     height: 500.0,
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.only(bottomRight: Radius.circular(20)),                                      
                                       color: Colors.black,
-                                    ),             
+                                    ),
                                     child: Center(
                                       child: Text(
                                         'Categories',
@@ -264,14 +186,12 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                             fontSize:expanded ? 20 : 0,
                                           
                                         ),
-                                          
                                       ),
                                     ),
                                   ),
                                 ),
                               ],
                             )
-
                           ],
                         ),
                         Stack(
@@ -284,7 +204,8 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                               width: expanded ? 0 : 20,
                               height: 40.0,
                               child: ClipRRect(
-                                borderRadius: BorderRadius.only(topLeft: Radius.circular(20)),
+                                borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(20)),
                                 child: Container(
                                   color: Colors.white,
                                 ),
