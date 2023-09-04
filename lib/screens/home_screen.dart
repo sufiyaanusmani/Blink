@@ -4,8 +4,8 @@ import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:mysql_client/mysql_client.dart';
-import 'package:food_delivery/restaurant.dart';
+import 'package:food_delivery/classes/restaurant.dart';
+import 'package:food_delivery/classes/cart.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -22,35 +22,57 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   var db = Mysql();
   String firstName = '';
+  List<RestaurantCard> restaurantCards = [];
 
-  void _getStudent(int loginID) async {
-    // var conn = await db.getConnection();
-    // await conn.connect();
-    // var results = await conn
-    //     .execute('SELECT first_name FROM Customer WHERE id=$loginID;');
-    Iterable<ResultSetRow> rows = await db
-        .getResults('SELECT first_name FROM Customer WHERE id=$loginID;');
-    for (var row in rows) {
+  // void _getStudent(int loginID) async {
+  //   // var conn = await db.getConnection();
+  //   // await conn.connect();
+  //   // var results = await conn
+  //   //     .execute('SELECT first_name FROM Customer WHERE id=$loginID;');
+  //   Iterable<ResultSetRow> rows = await db.getResults(
+  //       'SELECT customer_id, first_name FROM Customer WHERE id=$loginID;');
+  //   for (var row in rows) {
+  //     setState(() {
+  //       firstName = row.assoc()['first_name']!;
+  //       Cart.customerID = int.parse(row.assoc()['customer_id']!);
+  //     });
+  //   }
+  // }
+
+  void getRestaurants() async {
+    List<Restaurant> r = await Restaurant.getRestaurants();
+    List<RestaurantCard> tempRestaurantCards = [];
+    for (Restaurant res in r) {
+      print('got a card');
+      tempRestaurantCards.add(RestaurantCard(restaurant: res));
+    }
+    if (this.mounted) {
       setState(() {
-        firstName = row.assoc()['first_name']!;
+        restaurantCards = tempRestaurantCards;
       });
     }
   }
 
-  List<RestaurantCard> getRestaurantsCards() {
-    List<RestaurantCard> res = [];
-    for (Restaurant r in widget.restaurants) {
-      res.add(
-        RestaurantCard(
-          name: r.name,
-          caption: r.ownerName,
-          reviews: '00:00',
-          description:
-              'Second line of text in here for this card element or component',
-        ),
-      );
+  // void getRestaurantsCards() {
+  //   for (Restaurant r in widget.restaurants) {
+  //     setState(() {
+  //       restaurantCards.add(
+  //         RestaurantCard(
+  //           restaurant: r,
+  //         ),
+  //       );
+  //     });
+  //   }
+  // }
+
+  @override
+  void initState() {
+    if (restaurantCards.isEmpty) {
+      getRestaurants();
     }
-    return res;
+    Cart.customerID = widget.user.id;
+    // TODO: implement initState
+    super.initState();
   }
 
   @override
@@ -103,19 +125,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             Divider(),
             Column(
-              children: getRestaurantsCards(),
+              children: restaurantCards,
             ),
             // ListView.builder(
             //   itemBuilder: (context, index) {
-            //     return RestaurantCard(
-            //       name: widget.restaurants[index].name,
-            //       caption: widget.restaurants[index].ownerName,
-            //       reviews: '00:00',
-            //       description:
-            //           'Second line of text in here for this card element or component',
-            //     );
+            //     return RestaurantCard(restaurant: restaurants[index]);
             //   },
-            //   itemCount: widget.restaurants.length,
+            //   itemCount: restaurants.length,
             //   scrollDirection: Axis.vertical,
             //   shrinkWrap: true,
             // ),

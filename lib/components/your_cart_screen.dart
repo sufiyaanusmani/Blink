@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:food_delivery/classes/cart_product.dart';
+import 'package:food_delivery/classes/order.dart';
+import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/screens/order_status_screen.dart';
+import 'package:mysql_client/mysql_client.dart';
 import 'package:slide_to_act_reborn/slide_to_act_reborn.dart';
 import 'package:food_delivery/components/time_selector.dart';
-
+import 'package:food_delivery/classes/cart.dart';
+import 'package:food_delivery/classes/order_detail.dart';
 
 class YourCartScreen extends StatefulWidget {
   @override
@@ -10,44 +16,25 @@ class YourCartScreen extends StatefulWidget {
 }
 
 class _YourCartScreenState extends State<YourCartScreen> {
+  late CartProduct item;
+  void getCartItems() {
+    setState(() {
+      itemList = Cart.cart;
+    });
+  }
 
   @override
   void initState() {
+    getCartItems();
+    setState(() {
+      totalPrice = Cart.getTotalPrice();
+    });
+    print('${Cart.cart.length}');
     super.initState();
   }
 
-  final itemList = [
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Chicken mayo boti roll',
-      'desc': 'priaaa',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'biryani',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 1',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 2',
-      'desc': 'price',
-    },
-    {
-      'image': 'assets/icons/cancel.png',
-      'title': 'Item 3',
-      'desc': 'price',
-    }
-  ];
+  late List<CartProduct> itemList = [];
+  late int totalPrice = 0;
 
   double translateX = 0.0;
   double translateY = 0.0;
@@ -59,8 +46,9 @@ class _YourCartScreenState extends State<YourCartScreen> {
       child: Scaffold(
         body: Column(
           children: [
-
-            const SizedBox(height: 10,),
+            const SizedBox(
+              height: 10,
+            ),
 
             // list view
             Expanded(
@@ -68,7 +56,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                 physics: BouncingScrollPhysics(),
                 itemCount: itemList.length,
                 itemBuilder: (context, index) {
-                  final item = itemList[index];
+                  item = itemList[index];
                   return Padding(
                     padding: (index == 0)
                         ? const EdgeInsets.symmetric(vertical: 15.0)
@@ -107,33 +95,28 @@ class _YourCartScreenState extends State<YourCartScreen> {
                           ],
                         ),
 
-
-
                         // ListView row
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
                               child: Image.asset(
-                                item['image']!,
+                                'images/kfc.jpg',
                                 width: 100.0,
                                 height: 100.0,
                                 fit: BoxFit.cover,
                               ),
                             ),
-
                             const SizedBox(width: 10.0),
-
                             Expanded(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    item['title']!,
+                                    item.product.name,
                                     style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
@@ -141,7 +124,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                   ),
                                   const SizedBox(height: 10.0),
                                   Text(
-                                    item['desc']!,
+                                    '${item.product.price}',
                                     style: const TextStyle(
                                       fontSize: 14.0,
                                       color: Colors.grey,
@@ -150,12 +133,15 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                 ],
                               ),
                             ),
-
                             Row(
                               children: [
-
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      Cart.cart[index].decreaseQuantity();
+                                      totalPrice = Cart.getTotalPrice();
+                                    });
+                                  },
                                   child: Container(
                                     alignment: Alignment.center,
                                     width: 20,
@@ -172,7 +158,6 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                     ),
                                   ),
                                 ),
-
                                 Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
@@ -180,14 +165,18 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                   ),
                                   padding: EdgeInsets.all(10),
                                   child: Text(
-                                    ' 3 ',
+                                    ' ${item.quantity} ',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 18),
                                   ),
                                 ),
-
                                 TextButton(
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    setState(() {
+                                      Cart.cart[index].increaseQuantity();
+                                      totalPrice = Cart.getTotalPrice();
+                                    });
+                                  },
                                   child: Container(
                                     alignment: Alignment.center,
                                     width: 20,
@@ -215,13 +204,12 @@ class _YourCartScreenState extends State<YourCartScreen> {
               ),
             ),
 
-
-
             // preorder
             Row(
               children: [
-
-                const SizedBox(width: 15,),
+                const SizedBox(
+                  width: 15,
+                ),
 
                 Expanded(
                     flex: 4,
@@ -233,10 +221,8 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       ),
                       child: Column(
                         children: [
-
                           Row(
                             children: [
-
                               Container(
                                 margin: EdgeInsets.only(top: 15, left: 15),
                                 padding: EdgeInsets.all(10),
@@ -250,7 +236,6 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                   height: 25,
                                 ),
                               ),
-
                               Expanded(
                                 child: Container(
                                   alignment: Alignment.topRight,
@@ -266,9 +251,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               ),
                             ],
                           ),
-
                           SizedBox(height: 12),
-
                           TextButton(
                             onPressed: () {
                               _showTimeSelectionBottomSheet();
@@ -289,12 +272,12 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               ),
                             ),
                           ),
-
                         ],
                       ),
                     )),
-                const SizedBox(width: 10,),
-
+                const SizedBox(
+                  width: 10,
+                ),
 
                 // Amount
                 Expanded(
@@ -307,7 +290,6 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       ),
                       child: Row(
                         children: [
-
                           Container(
                             padding: EdgeInsets.all(10),
                             margin: EdgeInsets.only(bottom: 45, left: 15),
@@ -321,11 +303,10 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               height: 30,
                             ),
                           ),
-
                           Expanded(
                             child: Container(
                               margin: EdgeInsets.only(
-                                  top: 20, bottom: 5, right: 15),
+                                  top: 20, bottom: 1, right: 15),
                               child: Column(
                                 children: [
                                   const Align(
@@ -337,14 +318,14 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 34),
+                                  SizedBox(height: 20),
                                   Align(
                                     alignment: Alignment.bottomRight,
-                                    child: const Text(
-                                      'Rs 540',
+                                    child: Text(
+                                      'Rs $totalPrice',
                                       style: TextStyle(
                                         color: Color.fromARGB(255, 0, 0, 0),
-                                        fontSize: 50,
+                                        fontSize: 30,
                                       ),
                                     ),
                                   ),
@@ -352,16 +333,17 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               ),
                             ),
                           ),
-
                         ],
                       ),
                     )),
-                    const SizedBox(width: 15,),
+                const SizedBox(
+                  width: 15,
+                ),
               ],
             ),
-            const SizedBox(height: 10,),
-
-
+            const SizedBox(
+              height: 10,
+            ),
 
             // bottom Slider
             Container(
@@ -383,7 +365,48 @@ class _YourCartScreenState extends State<YourCartScreen> {
                   ),
                 ),
                 sliderRotate: false,
-                onSubmit: () {},
+                onSubmit: () async {
+                  var db = Mysql();
+                  db.placeOrder(Cart.customerID, Cart.restaurantID, totalPrice);
+                  Iterable<ResultSetRow> rows = await db.getResults(
+                      'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=1 ORDER BY placed_at DESC LIMIT 1;');
+                  int orderID = 0;
+                  int price = 0;
+                  String restaurantName = '';
+                  String status = '';
+                  if (rows.length == 1) {
+                    for (var row in rows) {
+                      orderID = int.parse(row.assoc()['order_id']!);
+                      restaurantName = row.assoc()['name']!;
+                      status = row.assoc()['status']!;
+                      price = int.parse(row.assoc()['price']!);
+                    }
+                    Order order = Order(
+                        orderID: orderID,
+                        restaurantName: restaurantName,
+                        status: status,
+                        price: price);
+                    for (CartProduct product in Cart.cart) {
+                      print(product.product.id);
+                      db.addOrderDetail(
+                          orderID, product.product.id, product.quantity);
+                    }
+                    setState(() {
+                      Cart.cart = [];
+                      totalPrice = 0;
+                    });
+
+                    Navigator.push(
+                      context,
+                      PageRouteBuilder(
+                        pageBuilder: (_, animation, __) => FadeTransition(
+                          opacity: animation,
+                          child: OrderStatusScreen(order: order),
+                        ),
+                      ),
+                    );
+                  }
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -529,12 +552,6 @@ class _YourCartScreenState extends State<YourCartScreen> {
               ),
             ],
           );
-        }
-      );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
+        });
   }
 }

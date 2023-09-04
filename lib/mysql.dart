@@ -27,4 +27,24 @@ class Mysql {
     conn.close();
     return results.rows;
   }
+
+  void placeOrder(int customerID, int restaurantID, int price) async {
+    var conn = await getConnection();
+    await conn.connect();
+    var stmt = await conn.prepare(
+        'INSERT INTO Orders (customer_id, restaurant_id, price) VALUES (?, ?, ?)');
+    await stmt.execute([customerID, restaurantID, price]);
+    await stmt.deallocate();
+    conn.close();
+  }
+
+  void addOrderDetail(int orderID, int productID, int quantity) async {
+    var conn = await getConnection();
+    await conn.connect();
+    var stmt = await conn.prepare(
+        'INSERT INTO OrderDetail (order_id, product_id, quantity) VALUES (?, ?, ?)');
+    await stmt.execute([orderID, productID, quantity]);
+    await stmt.deallocate();
+    conn.close();
+  }
 }
