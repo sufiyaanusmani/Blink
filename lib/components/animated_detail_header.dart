@@ -27,72 +27,78 @@ class AnimatedDetailHeader extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        ClipRect(
-          child: Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: (20 + topPadding) * (1 - bottomPercent),
-                  bottom: 160 * (1 - bottomPercent),
-                ),
-                child: Transform.scale(
-                  scale: lerpDouble(1, 1.3, bottomPercent)!,
-                  child: PlaceImagesPageView(images: image),
-                ),
-              ),
-              Positioned(
-                  top: topPadding,
-                  left: -60 * (1 - bottomPercent),
-                  child: BackButton(
-                    color: Colors.white,
-                  )),
-              Positioned(
-                  top: topPadding,
-                  right: -60 * (1 - bottomPercent),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.more_horiz,
-                      color: Colors.white,
+        Hero(
+          tag: restaurant,
+          child: Material(
+            child: ClipRect(
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: (20 + topPadding) * (1 - bottomPercent),
+                      bottom: 160 * (1 - bottomPercent),
                     ),
-                    color: Colors.white,
-                  )),
-              Positioned(
-                  top: lerpDouble(-30, 140, topPercent)!
-                      .clamp(topPadding + 10, 140),
-                  left: lerpDouble(60, 20, topPercent)!.clamp(20.0, 50.0),
-                  right: 20,
-                  child: AnimatedOpacity(
-                    duration: kThemeAnimationDuration,
-                    opacity: bottomPercent < 1 ? 0 : 1,
-                    child: Text(
-                      restaurant.name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: lerpDouble(30, 40, 2 * topPercent),
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Transform.scale(
+                      scale: lerpDouble(1, 1.3, bottomPercent)!,
+                      child: PlaceImagesPageView(images: image),
                     ),
-                  )),
-              Positioned(
-                left: 20,
-                top: 200,
-                child: AnimatedOpacity(
-                  duration: kThemeAnimationDuration,
-                  opacity: bottomPercent < 1 ? 0 : 1,
-                  child: Opacity(
-                    opacity: topPercent,
-                    child: Text(
-                      restaurant.ownerName,
-                      style: TextStyle(
+                  ),
+                  Positioned(
+                      top: topPadding,
+                      left: -60 * (1 - bottomPercent),
+                      child: BackButton(
                         color: Colors.white,
-                        fontSize: 15,
+                      )),
+                  Positioned(
+                      top: topPadding,
+                      right: -60 * (1 - bottomPercent),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.more_horiz,
+                          color: Colors.white,
+                        ),
+                        color: Colors.white,
+                      )),
+                  Positioned(
+                      top: lerpDouble(-30, 140, topPercent)!
+                          .clamp(topPadding + 10, 140),
+                      left: lerpDouble(60, 20, topPercent)!.clamp(20.0, 50.0),
+                      right: 20,
+                      child: AnimatedOpacity(
+                        duration: kThemeAnimationDuration,
+                        opacity: bottomPercent < 1 ? 0 : 1,
+                        child: Text(
+                          restaurant.name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: lerpDouble(30, 40, 2 * topPercent),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'britanic',
+                          ),
+                        ),
+                      )),
+                  Positioned(
+                    left: 20,
+                    top: 200,
+                    child: AnimatedOpacity(
+                      duration: kThemeAnimationDuration,
+                      opacity: bottomPercent < 1 ? 0 : 1,
+                      child: Opacity(
+                        opacity: topPercent,
+                        child: Text(
+                          restaurant.ownerName,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
         Positioned.fill(
@@ -181,7 +187,7 @@ class TranslateAnimation extends StatelessWidget {
   }
 }
 
-class PlaceImagesPageView extends StatelessWidget {
+class PlaceImagesPageView extends StatefulWidget {
   const PlaceImagesPageView({
     super.key,
     required this.images,
@@ -191,18 +197,34 @@ class PlaceImagesPageView extends StatelessWidget {
   final images;
 
   @override
+  State<PlaceImagesPageView> createState() => _PlaceImagesPageViewState();
+}
+
+class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
+  int currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
           child: PageView.builder(
             itemCount: 5,
+            onPageChanged: (value) {
+              setState(() => currentIndex = value);
+            },
             physics: const BouncingScrollPhysics(),
             controller: PageController(viewportFraction: .9),
             itemBuilder: (context, index) {
               const imageUrl = 'images/kfc.jpg';
-              return Container(
-                margin: const EdgeInsets.only(right: 10),
+              final isSelected = currentIndex == index;
+              return AnimatedContainer(
+                duration: kThemeAnimationDuration,
+                margin: EdgeInsets.only(
+                  right: 10,
+                  top: isSelected ? 5 : 20,
+                  bottom: isSelected ? 5 : 20,
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [
@@ -225,14 +247,17 @@ class PlaceImagesPageView extends StatelessWidget {
         const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-              5, // <-- ITEM COUNT
-              (index) => Container(
-                    color: Colors.black12,
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    height: 3,
-                    width: 10,
-                  )),
+          children: List.generate(5, // <-- ITEM COUNT
+              (index) {
+            final isSelected = currentIndex == index;
+            return AnimatedContainer(
+              duration: kThemeAnimationDuration,
+              color: isSelected ? Colors.black38 : Colors.black12,
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              height: 3,
+              width: isSelected ? 20 : 10,
+            );
+          }),
         ),
         const SizedBox(height: 10),
       ],

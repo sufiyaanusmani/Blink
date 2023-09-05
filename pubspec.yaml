@@ -92,6 +92,9 @@ flutter:
     - family: Gruppo
       fonts:
         - asset: assets/fonts/Gruppo.ttf
+    - family: Britanic
+      fonts:
+        - asset: assets/fonts/britanic.ttf        
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
