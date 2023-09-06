@@ -367,16 +367,20 @@ class _YourCartScreenState extends State<YourCartScreen> {
                 sliderRotate: false,
                 onSubmit: () async {
                   var db = Mysql();
-                  db.placeOrder(Cart.customerID, Cart.restaurantID, totalPrice);
-                  Iterable<ResultSetRow> rows = await db.getResults(
-                      'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=1 ORDER BY placed_at DESC LIMIT 1;');
                   int orderID = 0;
+                  orderID = await db.placeOrder(
+                      Cart.customerID, Cart.restaurantID, totalPrice);
+                  Iterable<ResultSetRow> rows = await db.getResults(
+                      'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
+                  print('line 371');
+                  print(orderID);
                   int price = 0;
                   String restaurantName = '';
                   String status = '';
+                  print(rows.length);
                   if (rows.length == 1) {
                     for (var row in rows) {
-                      orderID = int.parse(row.assoc()['order_id']!);
+                      print(orderID);
                       restaurantName = row.assoc()['name']!;
                       status = row.assoc()['status']!;
                       price = int.parse(row.assoc()['price']!);
@@ -386,8 +390,8 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         restaurantName: restaurantName,
                         status: status,
                         price: price);
+                    print(orderID);
                     for (CartProduct product in Cart.cart) {
-                      print(product.product.id);
                       db.addOrderDetail(
                           orderID, product.product.id, product.quantity);
                     }
