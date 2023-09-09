@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/screens/home_screen.dart';
@@ -13,60 +14,70 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        height: 370,
-        padding: EdgeInsets.only(bottom: 0, right: 10, left: 10, top: 10),
+        height: 330,
+        // padding: EdgeInsets.only(bottom: 0, right: 10, left: 10, top: 10),
         margin: EdgeInsets.symmetric(
           vertical: 2,
-          horizontal: 10,
+          horizontal: 5,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.grey.shade800,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  restaurant.name,
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                CircleAvatar(
-                  child: Text('SU'),
-                  backgroundColor: Colors.white,
-                  radius: 25,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
+            // SizedBox(height: 10),
             ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               child: SizedBox.fromSize(
                 size: Size.fromRadius(100), // Image radius
                 child: Image.asset('images/kfc.jpg', fit: BoxFit.cover),
               ),
             ),
-            SizedBox(
-              height: 10,
+            SizedBox(height: 15),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        restaurant.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          for (int i = 0; i < 3; i++)
+                            Icon(Icons.star, color: Colors.blueGrey),
+                          for (int i = 0; i < 2; i++)
+                            Icon(Icons.star_border_outlined),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    restaurant.ownerName,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    restaurant.ownerName,
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(restaurant.ownerName),
-                Text(restaurant.ownerName),
-              ],
-            ),
-            SizedBox(height: 10),
-            Text(restaurant.ownerName),
-            SizedBox(height: 10),
             Divider(),
           ],
         ),

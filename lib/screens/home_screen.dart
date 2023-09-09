@@ -83,60 +83,136 @@ class _HomeScreenState extends State<HomeScreen> {
     //   _getStudent(widget.loginID);
     // }
     // getRestaurants();
-    return SafeArea(
-      child: Scaffold(
-        body: ListView(
-          scrollDirection: Axis.vertical,
-          // itemCount: 5,
-          padding: EdgeInsets.all(10.0),
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 17),
-              child: Text(
-                'Welcome, ${widget.user.firstName}',
-                style: GoogleFonts.caveat(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 45,
-                    color: Colors.deepOrange,
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey.shade800,
+        shadowColor: Colors.grey.shade800,
+        automaticallyImplyLeading: false,
+        title: Container(
+          // padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Blink',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
-              height: 255,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                physics: BouncingScrollPhysics(),
-                // itemCount: 5,
-                padding: EdgeInsets.all(10.0),
-                children: [
-                  SmallRestaurantCard(imageID: 'kfc'),
-                  SmallRestaurantCard(imageID: 'mac'),
-                  SmallRestaurantCard(imageID: 'pizzahut'),
-                ],
+              Container(
+                padding: EdgeInsets.all(5),
+                child: Icon(
+                  Icons.notifications,
+                  size: 25,
+                  color: Colors.grey,
+                ),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(110, 33, 33, 33),
+                  borderRadius: BorderRadius.all(Radius.circular(9)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: ListView(
+        scrollDirection: Axis.vertical,
+        // itemCount: 5,
+        padding: EdgeInsets.all(10.0),
+        children: [
+          SizedBox(height: 5),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 10),
+          //   child: Column(
+          //     textDirection: TextDirection.rtl,
+          //     crossAxisAlignment: CrossAxisAlignment.end,
+          //     children: [
+          //       Text(
+          //         'Welcome,',
+          //         style: TextStyle(
+          //           fontSize: 30,
+          //           color: Colors.grey.shade800,
+          //         ),
+          //       ),
+          //       Text(
+          //         '${widget.user.firstName}',
+          //         style: TextStyle(
+          //           fontWeight: FontWeight.w600,
+          //           fontSize: 30,
+          //           color: Colors.grey.shade800,
+          //         ),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          SizedBox(height: 30),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Trending',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.w800,
               ),
             ),
-            Divider(),
-            Column(
-              children: restaurantCards,
+          ),
+          SizedBox(
+            height: 250,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
+              // itemCount: 5,
+              padding: EdgeInsets.only(
+                top: 10.0,
+                bottom: 10,
+              ),
+              children: [
+                SmallRestaurantCard(
+                  imageID: 'kfc',
+                  itemName: 'itemname',
+                  itemDesc: 'itemDisc',
+                ),
+                SmallRestaurantCard(
+                  imageID: 'mac',
+                  itemName: 'itemname',
+                  itemDesc: 'itemDisc',
+                ),
+                SmallRestaurantCard(
+                  imageID: 'pizzahut',
+                  itemName: 'itemname',
+                  itemDesc: 'itemDisc',
+                ),
+              ],
             ),
-            // ListView.builder(
-            //   itemBuilder: (context, index) {
-            //     return RestaurantCard(restaurant: restaurants[index]);
-            //   },
-            //   itemCount: restaurants.length,
-            //   scrollDirection: Axis.vertical,
-            //   shrinkWrap: true,
-            // ),
-          ],
-        ),
+          ),
+          Divider(),
+          SizedBox(height: 20),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Discover',
+              style: TextStyle(
+                fontSize: 40,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          SizedBox(height: 15),
+          Column(
+            children: restaurantCards,
+          ),
+          // ListView.builder(
+          //   itemBuilder: (context, index) {
+          //     return RestaurantCard(restaurant: restaurants[index]);
+          //   },
+          //   itemCount: restaurants.length,
+          //   scrollDirection: Axis.vertical,
+          //   shrinkWrap: true,
+          // ),
+        ],
       ),
     );
   }
