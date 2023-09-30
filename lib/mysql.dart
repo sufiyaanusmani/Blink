@@ -57,4 +57,14 @@ class Mysql {
     await stmt.deallocate();
     conn.close();
   }
+
+  void incrementViewCount(int restaurantID) async {
+    var conn = await getConnection();
+    await conn.connect();
+    var stmt = await conn
+        .prepare('UPDATE Impressions SET views=views+1 WHERE restaurant_id=?');
+    await stmt.execute([restaurantID]);
+    await stmt.deallocate();
+    conn.close();
+  }
 }
