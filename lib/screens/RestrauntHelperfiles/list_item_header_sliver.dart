@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:food_delivery/screens/RestrauntHelperFiles/model/models.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/get_box_offset.dart';
-
 import 'package:food_delivery/screens/RestrauntHelperFiles/controller/sliver_scroll_controller.dart';
 
 class ListItemHeaderSliver extends StatelessWidget {
@@ -13,7 +11,6 @@ class ListItemHeaderSliver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // for scroll troubleshooting, disable physics, and add padding in SingleChildScrollView with right 500.
     final itemsOffset = bloc.listOffsetItemHeader;
     final size = MediaQuery.of(context).size;
     return Padding(

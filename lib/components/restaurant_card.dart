@@ -29,49 +29,6 @@ class RestaurantCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // SizedBox(height: 10),
-            // Stack(
-            //   children: [
-            //     Image.asset(
-            //       'images/kfc.jpg',
-            //       fit: BoxFit.cover,
-            //       width: double.infinity,
-            //       height: 300,
-            //     ),
-            //     Container(
-            //       decoration: BoxDecoration(
-            //         gradient: LinearGradient(
-            //           begin: Alignment.topCenter,
-            //           end: Alignment.bottomCenter,
-            //           colors: [
-            //             Color.fromARGB(255, 255, 0, 0),
-            //             Color.fromARGB(255, 0, 149, 255).withOpacity(1),
-            //           ],
-            //         ),
-            //       ),
-            //       width: double.infinity,
-            //       height: double.infinity,
-            //     ),
-            //     Positioned(
-            //       bottom: 0,
-            //       left: 0,
-            //       right: 0,
-            //       child: Container(
-            //         height: 20,
-            //         decoration: BoxDecoration(
-            //           boxShadow: [
-            //             BoxShadow(
-            //               color: const Color.fromARGB(255, 255, 0, 0)
-            //                   .withOpacity(1),
-            //               spreadRadius: 20,
-            //               blurRadius: 50,
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
             ClipRRect(
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20)),

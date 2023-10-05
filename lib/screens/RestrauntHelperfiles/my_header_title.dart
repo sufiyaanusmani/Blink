@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const headerTitle = 80.0;
+const headerTitle = 50.0;
 typedef OnHeaderChange = void Function(bool visible);
 
 class MyHeaderTitle extends SliverPersistentHeaderDelegate {
@@ -17,18 +17,17 @@ class MyHeaderTitle extends SliverPersistentHeaderDelegate {
       onHeaderChange(false);
     }
 
-    return Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ));
+    return Container(
+      margin: EdgeInsets.only(left: 15),
+      alignment: Alignment.centerLeft,
+      child: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 30,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
   }
 
   @override

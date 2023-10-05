@@ -4,6 +4,34 @@ import 'package:flutter/rendering.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/model/my_header.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_category.dart';
 
+// class ProductCategory {
+//   ProductCategory({
+//     required this.category,
+//     required this.products,
+//   });
+
+//   final String category;
+//   final List<Product2> products;
+// }
+
+// class Product2 {
+//   final String name;
+//   final String description;
+//   final String price;
+//   final String image;
+
+//   Product2({
+//     required this.name,
+//     required this.description,
+//     required this.price,
+//     required this.image,
+//   });
+// }
+
+
+
+
+
 class SliverScrollController {
   late List<ProductCategory> listCategory;
 
@@ -25,92 +53,52 @@ class SliverScrollController {
 
 
 
-final productsw = [
-  Product(
-    name: 'Choclate Cake',
-    image: 'assets/icons/cancel.png',
-    description: 'hai,.,,,,.......................................',
-    price: '\$19',
-  ),
-  Product(
-    name: 'Choclate Cake',
-    image: 'assets/icons/cancel.png',
-    description: 'hai,.,,,,.......................................',
-    price: '\$19',
-  ),
-  Product(
-    name: 'Choclate Cake',
-    image: 'assets/icons/cancel.png',
-    description: 'hai,.,,,,.......................................',
-    price: '\$19',
-  ),
-  Product(
-    name: 'Choclate Cake',
-    image: 'assets/icons/cancel.png',
-    description: 'hai,.,,,,.......................................',
-    price: '\$19',
-  ),
-  Product(
-    name: 'Choclate Cake',
-    image: 'assets/icons/cancel.png',
-    description: 'hai,.,,,,.......................................',
-    price: '\$19',
-  ),
-  Product(
-    name: 'Choclate Cake',
-    image: 'assets/icons/cancel.png',
-    description: 'hai,.,,,,.......................................',
-    price: '\$19',
-  ),
-  Product(
-    name: 'Choclate Cake',
-    image: 'assets/icons/cancel.png',
-    description: 'hai,.,,,,.......................................',
-    price: '\$19',
-  ),
-  Product(
-    name: 'Choclate Cake',
-    image: 'assets/icons/cancel.png',
-    description: 'hai,.,,,,.......................................',
-    price: '\$19',
-  ),
-  Product(
-    name: 'Choclate Cake',
-    image: 'assets/icons/cancel.png',
-    description: 'hai,.,,,,.......................................',
-    price: '\$19',
-  ),
-];
+  final products = [
+    Product2(
+      name: 'Choclate Cake',
+      image: 'assets/icons/cancel.png',
+      description: 'hai,.,,,,.......................................',
+      price: '\$19',
+    ),
+    Product2(
+      name: 'Choclate Cake',
+      image: 'assets/icons/cancel.png',
+      description: 'hai,.,,,,.......................................',
+      price: '\$19',
+    ),
+    Product2(
+      name: 'Choclate Cake',
+      image: 'assets/icons/cancel.png',
+      description: 'hai,.,,,,.......................................',
+      price: '\$19',
+    ),
+    Product2(
+      name: 'Choclate Cake',
+      image: 'assets/icons/cancel.png',
+      description: 'hai,.,,,,.......................................',
+      price: '\$19',
+    ),
+  ];
 
 
   void loadDataRandom() {
-    final productsTwo = [...productsw];
-    final productsThree = [...productsw];
-    final productsFour = [...productsw];
-
-    productsTwo.shuffle();
-    productsThree.shuffle();
-    productsFour.shuffle();
-
-
-
 
     listCategory = [
       ProductCategory(
         category: 'Order Again',
-        products: productsw,
+        products: products,
       ),
       ProductCategory(
         category: 'Picked For You',
-        products: productsw,
+        products: products,
       ),
       ProductCategory(
         category: 'Starter',
-        products: productsw,
+        products: products,
       ),
       ProductCategory(
         category: 'Roll',
-        products: productsw,
+        products: products,
       )
     ];
   }
@@ -146,7 +134,7 @@ final productsw = [
     if (headerNotifier.value?.index == index &&
         headerNotifier.value!.visibile) {
       scrollControllerItemHeader.animateTo(
-          listOffsetItemHeader[headerNotifier.value!.index+1] - 16,    //<<<-------  HERE
+          listOffsetItemHeader[headerNotifier.value!.index] - 16,    //<<<-------  HERE
           duration: const Duration(milliseconds: 200),
           curve: goingDown.value ? Curves.bounceOut : Curves.fastOutSlowIn);
     }
