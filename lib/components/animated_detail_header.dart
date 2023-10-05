@@ -55,7 +55,7 @@ class AnimatedDetailHeader extends StatelessWidget {
                       child: IconButton(
                         onPressed: () {},
                         icon: Icon(
-                          Icons.more_horiz,
+                          Icons.shopping_bag_outlined,
                           color: Colors.white,
                         ),
                         color: Colors.white,
@@ -116,11 +116,11 @@ class AnimatedDetailHeader extends StatelessWidget {
           top: null,
           child: TranslateAnimation(
             child: Container(
-              height: 50,
+              height: 30,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(30),
+                  top: Radius.circular(20),
                 ),
               ),
             ),
@@ -142,7 +142,7 @@ class MenuInfoContainer extends StatelessWidget {
         height: 100,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.blue.shade50,
+          color: Color.fromARGB(255, 221, 221, 221),
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(30),
           ),
@@ -150,15 +150,42 @@ class MenuInfoContainer extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextButton.icon(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                primary: Colors.black,
-                // textStyle: context.,
-                shape: const StadiumBorder(),
-              ),
-              icon: const Icon(CupertinoIcons.heart),
-              label: Text("ratings"),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      margin: EdgeInsets.only(top: 3, left: 3),
+                      child: Text(
+                        "Reviews ",
+                        style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 20,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 3),
+                      child: Text(
+                        "(5.6k)",
+                        style: TextStyle(
+                          color: Colors.blueGrey,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    for (int i = 0; i < 3; i++)
+                      Icon(Icons.star, color: Colors.grey),
+                    for (int i = 0; i < 2; i++)
+                      Icon(Icons.star_border_outlined, color: Colors.grey),
+                  ],
+                ),
+              ],
             ),
           ],
         ));
@@ -212,6 +239,7 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
             itemCount: 5,
             onPageChanged: (value) {
               setState(() => currentIndex = value);
+              print("current page: ${value}");
             },
             physics: const BouncingScrollPhysics(),
             controller: PageController(viewportFraction: .9),

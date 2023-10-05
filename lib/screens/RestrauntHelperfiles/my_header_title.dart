@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const headerTitle = 50.0;
+const headerTitle = 80.0;
 typedef OnHeaderChange = void Function(bool visible);
 
 class MyHeaderTitle extends SliverPersistentHeaderDelegate {
