@@ -19,7 +19,7 @@ class Product {
     var db = Mysql();
     List<Product> products = [];
     Iterable<ResultSetRow> rows = await db
-        .getResults('SELECT * FROM Product WHERE restaurant_id=$restaurantID');
+        .getResults('SELECT * FROM Product INNER JOIN Category ON Product.category_id = Category.category_id WHERE restaurant_id=$restaurantID;');
 
     for (var row in rows) {
       // firstName = row.assoc()['first_name']!;
@@ -30,6 +30,7 @@ class Product {
           category_id: int.parse(row.assoc()['category_id']!),
           price: int.parse(row.assoc()['price']!));
       products.add(product);
+      print(int.parse(row.assoc()['category_id']!));
     }
 
     return products;

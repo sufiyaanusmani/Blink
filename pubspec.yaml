@@ -46,6 +46,8 @@ dependencies:
   mysql_client: ^0.0.27
   cached_network_image: ^3.2.3
   shared_preferences: ^2.2.1
+  flutter_sticky_header: ^0.6.5
+  grouped_list: ^5.1.2
 
 dev_dependencies:
   flutter_test:
