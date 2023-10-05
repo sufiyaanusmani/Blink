@@ -22,14 +22,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   late ScrollController _controller;
   late ValueNotifier<double> bottomPercentNotifier;
 
-  bool expanded = false;
-
-  void toggleExpansion() {
-    setState(() {
-      expanded = !expanded;
-    });
-  }
-
   void _scrollListener() {
     var percent =
         _controller.position.pixels / MediaQuery.of(context).size.height;
@@ -84,309 +76,21 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                           restaurant: widget.restaurant,
                         );
                       })),
-
-              // const SliverToBoxAdapter(child: Placeholder()),
-
               SliverToBoxAdapter(
                 child: TranslateAnimation(
                   child: Column(
                     children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: GestureDetector(
-                          onTap: toggleExpansion,
-                          child: AnimatedContainer(
-                            duration: Duration(milliseconds: 150),
-                            width: expanded ? 0 : 150.0,
-                            height: expanded ? 0 : 40.0,
-                            padding: expanded
-                                ? EdgeInsets.only(right: 30)
-                                : EdgeInsets.only(left: 30),
-                            margin: expanded
-                                ? EdgeInsets.only(top: 40)
-                                : EdgeInsets.all(0),
-                            decoration: BoxDecoration(
-                              borderRadius: expanded
-                                  ? BorderRadius.only(
-                                      topRight: Radius.circular(20))
-                                  : BorderRadius.only(
-                                      topRight: Radius.circular(20),
-                                      bottomRight: Radius.circular(20)),
-                              color: Colors.black,
-                            ),
-                            child: Center(
-                              child: Text(
-                                'Categories',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: expanded ? 0 : 20.0,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // if(expanded)
-                              GestureDetector(
-                                onTap: toggleExpansion,
-                                child: AnimatedContainer(
-                                  duration: Duration(milliseconds: 150),
-                                  width: expanded
-                                      ? MediaQuery.of(context).size.width * 0.3
-                                      : 0,
-                                  height: expanded ? 40.0 : 0,
-                                  padding: expanded
-                                      ? EdgeInsets.only(right: 30)
-                                      : EdgeInsets.only(left: 30),
-                                  // margin: expanded
-                                  //     ? EdgeInsets.only(top: 40)
-                                  //     : EdgeInsets.all(0),
-                                  decoration: BoxDecoration(
-                                    borderRadius: expanded
-                                        ? BorderRadius.only(
-                                            topRight: Radius.circular(20))
-                                        : BorderRadius.only(
-                                            topRight: Radius.circular(20),
-                                            bottomRight: Radius.circular(20)),
-                                    color: Colors.black,
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      'Categories',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20.0,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.topCenter,
-                                    child: AnimatedContainer(
-                                      duration: Duration(milliseconds: 150),
-                                      width: expanded
-                                          ? MediaQuery.of(context).size.width *
-                                              0.3
-                                          : MediaQuery.of(context).size.width *
-                                              0.025,
-                                      height: 500.0,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.only(
-                                            bottomRight: Radius.circular(20)),
-                                        color: Colors.black,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          'Categories',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 20.0),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                          Stack(
-                            alignment: Alignment.topLeft,
-                            children: [
-                              AnimatedContainer(
-                                duration: Duration(milliseconds: 150),
+                          Container(
+                            child: Align(
                                 alignment: Alignment.topLeft,
-                                color: Colors.black,
-                                width: expanded ? 0 : 20,
-                                height: 40.0,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(20)),
-                                  child: Container(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                child: Align(
-                                    alignment: Alignment.topLeft,
-                                    child: Column(
-                                      children: [
-                                        AnimatedContainer(
-                                          duration: Duration(milliseconds: 150),
-                                          height: 700,
-                                          width: expanded
-                                              ? MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.67
-                                              : MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.95,
-                                          margin:
-                                              EdgeInsets.only(top: 5, left: 5),
-                                          decoration: const BoxDecoration(
-                                            color: Colors.grey,
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(20)),
-                                          ),
-                                          child: ListView.builder(
-                                            physics: BouncingScrollPhysics(),
-                                            itemCount: itemList.length,
-                                            itemBuilder: (context, index) {
-                                              final item = itemList[index];
-                                              return Padding(
-                                                padding: (index == 0)
-                                                    ? const EdgeInsets
-                                                            .symmetric(
-                                                        vertical: 10.0)
-                                                    : const EdgeInsets.only(
-                                                        bottom: 10.0),
-                                                child: Container(
-                                                  margin: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 10.0),
-                                                  padding: const EdgeInsets.all(
-                                                      10.0),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10.0),
-                                                    color: Colors.white,
-                                                    boxShadow: [
-                                                      BoxShadow(
-                                                          blurRadius: 1.0,
-                                                          spreadRadius: 1.0,
-                                                          color: Colors
-                                                              .grey[400]!),
-                                                    ],
-                                                  ),
-
-                                                  // ListView row
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment.start,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 150),
-                                                        child: ClipRRect(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      10.0),
-                                                          child: Image.asset(
-                                                            'images/mac.jpg',
-                                                            width: expanded
-                                                                ? 0
-                                                                : 70.0,
-                                                            height: 70.0,
-                                                            fit: BoxFit.cover,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      const SizedBox(
-                                                          width: 10.0),
-                                                      AnimatedContainer(
-                                                        duration: Duration(
-                                                            milliseconds: 150),
-                                                        child: Expanded(
-                                                          child: Column(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .center,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .start,
-                                                            children: [
-                                                              Text(
-                                                                item.name,
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      expanded
-                                                                          ? 15
-                                                                          : 18.0,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                ),
-                                                              ),
-                                                              const SizedBox(
-                                                                  height: 10.0),
-                                                              Text(
-                                                                '${item.price}',
-                                                                style:
-                                                                    TextStyle(
-                                                                  fontSize:
-                                                                      expanded
-                                                                          ? 12
-                                                                          : 14.0,
-                                                                  color: Colors
-                                                                      .grey,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ),
-                                                      ),
-                                                      ElevatedButton(
-                                                        onPressed: () {
-                                                          Cart.addNewProduct(
-                                                              item);
-                                                          print(
-                                                              'pressed ${item.name}');
-                                                        },
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                              Colors.blue,
-                                                          foregroundColor:
-                                                              Colors.white,
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                          ),
-                                                        ),
-                                                        child: Padding(
-                                                          padding:
-                                                              EdgeInsets.only(
-                                                                  top: 10,
-                                                                  bottom: 10,
-                                                                  right: 5,
-                                                                  left: 5),
-                                                          child: Text(
-                                                              'Add to Cart'),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    )),
-                              ),
-                            ],
+                                child: Column(
+                                  children: [
+                                    RestrauntMenuDisplay(itemList: itemList),
+                                  ],
+                                )),
                           ),
                         ],
                       ),
@@ -394,11 +98,189 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                   ),
                 ),
               ),
-              // const SliverToBoxAdapter(child: Placeholder()),
             ],
           ),
         ],
       ),
+    );
+  }
+}
+
+
+
+// listview 
+class RestrauntMenuDisplay extends StatelessWidget {
+  const RestrauntMenuDisplay({
+    super.key,
+    required this.itemList,
+  });
+
+  final List<Product> itemList;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 150),
+      height: 700,
+      width: MediaQuery.of(context)
+                  .size
+                  .width *
+              0.95,
+      margin:
+          EdgeInsets.only(top: 5, left: 5),
+      decoration: const BoxDecoration(
+        color: Colors.grey,
+        borderRadius: BorderRadius.all(
+            Radius.circular(20)),
+      ),
+
+      child: MenuRows(itemList: itemList),
+    );
+  }
+}
+
+class MenuRows extends StatelessWidget {
+  const MenuRows({
+    super.key,
+    required this.itemList,
+  });
+
+  final List<Product> itemList;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      physics: BouncingScrollPhysics(),
+      itemCount: itemList.length,
+      itemBuilder: (context, index) {
+        final item = itemList[index];
+        return Padding(
+          padding: (index == 0)
+              ? const EdgeInsets
+                      .symmetric(
+                  vertical: 10.0)
+              : const EdgeInsets.only(
+                  bottom: 10.0),
+          child: Container(
+            margin: const EdgeInsets
+                    .symmetric(
+                horizontal: 10.0),
+            padding: const EdgeInsets.all(
+                10.0),
+            decoration: BoxDecoration(
+              borderRadius:
+                  BorderRadius.circular(
+                      10.0),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    blurRadius: 1.0,
+                    spreadRadius: 1.0,
+                    color: Colors
+                        .grey[400]!),
+              ],
+            ),
+
+            // ListView row
+            child: Row(
+              mainAxisAlignment:
+                  MainAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment
+                      .center,
+              children: [
+                AnimatedContainer(
+                  duration: Duration(
+                      milliseconds: 150),
+                  child: ClipRRect(
+                    borderRadius:
+                        BorderRadius
+                            .circular(
+                                10.0),
+                    child: Image.asset(
+                      'images/mac.jpg',
+                      width: 70.0,
+                      height: 70.0,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                    width: 10.0),
+                AnimatedContainer(
+                  duration: Duration(
+                      milliseconds: 150),
+                  child: Expanded(
+                    child: Column(
+                      mainAxisAlignment:
+                          MainAxisAlignment
+                              .center,
+                      crossAxisAlignment:
+                          CrossAxisAlignment
+                              .start,
+                      children: [
+                        Text(
+                          item.name,
+                          style:
+                              TextStyle(
+                            fontSize:18.0,
+                            fontWeight:
+                                FontWeight
+                                    .bold,
+                          ),
+                        ),
+                        const SizedBox(
+                            height: 10.0),
+                        Text(
+                          '${item.price}',
+                          style:
+                              TextStyle(
+                            fontSize:14.0,
+                            color: Colors
+                                .grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Cart.addNewProduct(
+                        item);
+                    print(
+                        'pressed ${item.name}');
+                  },
+                  style: ElevatedButton
+                      .styleFrom(
+                    backgroundColor:
+                        Colors.blue,
+                    foregroundColor:
+                        Colors.white,
+                    shape:
+                        RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius
+                              .circular(
+                                  10),
+                    ),
+                  ),
+                  child: Padding(
+                    padding:
+                        EdgeInsets.only(
+                            top: 10,
+                            bottom: 10,
+                            right: 5,
+                            left: 5),
+                    child: Text(
+                        'Add to Cart'),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }
@@ -430,4 +312,29 @@ class BuilderPersistentDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       false;
+}
+
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+
+  _StickyHeaderDelegate({
+    required this.child,
+  });
+
+  @override
+  double get minExtent => 0;
+
+  @override
+  double get maxExtent => 100; // Adjust the max height as needed
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return child;
+  }
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return false;
+  }
 }

@@ -3,7 +3,7 @@ import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/cart.dart';
 

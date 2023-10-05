@@ -225,6 +225,11 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
                   top: isSelected ? 5 : 20,
                   bottom: isSelected ? 5 : 20,
                 ),
+                child: GestureDetector(
+                  onTap: () {
+                    print(index);
+                  },
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [

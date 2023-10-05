@@ -1,11 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/mysql.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/screens/home_screen.dart';
 import 'package:food_delivery/screens/restaurant_screen.dart';
 import 'package:food_delivery/classes/restaurant.dart';
-import 'package:mysql1/mysql1.dart';
+// import 'package:mysql1/mysql1.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
