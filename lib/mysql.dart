@@ -28,7 +28,7 @@ class Mysql {
     return results.rows;
   }
 
-  void placeOrder(int customerID, int restaurantID, int price) async {
+  Future<int> placeOrder(int customerID, int restaurantID, int price) async {
     var conn = await getConnection();
     await conn.connect();
     var stmt = await conn.prepare(
@@ -36,6 +36,16 @@ class Mysql {
     await stmt.execute([customerID, restaurantID, price]);
     await stmt.deallocate();
     conn.close();
+    var db = Mysql();
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=$customerID ORDER BY placed_at DESC LIMIT 1;');
+    int orderID = 0;
+    if (rows.length == 1) {
+      for (var row in rows) {
+        orderID = int.parse(row.assoc()['order_id']!);
+      }
+    }
+    return orderID;
   }
 
   void addOrderDetail(int orderID, int productID, int quantity) async {
@@ -44,6 +54,16 @@ class Mysql {
     var stmt = await conn.prepare(
         'INSERT INTO OrderDetail (order_id, product_id, quantity) VALUES (?, ?, ?)');
     await stmt.execute([orderID, productID, quantity]);
+    await stmt.deallocate();
+    conn.close();
+  }
+
+  void incrementViewCount(int restaurantID) async {
+    var conn = await getConnection();
+    await conn.connect();
+    var stmt = await conn
+        .prepare('UPDATE Impressions SET views=views+1 WHERE restaurant_id=?');
+    await stmt.execute([restaurantID]);
     await stmt.deallocate();
     conn.close();
   }
