@@ -116,11 +116,14 @@ class AnimatedDetailHeader extends StatelessWidget {
           top: null,
           child: TranslateAnimation(
             child: Container(
-              height: 30,
+              height: 20,
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 255, 255, 255),
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(20),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.elliptical(
+                      30, 10), // Adjust the values for the ellipse
+                  topRight: Radius.elliptical(
+                      30, 10), // Adjust the values for the ellipse
                 ),
               ),
             ),
@@ -139,10 +142,10 @@ class MenuInfoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 80,
+        height: 70,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: Color.fromARGB(255, 221, 221, 221),
+          color: Color.fromARGB(255, 236, 236, 236),
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(30),
           ),
@@ -177,13 +180,21 @@ class MenuInfoContainer extends StatelessWidget {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(top: 6),
-              child: Text(
-                "40-50 min - 100rs minimum",
-                style: TextStyle(
-                  color: Colors.blueGrey,
-                  fontSize: 15,
-                ),
+              margin: EdgeInsets.only(top: 5),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.access_time_rounded, color: Colors.grey, size: 17),
+                  Container(
+                    child: Text(
+                      " 40-50 min    100rs minimum",
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 17,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
           ],

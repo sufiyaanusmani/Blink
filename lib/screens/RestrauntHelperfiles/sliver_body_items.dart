@@ -85,18 +85,55 @@ class SliverBodyItems extends StatelessWidget {
                             ),
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(
-                                product.image,
+                        Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                image: DecorationImage(
+                                  fit: BoxFit.cover,
+                                  image: AssetImage(
+                                    product.image,
+                                  ),
+                                ),
                               ),
+                              height: 140,
+                              width: 130,
                             ),
-                          ),
-                          height: 140,
-                          width: 130,
+                            Positioned(
+                              top: 0,
+                              right: 0,
+                              child: Container(
+                                width: 35,
+                                height: 35,
+                                margin: EdgeInsets.only(top: 5, right: 5),
+                                decoration: BoxDecoration(
+                                  color: Color.fromARGB(171, 255, 255, 255),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(5)),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(
+                                          0.5), // Color of the shadow
+                                      spreadRadius: 5, // Spread radius
+                                      blurRadius: 7, // Blur radius
+                                      offset:
+                                          Offset(0, 3), // Offset of the shadow
+                                    ),
+                                  ],
+                                ),
+                                child: InkWell(
+                                  onTap: () {
+                                    print("product: ${product.name} Liked");
+                                  },
+                                  child: Icon(
+                                    Icons.favorite_border,
+                                    color: Colors.black45,
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
                         )
                       ],
                     ),

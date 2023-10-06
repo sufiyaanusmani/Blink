@@ -11,7 +11,6 @@ import 'package:food_delivery/screens/RestrauntHelperFiles/widgets.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'RestrauntHelperfiles/model/product_category.dart';
 
-
 class RestaurantScreen extends StatefulWidget {
   static const String id = 'restaurant_screen';
 
@@ -69,8 +68,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
 
     super.dispose();
   }
-
-
 
   List<Product2> dummyProducts = [
     Product2(
@@ -203,12 +200,16 @@ class _HeaderSliver extends SliverPersistentHeaderDelegate {
     return Stack(
       children: [
         Positioned(
-          bottom: 0,
+          // bottom: 0,
           left: 0,
           right: 0,
           child: Container(
             height: _maxHeaderExtent,
-            color: Color.fromARGB(255, 255, 255, 255),
+            color: Colors.white,
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.circular(20),
+            //   color: Colors.amber,
+            // ),
             child: Column(
               children: [
                 Expanded(

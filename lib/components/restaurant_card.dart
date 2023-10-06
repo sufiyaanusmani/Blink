@@ -37,7 +37,6 @@ class RestaurantCard extends StatelessWidget {
                 child: Image.asset('images/kfc.jpg', fit: BoxFit.cover),
               ),
             ),
-
             SizedBox(height: 15),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
@@ -58,11 +57,12 @@ class RestaurantCard extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          for (int i = 0; i < 3; i++)
-                            Icon(Icons.star, color: Colors.blueGrey),
-                          for (int i = 0; i < 2; i++)
-                            Icon(Icons.star_border_outlined,
-                                color: Colors.blueGrey),
+                          Icon(Icons.star_border_rounded,
+                              color: Colors.blueGrey, size: 20),
+                          Text(
+                            '4.3 (5.6k)',
+                            style: TextStyle(color: Colors.grey, fontSize: 20),
+                          ),
                         ],
                       ),
                     ],
@@ -75,9 +75,15 @@ class RestaurantCard extends StatelessWidget {
                         restaurant.ownerName,
                         style: TextStyle(color: Colors.grey),
                       ),
-                      Text(
-                        '4.3(5.6k)',
-                        style: TextStyle(color: Colors.grey),
+                      Row(
+                        children: [
+                          Icon(Icons.access_time,
+                              color: Colors.blueGrey, size: 17),
+                          Text(
+                            ' 60 min',
+                            style: TextStyle(color: Colors.grey, fontSize: 20),
+                          ),
+                        ],
                       ),
                     ],
                   ),
