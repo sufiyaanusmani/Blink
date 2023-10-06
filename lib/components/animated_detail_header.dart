@@ -79,8 +79,8 @@ class AnimatedDetailHeader extends StatelessWidget {
                         ),
                       )),
                   Positioned(
-                    left: 20,
-                    top: 200,
+                    left: 25,
+                    top: 220,
                     child: AnimatedOpacity(
                       duration: kThemeAnimationDuration,
                       opacity: bottomPercent < 1 ? 0 : 1,
@@ -139,7 +139,7 @@ class MenuInfoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 100,
+        height: 80,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 221, 221, 221),
@@ -148,44 +148,43 @@ class MenuInfoContainer extends StatelessWidget {
           ),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
               children: [
-                Row(
-                  children: [
-                    Container(
-                      margin: EdgeInsets.only(top: 3, left: 3),
-                      child: Text(
-                        "Reviews ",
-                        style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 20,
-                        ),
-                      ),
+                Icon(Icons.star, color: Colors.grey),
+                Container(
+                  margin: EdgeInsets.only(top: 3, left: 3),
+                  child: Text(
+                    "4.3 ",
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 20,
                     ),
-                    Container(
-                      margin: EdgeInsets.only(top: 3),
-                      child: Text(
-                        "(5.6k)",
-                        style: TextStyle(
-                          color: Colors.blueGrey,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
-                Row(
-                  children: [
-                    for (int i = 0; i < 3; i++)
-                      Icon(Icons.star, color: Colors.grey),
-                    for (int i = 0; i < 2; i++)
-                      Icon(Icons.star_border_outlined, color: Colors.grey),
-                  ],
+                Container(
+                  margin: EdgeInsets.only(top: 3),
+                  child: Text(
+                    "(4k+)",
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 15,
+                    ),
+                  ),
                 ),
               ],
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 6),
+              child: Text(
+                "40-50 min - 100rs minimum",
+                style: TextStyle(
+                  color: Colors.blueGrey,
+                  fontSize: 15,
+                ),
+              ),
             ),
           ],
         ));
@@ -201,11 +200,11 @@ class TranslateAnimation extends StatelessWidget {
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 1, end: 0),
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOutBack,
       builder: (context, value, child) {
         return Transform.translate(
-          offset: Offset(0, 100 * value),
+          offset: Offset(0, 50 * value),
           child: child!,
         );
       },

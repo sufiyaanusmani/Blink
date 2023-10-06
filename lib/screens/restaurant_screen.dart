@@ -9,10 +9,7 @@ import 'package:food_delivery/screens/RestrauntHelperFiles/controller/sliver_scr
 import 'package:food_delivery/screens/RestrauntHelperFiles/my_header_title.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/widgets.dart';
 import 'package:grouped_list/grouped_list.dart';
-
 import 'RestrauntHelperfiles/model/product_category.dart';
-
-// import 'RestrauntHelperfiles/controller/sliver_scroll_controller.dart';
 
 
 class RestaurantScreen extends StatefulWidget {
@@ -148,7 +145,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                         pinned: true,
                         delegate: BuilderPersistentDelegate(
                             maxExtent: MediaQuery.of(context).size.height,
-                            minExtent: 240,
+                            minExtent: 160,
                             builder: (percent) {
                               final bottomPercent =
                                   (percent / .3).clamp(0.0, 1.0);
