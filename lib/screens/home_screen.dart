@@ -121,31 +121,79 @@ class _HomeScreenState extends State<HomeScreen> {
         // itemCount: 5,
         padding: EdgeInsets.all(10.0),
         children: [
+          Padding(
+            padding: EdgeInsets.zero,
+            child: Container(
+              height: 200,
+              decoration: BoxDecoration(
+                color: Colors.amber,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Order"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Orderid"),
+                      Text("#1246"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Status"),
+                      Text("Pending"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Expected"),
+                      Text("11:40"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Restraunt"),
+                      Text("Pizza fast"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("1x"),
+                      Text("Food Item"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("1x"),
+                      Text("Food Item"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("2x"),
+                      Text("Food Item"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Total"),
+                      Text("520rs"),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
           SizedBox(height: 5),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 10),
-          //   child: Column(
-          //     textDirection: TextDirection.rtl,
-          //     crossAxisAlignment: CrossAxisAlignment.end,
-          //     children: [
-          //       Text(
-          //         'Welcome,',
-          //         style: TextStyle(
-          //           fontSize: 30,
-          //           color: Colors.grey.shade800,
-          //         ),
-          //       ),
-          //       Text(
-          //         '${widget.user.firstName}',
-          //         style: TextStyle(
-          //           fontWeight: FontWeight.w600,
-          //           fontSize: 30,
-          //           color: Colors.grey.shade800,
-          //         ),
-          //       ),
-          //     ],
-          //   ),
-          // ),
+
           SizedBox(height: 30),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 10),

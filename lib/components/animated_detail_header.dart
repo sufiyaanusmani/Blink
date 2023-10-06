@@ -121,9 +121,9 @@ class AnimatedDetailHeader extends StatelessWidget {
                 color: Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.elliptical(
-                      30, 10), // Adjust the values for the ellipse
+                      30, 10),
                   topRight: Radius.elliptical(
-                      30, 10), // Adjust the values for the ellipse
+                      30, 10),
                 ),
               ),
             ),
