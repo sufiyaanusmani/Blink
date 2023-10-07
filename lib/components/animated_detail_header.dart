@@ -27,72 +27,78 @@ class AnimatedDetailHeader extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: [
-        ClipRect(
-          child: Stack(
-            children: [
-              Padding(
-                padding: EdgeInsets.only(
-                  top: (20 + topPadding) * (1 - bottomPercent),
-                  bottom: 160 * (1 - bottomPercent),
-                ),
-                child: Transform.scale(
-                  scale: lerpDouble(1, 1.3, bottomPercent)!,
-                  child: PlaceImagesPageView(images: image),
-                ),
-              ),
-              Positioned(
-                  top: topPadding,
-                  left: -60 * (1 - bottomPercent),
-                  child: BackButton(
-                    color: Colors.white,
-                  )),
-              Positioned(
-                  top: topPadding,
-                  right: -60 * (1 - bottomPercent),
-                  child: IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.more_horiz,
-                      color: Colors.white,
+        Hero(
+          tag: restaurant,
+          child: Material(
+            child: ClipRect(
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: (20 + topPadding) * (1 - bottomPercent),
+                      bottom: 160 * (1 - bottomPercent),
                     ),
-                    color: Colors.white,
-                  )),
-              Positioned(
-                  top: lerpDouble(-30, 140, topPercent)!
-                      .clamp(topPadding + 10, 140),
-                  left: lerpDouble(60, 20, topPercent)!.clamp(20.0, 50.0),
-                  right: 20,
-                  child: AnimatedOpacity(
-                    duration: kThemeAnimationDuration,
-                    opacity: bottomPercent < 1 ? 0 : 1,
-                    child: Text(
-                      restaurant.name,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: lerpDouble(30, 40, 2 * topPercent),
-                        fontWeight: FontWeight.bold,
-                      ),
+                    child: Transform.scale(
+                      scale: lerpDouble(1, 1.3, bottomPercent)!,
+                      child: PlaceImagesPageView(images: image),
                     ),
-                  )),
-              Positioned(
-                left: 20,
-                top: 200,
-                child: AnimatedOpacity(
-                  duration: kThemeAnimationDuration,
-                  opacity: bottomPercent < 1 ? 0 : 1,
-                  child: Opacity(
-                    opacity: topPercent,
-                    child: Text(
-                      restaurant.ownerName,
-                      style: TextStyle(
+                  ),
+                  Positioned(
+                      top: topPadding,
+                      left: -60 * (1 - bottomPercent),
+                      child: BackButton(
                         color: Colors.white,
-                        fontSize: 15,
+                      )),
+                  Positioned(
+                      top: topPadding,
+                      right: -60 * (1 - bottomPercent),
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: Icon(
+                          Icons.shopping_bag_outlined,
+                          color: Colors.white,
+                        ),
+                        color: Colors.white,
+                      )),
+                  Positioned(
+                      top: lerpDouble(-30, 140, topPercent)!
+                          .clamp(topPadding + 10, 140),
+                      left: lerpDouble(60, 20, topPercent)!.clamp(20.0, 50.0),
+                      right: 20,
+                      child: AnimatedOpacity(
+                        duration: kThemeAnimationDuration,
+                        opacity: bottomPercent < 1 ? 0 : 1,
+                        child: Text(
+                          restaurant.name,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: lerpDouble(30, 40, 2 * topPercent),
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'britanic',
+                          ),
+                        ),
+                      )),
+                  Positioned(
+                    left: 25,
+                    top: 220,
+                    child: AnimatedOpacity(
+                      duration: kThemeAnimationDuration,
+                      opacity: bottomPercent < 1 ? 0 : 1,
+                      child: Opacity(
+                        opacity: topPercent,
+                        child: Text(
+                          restaurant.ownerName,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
         Positioned.fill(
@@ -110,11 +116,14 @@ class AnimatedDetailHeader extends StatelessWidget {
           top: null,
           child: TranslateAnimation(
             child: Container(
-              height: 50,
+              height: 20,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(
-                  top: Radius.circular(30),
+                color: Color.fromARGB(255, 255, 255, 255),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.elliptical(
+                      30, 10),
+                  topRight: Radius.elliptical(
+                      30, 10),
                 ),
               ),
             ),
@@ -133,26 +142,60 @@ class MenuInfoContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 100,
+        height: 70,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
-          color: Colors.blue.shade50,
+          color: Color.fromARGB(255, 236, 236, 236),
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(30),
           ),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextButton.icon(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                primary: Colors.black,
-                // textStyle: context.,
-                shape: const StadiumBorder(),
+            Row(
+              children: [
+                Icon(Icons.star, color: Colors.grey),
+                Container(
+                  margin: EdgeInsets.only(top: 3, left: 3),
+                  child: Text(
+                    "4.3 ",
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 3),
+                  child: Text(
+                    "(4k+)",
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 15,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              margin: EdgeInsets.only(top: 5),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.access_time_rounded, color: Colors.grey, size: 17),
+                  Container(
+                    child: Text(
+                      " 40-50 min    100rs minimum",
+                      style: TextStyle(
+                        color: Colors.blueGrey,
+                        fontSize: 17,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              icon: const Icon(CupertinoIcons.heart),
-              label: Text("ratings"),
             ),
           ],
         ));
@@ -168,11 +211,11 @@ class TranslateAnimation extends StatelessWidget {
   Widget build(BuildContext context) {
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 1, end: 0),
-      duration: const Duration(milliseconds: 600),
+      duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOutBack,
       builder: (context, value, child) {
         return Transform.translate(
-          offset: Offset(0, 100 * value),
+          offset: Offset(0, 50 * value),
           child: child!,
         );
       },
@@ -181,7 +224,7 @@ class TranslateAnimation extends StatelessWidget {
   }
 }
 
-class PlaceImagesPageView extends StatelessWidget {
+class PlaceImagesPageView extends StatefulWidget {
   const PlaceImagesPageView({
     super.key,
     required this.images,
@@ -191,18 +234,40 @@ class PlaceImagesPageView extends StatelessWidget {
   final images;
 
   @override
+  State<PlaceImagesPageView> createState() => _PlaceImagesPageViewState();
+}
+
+class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
+  int currentIndex = 0;
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         Expanded(
           child: PageView.builder(
             itemCount: 5,
+            onPageChanged: (value) {
+              setState(() => currentIndex = value);
+              print("current page: ${value}");
+            },
             physics: const BouncingScrollPhysics(),
             controller: PageController(viewportFraction: .9),
             itemBuilder: (context, index) {
               const imageUrl = 'images/kfc.jpg';
-              return Container(
-                margin: const EdgeInsets.only(right: 10),
+              final isSelected = currentIndex == index;
+              return AnimatedContainer(
+                duration: kThemeAnimationDuration,
+                margin: EdgeInsets.only(
+                  right: 10,
+                  top: isSelected ? 5 : 20,
+                  bottom: isSelected ? 5 : 20,
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    print(index);
+                  },
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: const [
@@ -225,14 +290,17 @@ class PlaceImagesPageView extends StatelessWidget {
         const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-              5, // <-- ITEM COUNT
-              (index) => Container(
-                    color: Colors.black12,
-                    margin: const EdgeInsets.symmetric(horizontal: 3),
-                    height: 3,
-                    width: 10,
-                  )),
+          children: List.generate(5, // <-- ITEM COUNT
+              (index) {
+            final isSelected = currentIndex == index;
+            return AnimatedContainer(
+              duration: kThemeAnimationDuration,
+              color: isSelected ? Colors.black38 : Colors.black12,
+              margin: const EdgeInsets.symmetric(horizontal: 3),
+              height: 3,
+              width: isSelected ? 20 : 10,
+            );
+          }),
         ),
         const SizedBox(height: 10),
       ],

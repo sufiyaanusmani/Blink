@@ -1,10 +1,11 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/mysql.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/screens/home_screen.dart';
 import 'package:food_delivery/screens/restaurant_screen.dart';
 import 'package:food_delivery/classes/restaurant.dart';
-import 'package:mysql1/mysql1.dart';
+// import 'package:mysql1/mysql1.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
@@ -15,60 +16,81 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        height: 370,
-        padding: EdgeInsets.only(bottom: 0, right: 10, left: 10, top: 10),
+        height: 330,
+        // padding: EdgeInsets.only(bottom: 0, right: 10, left: 10, top: 10),
         margin: EdgeInsets.symmetric(
           vertical: 2,
-          horizontal: 10,
+          horizontal: 5,
         ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(5),
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.grey.shade800,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  restaurant.name,
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                CircleAvatar(
-                  child: Text('SU'),
-                  backgroundColor: Colors.white,
-                  radius: 25,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10,
-            ),
             ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               child: SizedBox.fromSize(
                 size: Size.fromRadius(100), // Image radius
                 child: Image.asset('images/kfc.jpg', fit: BoxFit.cover),
               ),
             ),
-            SizedBox(
-              height: 10,
+            SizedBox(height: 15),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        restaurant.name,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 30,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.star_border_rounded,
+                              color: Colors.blueGrey, size: 20),
+                          Text(
+                            '4.3 (5.6k)',
+                            style: TextStyle(color: Colors.grey, fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        restaurant.ownerName,
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      Row(
+                        children: [
+                          Icon(Icons.access_time,
+                              color: Colors.blueGrey, size: 17),
+                          Text(
+                            ' 60 min',
+                            style: TextStyle(color: Colors.grey, fontSize: 20),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 10),
+                ],
+              ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(restaurant.ownerName),
-                Text(restaurant.ownerName),
-              ],
-            ),
-            SizedBox(height: 10),
-            Text(restaurant.ownerName),
-            SizedBox(height: 10),
             Divider(),
           ],
         ),

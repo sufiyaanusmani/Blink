@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/components/animated_detail_header.dart';
-import 'package:food_delivery/classes/product.dart';
-import 'package:food_delivery/classes/cart.dart';
+// import 'package:food_delivery/classes/product.dart';
+// import 'package:food_delivery/classes/cart.dart';
+// import 'package:food_delivery/screens/RestrauntHelperFiles/model/product_category.dart';
+
+import 'package:food_delivery/screens/RestrauntHelperFiles/controller/sliver_scroll_controller.dart';
+import 'package:food_delivery/screens/RestrauntHelperFiles/my_header_title.dart';
+import 'package:food_delivery/screens/RestrauntHelperFiles/widgets.dart';
+import 'package:grouped_list/grouped_list.dart';
+import 'RestrauntHelperfiles/model/product_category.dart';
 
 class RestaurantScreen extends StatefulWidget {
   static const String id = 'restaurant_screen';
@@ -22,376 +29,213 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   late ScrollController _controller;
   late ValueNotifier<double> bottomPercentNotifier;
 
-  bool expanded = false;
-
-  void toggleExpansion() {
-    setState(() {
-      expanded = !expanded;
-    });
-  }
-
   void _scrollListener() {
     var percent =
         _controller.position.pixels / MediaQuery.of(context).size.height;
     bottomPercentNotifier.value = (percent / .3).clamp(0.0, 1.0);
   }
 
-  late List<Product> itemList = [];
+  // late List<Product> itemList = [];
 
-  void getProducts() async {
-    List<Product> items =
-        await Product.getProducts(widget.restaurant.restaurantID);
-    setState(() {
-      itemList = items;
-    });
-  }
+  // void getProducts() async {
+  //   List<Product> items =
+  //       await Product.getProducts(widget.restaurant.restaurantID);
+  //   setState(() {
+  //     itemList = items;
+  //   });
+  // }
+
+  final bloc = SliverScrollController();
 
   @override
   void initState() {
-    getProducts();
+    // getProducts();
     _controller =
         ScrollController(initialScrollOffset: widget.screenHeight * .3);
     _controller.addListener(_scrollListener);
     bottomPercentNotifier = ValueNotifier(1.0);
+
+    bloc.init();
+
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+
+    bloc.init();
+
     super.dispose();
   }
 
+  List<Product2> dummyProducts = [
+    Product2(
+      name: "Product 1",
+      description: "Description for Product 1",
+      price: "19.99",
+      image: 'images/mac.jpg',
+    ),
+    Product2(
+      name: "Product 2",
+      description: "Description for Product 2",
+      price: "29.99",
+      image: "images/mac.jpg",
+    ),
+    Product2(
+      name: "Product 3",
+      description: "Description for Product 3",
+      price: "15.99",
+      image: "images/mac.jpg",
+    ),
+    Product2(
+      name: "Product 1",
+      description: "Description for Product 1",
+      price: "19.99",
+      image: "images/mac.jpg",
+    ),
+    Product2(
+      name: "Product 2",
+      description: "Description for Product 2",
+      price: "29.99",
+      image: "images/mac.jpg",
+    ),
+    Product2(
+      name: "Product 3",
+      description: "Description for Product 3",
+      price: "15.99",
+      image: "images/mac.jpg",
+    ),
+    Product2(
+      name: "Product 1",
+      description: "Description for Product 1",
+      price: "19.99",
+      image: "images/mac.jpg",
+    ),
+    Product2(
+      name: "Product 2",
+      description: "Description for Product 2",
+      price: "29.99",
+      image: "images/mac.jpg",
+    ),
+    Product2(
+      name: "Product 3",
+      description: "Description for Product 3",
+      price: "15.99",
+      image: "images/mac.jpg",
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        body: CustomScrollView(
-          physics: const BouncingScrollPhysics(),
-          controller: _controller,
-          slivers: [
-            SliverPersistentHeader(
-                pinned: true,
-                delegate: BuilderPersistentDelegate(
-                    maxExtent: MediaQuery.of(context).size.height,
-                    minExtent: 240,
-                    builder: (percent) {
-                      final bottomPercent = (percent / .3).clamp(0.0, 1.0);
-                      return AnimatedDetailHeader(
-                        topPercent: ((1 - percent) / .7).clamp(0.0, 1.0),
-                        bottomPercent: bottomPercent,
-                        restaurant: widget.restaurant,
-                      );
-                    })),
-
-            // const SliverToBoxAdapter(child: Placeholder()),
-
-            SliverToBoxAdapter(
-              child: TranslateAnimation(
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: GestureDetector(
-                        onTap: toggleExpansion,
-                        child: AnimatedContainer(
-                          duration: Duration(milliseconds: 150),
-                          width: expanded ? 0 : 150.0,
-                          height: expanded ? 0 : 40.0,
-                          padding: expanded
-                              ? EdgeInsets.only(right: 30)
-                              : EdgeInsets.only(left: 30),
-                          margin: expanded
-                              ? EdgeInsets.only(top: 40)
-                              : EdgeInsets.all(0),
-                          decoration: BoxDecoration(
-                            borderRadius: expanded
-                                ? BorderRadius.only(
-                                    topRight: Radius.circular(20))
-                                : BorderRadius.only(
-                                    topRight: Radius.circular(20),
-                                    bottomRight: Radius.circular(20)),
-                            color: Colors.amber,
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Categories',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: expanded ? 0 : 20.0,
-                                  fontWeight: FontWeight.bold),
-                            ),
+    return Scaffold(
+      body: Stack(
+        children: [
+          ValueListenableBuilder<double>(
+              valueListenable: bloc.globalOffsetValue,
+              builder: (_, double valueCurrentScroll, __) {
+                return CustomScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  controller: _controller,
+                  slivers: [
+                    SliverPersistentHeader(
+                        pinned: true,
+                        delegate: BuilderPersistentDelegate(
+                            maxExtent: MediaQuery.of(context).size.height,
+                            minExtent: 160,
+                            builder: (percent) {
+                              final bottomPercent =
+                                  (percent / .3).clamp(0.0, 1.0);
+                              return AnimatedDetailHeader(
+                                topPercent:
+                                    ((1 - percent) / .7).clamp(0.0, 1.0),
+                                bottomPercent: bottomPercent,
+                                restaurant: widget.restaurant,
+                              );
+                            })),
+                    SliverPersistentHeader(
+                      pinned: true,
+                      delegate: _HeaderSliver(bloc),
+                    ),
+                    for (var i = 0; i < bloc.listCategory.length; i++) ...[
+                      SliverPersistentHeader(
+                        delegate: MyHeaderTitle(
+                          bloc.listCategory[i].category,
+                          (visible) => bloc.refreshHeader(
+                            i,
+                            visible,
+                            lastIndex: i > 0 ? i - 1 : null,
                           ),
                         ),
                       ),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // if(expanded)
-                            GestureDetector(
-                              onTap: toggleExpansion,
-                              child: AnimatedContainer(
-                                duration: Duration(milliseconds: 150),
-                                width: expanded
-                                    ? MediaQuery.of(context).size.width * 0.3
-                                    : 0,
-                                height: expanded ? 40.0 : 0,
-                                padding: expanded
-                                    ? EdgeInsets.only(right: 30)
-                                    : EdgeInsets.only(left: 30),
-                                // margin: expanded
-                                //     ? EdgeInsets.only(top: 40)
-                                //     : EdgeInsets.all(0),
-                                decoration: BoxDecoration(
-                                  borderRadius: expanded
-                                      ? BorderRadius.only(
-                                          topRight: Radius.circular(20))
-                                      : BorderRadius.only(
-                                          topRight: Radius.circular(20),
-                                          bottomRight: Radius.circular(20)),
-                                  color: Colors.amber,
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    'Categories',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
-
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: AnimatedContainer(
-                                    duration: Duration(milliseconds: 150),
-                                    width: expanded
-                                        ? MediaQuery.of(context).size.width *
-                                            0.3
-                                        : MediaQuery.of(context).size.width *
-                                            0.025,
-                                    height: 500.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.only(
-                                          bottomRight: Radius.circular(20)),
-                                      color: Colors.amber,
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        'Categories',
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.0),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                        Stack(
-                          alignment: Alignment.topLeft,
-                          children: [
-                            AnimatedContainer(
-                              duration: Duration(milliseconds: 150),
-                              alignment: Alignment.topLeft,
-                              color: Colors.amber,
-                              width: expanded ? 0 : 20,
-                              height: 40.0,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(20)),
-                                child: Container(
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: Align(
-                                  alignment: Alignment.topLeft,
-                                  child: Column(
-                                    children: [
-                                      AnimatedContainer(
-                                        duration: Duration(milliseconds: 150),
-                                        height: 700,
-                                        width: expanded
-                                            ? MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.67
-                                            : MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.95,
-                                        margin:
-                                            EdgeInsets.only(top: 5, left: 5),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(20)),
-                                        ),
-                                        child: ListView.builder(
-                                          physics: BouncingScrollPhysics(),
-                                          itemCount: itemList.length,
-                                          itemBuilder: (context, index) {
-                                            final item = itemList[index];
-                                            return Padding(
-                                              padding: (index == 0)
-                                                  ? const EdgeInsets.symmetric(
-                                                      vertical: 10.0)
-                                                  : const EdgeInsets.only(
-                                                      bottom: 10.0),
-                                              child: Container(
-                                                margin:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 10.0),
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          10.0),
-                                                  color: Colors.white,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        blurRadius: 1.0,
-                                                        spreadRadius: 1.0,
-                                                        color:
-                                                            Colors.grey[400]!),
-                                                  ],
-                                                ),
-
-                                                // ListView row
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.start,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  children: [
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 150),
-                                                      child: ClipRRect(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10.0),
-                                                        child: Image.asset(
-                                                          'images/mac.jpg',
-                                                          width: expanded
-                                                              ? 0
-                                                              : 70.0,
-                                                          height: 70.0,
-                                                          fit: BoxFit.cover,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 10.0),
-                                                    AnimatedContainer(
-                                                      duration: Duration(
-                                                          milliseconds: 150),
-                                                      child: Expanded(
-                                                        child: Column(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Text(
-                                                              item.name,
-                                                              style: TextStyle(
-                                                                fontSize:
-                                                                    expanded
-                                                                        ? 15
-                                                                        : 18.0,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                            ),
-                                                            const SizedBox(
-                                                                height: 10.0),
-                                                            Text(
-                                                              '${item.price}',
-                                                              style: TextStyle(
-                                                                fontSize:
-                                                                    expanded
-                                                                        ? 12
-                                                                        : 14.0,
-                                                                color:
-                                                                    Colors.grey,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    ElevatedButton(
-                                                      onPressed: () {
-                                                        Cart.addNewProduct(
-                                                            item);
-                                                        print(
-                                                            'pressed ${item.name}');
-                                                      },
-                                                      style: ElevatedButton
-                                                          .styleFrom(
-                                                        backgroundColor:
-                                                            Colors.blue,
-                                                        foregroundColor:
-                                                            Colors.white,
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                        ),
-                                                      ),
-                                                      child: Padding(
-                                                        padding:
-                                                            EdgeInsets.only(
-                                                                top: 10,
-                                                                bottom: 10,
-                                                                right: 5,
-                                                                left: 5),
-                                                        child:
-                                                            Text('Add to Cart'),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  )),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                      SliverBodyItems(
+                        // listItem: bloc.listCategory[i].products,
+                        listItem: dummyProducts,
+                      )
+                    ],
                   ],
-                ),
-              ),
-            ),
-            // const SliverToBoxAdapter(child: Placeholder()),
-          ],
-        ),
+                );
+              }),
+        ],
       ),
     );
   }
+}
+
+const _maxHeaderExtent = 40.0;
+
+class _HeaderSliver extends SliverPersistentHeaderDelegate {
+  final SliverScrollController bloc;
+
+  _HeaderSliver(this.bloc);
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final percent = shrinkOffset / _maxHeaderExtent;
+    if (percent > 0.3) {
+      bloc.visibleHeader.value = true;
+    } else {
+      bloc.visibleHeader.value = false;
+    }
+    return Stack(
+      children: [
+        Positioned(
+          // bottom: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: _maxHeaderExtent,
+            color: Colors.white,
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.circular(20),
+            //   color: Colors.amber,
+            // ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 400),
+                      child: ListItemHeaderSliver(bloc: bloc)),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  // TODO: implement maxExtent
+  double get maxExtent => _maxHeaderExtent;
+
+  @override
+  // TODO: implement minExtent
+  double get minExtent => _maxHeaderExtent;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
 }
 
 class BuilderPersistentDelegate extends SliverPersistentHeaderDelegate {
@@ -421,4 +265,29 @@ class BuilderPersistentDelegate extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       false;
+}
+
+class _StickyHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final Widget child;
+
+  _StickyHeaderDelegate({
+    required this.child,
+  });
+
+  @override
+  double get minExtent => 0;
+
+  @override
+  double get maxExtent => 100; // Adjust the max height as needed
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return child;
+  }
+
+  @override
+  bool shouldRebuild(SliverPersistentHeaderDelegate oldDelegate) {
+    return false;
+  }
 }

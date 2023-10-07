@@ -3,7 +3,7 @@ import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user.dart';
-import 'package:google_fonts/google_fonts.dart';
+// import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/cart.dart';
 
@@ -83,60 +83,184 @@ class _HomeScreenState extends State<HomeScreen> {
     //   _getStudent(widget.loginID);
     // }
     // getRestaurants();
-    return SafeArea(
-      child: Scaffold(
-        body: ListView(
-          scrollDirection: Axis.vertical,
-          // itemCount: 5,
-          padding: EdgeInsets.all(10.0),
-          children: [
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 17),
-              child: Text(
-                'Welcome, ${widget.user.firstName}',
-                style: GoogleFonts.caveat(
-                  textStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 45,
-                    color: Colors.deepOrange,
-                  ),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.grey.shade800,
+        shadowColor: Colors.grey.shade800,
+        automaticallyImplyLeading: false,
+        title: Container(
+          // padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Blink',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
                 ),
               ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            SizedBox(
+              Container(
+                padding: EdgeInsets.all(5),
+                child: Icon(
+                  Icons.notifications,
+                  size: 25,
+                  color: Colors.grey,
+                ),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(110, 33, 33, 33),
+                  borderRadius: BorderRadius.all(Radius.circular(9)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: ListView(
+        scrollDirection: Axis.vertical,
+        // itemCount: 5,
+        padding: EdgeInsets.all(10.0),
+        children: [
+          Padding(
+            padding: EdgeInsets.zero,
+            child: Container(
               height: 200,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                physics: BouncingScrollPhysics(),
-                // itemCount: 5,
-                padding: EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                color: Colors.amber,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SmallRestaurantCard(imageID: 'kfc'),
-                  SmallRestaurantCard(imageID: 'mac'),
-                  SmallRestaurantCard(imageID: 'pizzahut'),
+                  Text("Order"),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Orderid"),
+                      Text("#1246"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Status"),
+                      Text("Pending"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Expected"),
+                      Text("11:40"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Restraunt"),
+                      Text("Pizza fast"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("1x"),
+                      Text("Food Item"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("1x"),
+                      Text("Food Item"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("2x"),
+                      Text("Food Item"),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Total"),
+                      Text("520rs"),
+                    ],
+                  ),
                 ],
               ),
             ),
-            Divider(),
-            Column(
-              children: restaurantCards,
+          ),
+          SizedBox(height: 5),
+
+          SizedBox(height: 30),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Trending',
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.w800,
+              ),
             ),
-            // ListView.builder(
-            //   itemBuilder: (context, index) {
-            //     return RestaurantCard(restaurant: restaurants[index]);
-            //   },
-            //   itemCount: restaurants.length,
-            //   scrollDirection: Axis.vertical,
-            //   shrinkWrap: true,
-            // ),
-          ],
-        ),
+          ),
+          SizedBox(
+            height: 250,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              physics: BouncingScrollPhysics(),
+              // itemCount: 5,
+              padding: EdgeInsets.only(
+                top: 10.0,
+                bottom: 10,
+              ),
+              children: [
+                SmallRestaurantCard(
+                  imageID: 'kfc',
+                  itemName: 'itemname',
+                  itemDesc: 'itemDisc',
+                ),
+                SmallRestaurantCard(
+                  imageID: 'mac',
+                  itemName: 'itemname',
+                  itemDesc: 'itemDisc',
+                ),
+                SmallRestaurantCard(
+                  imageID: 'pizzahut',
+                  itemName: 'itemname',
+                  itemDesc: 'itemDisc',
+                ),
+              ],
+            ),
+          ),
+          Divider(),
+          SizedBox(height: 20),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Discover',
+              style: TextStyle(
+                fontSize: 40,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          SizedBox(height: 15),
+          Column(
+            children: restaurantCards,
+          ),
+          // ListView.builder(
+          //   itemBuilder: (context, index) {
+          //     return RestaurantCard(restaurant: restaurants[index]);
+          //   },
+          //   itemCount: restaurants.length,
+          //   scrollDirection: Axis.vertical,
+          //   shrinkWrap: true,
+          // ),
+        ],
       ),
     );
   }
@@ -154,3 +278,5 @@ class _HomeScreenState extends State<HomeScreen> {
 // fit: BoxFit.fill,
 // ),
 // );
+
+
