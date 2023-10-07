@@ -2,7 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:food_delivery/screens/RestrauntHelperfiles/model/my_header.dart';
-import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_category.dart';
+// import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_category.dart';
+
+import '../../../classes/category.dart';
+import '../../../classes/product.dart';
 
 // class ProductCategory {
 //   ProductCategory({
@@ -28,12 +31,27 @@ import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_categor
 //   });
 // }
 
-
-
-
-
 class SliverScrollController {
-  late List<ProductCategory> listCategory;
+  late List<Category> listCategory = [];
+
+  SliverScrollController(List<Product> items1) {
+    List<Category> temp = [];
+    for (Product item in items1) {
+      bool found = false;
+      for (int i = 0; i < temp.length; i++) {
+        if (item.category_id == temp[i].id) {
+          temp[i].products.add(item);
+          found = true;
+        }
+      }
+      if (found == false) {
+        temp.add(Category(id: item.category_id, name: item.category_name));
+        temp[temp.length - 1].products.add(item);
+      }
+
+      listCategory = temp;
+    }
+  }
 
   List<double> listOffsetItemHeader = [];
 
@@ -51,60 +69,53 @@ class SliverScrollController {
 
   final visibleHeader = ValueNotifier(false);
 
+  // final products = [
+  //   Product2(
+  //     name: 'Choclate Cake',
+  //     image: 'assets/icons/cancel.png',
+  //     description: 'hai,.,,,,.......................................',
+  //     price: '\$19',
+  //   ),
+  //   Product2(
+  //     name: 'Choclate Cake',
+  //     image: 'assets/icons/cancel.png',
+  //     description: 'hai,.,,,,.......................................',
+  //     price: '\$19',
+  //   ),
+  //   Product2(
+  //     name: 'Choclate Cake',
+  //     image: 'assets/icons/cancel.png',
+  //     description: 'hai,.,,,,.......................................',
+  //     price: '\$19',
+  //   ),
+  //   Product2(
+  //     name: 'Choclate Cake',
+  //     image: 'assets/icons/cancel.png',
+  //     description: 'hai,.,,,,.......................................',
+  //     price: '\$19',
+  //   ),
+  // ];
 
-
-  final products = [
-    Product2(
-      name: 'Choclate Cake',
-      image: 'assets/icons/cancel.png',
-      description: 'hai,.,,,,.......................................',
-      price: '\$19',
-    ),
-    Product2(
-      name: 'Choclate Cake',
-      image: 'assets/icons/cancel.png',
-      description: 'hai,.,,,,.......................................',
-      price: '\$19',
-    ),
-    Product2(
-      name: 'Choclate Cake',
-      image: 'assets/icons/cancel.png',
-      description: 'hai,.,,,,.......................................',
-      price: '\$19',
-    ),
-    Product2(
-      name: 'Choclate Cake',
-      image: 'assets/icons/cancel.png',
-      description: 'hai,.,,,,.......................................',
-      price: '\$19',
-    ),
-  ];
-
-
-  void loadDataRandom() {
-
-    listCategory = [
-      ProductCategory(
-        category: 'Order Again',
-        products: products,
-      ),
-      ProductCategory(
-        category: 'Picked For You',
-        products: products,
-      ),
-      ProductCategory(
-        category: 'Starter',
-        products: products,
-      ),
-      ProductCategory(
-        category: 'Roll',
-        products: products,
-      )
-    ];
+  void loadDataRandom(List<Product> itemList) {
+    // List<Category> temp = [];
+    // for (Product item in itemList) {
+    //   bool found = false;
+    //   for (int i = 0; i < temp.length; i++) {
+    //     if (item.category_id == temp[i].id) {
+    //       temp[i].products.add(item);
+    //       found = true;
+    //     }
+    //   }
+    //   if (found == false) {
+    //     temp.add(Category(id: item.category_id, name: item.category_name));
+    //     temp[temp.length - 1].products.add(item);
+    //   }
+    // }
+    // listCategory = temp;
   }
 
   void init() {
-    loadDataRandom();
+    // loadDataRandom();
     listOffsetItemHeader = List.generate(
       listCategory.length,
       (index) => index.toDouble(),
@@ -125,7 +136,7 @@ class SliverScrollController {
   void _listenHeaderNeotifier() {
     if (visibleHeader.value) {
       for (var i = 0; i < listCategory.length; i++) {
-        scrollAnimationHorizontal(index: i);       
+        scrollAnimationHorizontal(index: i);
       }
     }
   }
@@ -134,7 +145,8 @@ class SliverScrollController {
     if (headerNotifier.value?.index == index &&
         headerNotifier.value!.visibile) {
       scrollControllerItemHeader.animateTo(
-          listOffsetItemHeader[headerNotifier.value!.index] - 16,    //<<<-------  HERE
+          listOffsetItemHeader[headerNotifier.value!.index] -
+              16, //<<<-------  HERE
           duration: const Duration(milliseconds: 200),
           curve: goingDown.value ? Curves.bounceOut : Curves.fastOutSlowIn);
     }

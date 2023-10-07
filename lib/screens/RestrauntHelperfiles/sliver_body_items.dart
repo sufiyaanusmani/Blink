@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/controller/sliver_scroll_controller.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_category.dart';
 
+import '../../classes/product.dart';
+
 // class ProductCategory {
 //   ProductCategory({
 //     required this.category,
@@ -29,7 +31,7 @@ import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_categor
 class SliverBodyItems extends StatelessWidget {
   const SliverBodyItems({Key? key, required this.listItem}) : super(key: key);
 
-  final List<Product2> listItem;
+  final List<Product> listItem;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +68,7 @@ class SliverBodyItems extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  product.description,
+                                  "this is a description",
                                   maxLines: 4,
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w300,
@@ -74,7 +76,7 @@ class SliverBodyItems extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  product.price,
+                                  "Rs ${product.price}",
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 18,
@@ -93,7 +95,7 @@ class SliverBodyItems extends StatelessWidget {
                                 image: DecorationImage(
                                   fit: BoxFit.cover,
                                   image: AssetImage(
-                                    product.image,
+                                    "images/kfc.jpg",
                                   ),
                                 ),
                               ),

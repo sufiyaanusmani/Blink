@@ -51,7 +51,7 @@ class RestaurantCard extends StatelessWidget {
                         restaurant.name,
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
-                          fontSize: 30,
+                          fontSize: 25,
                           color: Colors.white,
                         ),
                       ),

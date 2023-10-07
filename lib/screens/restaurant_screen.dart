@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/components/animated_detail_header.dart';
-// import 'package:food_delivery/classes/product.dart';
+import 'package:food_delivery/classes/product.dart';
 // import 'package:food_delivery/classes/cart.dart';
 // import 'package:food_delivery/screens/RestrauntHelperFiles/model/product_category.dart';
-
+import 'package:food_delivery/classes/category.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/controller/sliver_scroll_controller.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/my_header_title.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/widgets.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'RestrauntHelperfiles/model/product_category.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class RestaurantScreen extends StatefulWidget {
   static const String id = 'restaurant_screen';
@@ -35,27 +38,69 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     bottomPercentNotifier.value = (percent / .3).clamp(0.0, 1.0);
   }
 
-  // late List<Product> itemList = [];
+  late List<Product> itemList = [];
+  late List<Category> categoryList = [];
 
-  // void getProducts() async {
-  //   List<Product> items =
-  //       await Product.getProducts(widget.restaurant.restaurantID);
-  //   setState(() {
-  //     itemList = items;
-  //   });
-  // }
+  Future<List<Product>> getProducts() async {
+    List<Product> items =
+        await Product.getProducts(widget.restaurant.restaurantID);
+    setState(() {
+      itemList = items;
+    });
+    return items;
+  }
 
-  final bloc = SliverScrollController();
+  late SliverScrollController bloc;
+  bool _loading = false;
+
+  void getCategories() async {
+    setState(() {
+      _loading = true;
+    });
+    List<Category> temp = [];
+    List<Product> items1 = await getProducts();
+    setState(() {
+      itemList = items1;
+    });
+    // for (Product item in items1) {
+    //   bool found = false;
+    //   for (int i = 0; i < temp.length; i++) {
+    //     if (item.category_id == temp[i].id) {
+    //       temp[i].products.add(item);
+    //       found = true;
+    //     }
+    //   }
+    //   if (found == false) {
+    //     temp.add(Category(id: item.category_id, name: item.category_name));
+    //     temp[temp.length - 1].products.add(item);
+    //   }
+    // }
+    // setState(() {
+    //   bloc.listCategory = temp;
+    //   bloc.init();
+    // });
+    setState(() {
+      bloc = SliverScrollController(items1);
+      bloc.init();
+    });
+
+    setState(() {
+      _loading = false;
+    });
+  }
 
   @override
   void initState() {
     // getProducts();
+    getCategories();
+    // bloc = SliverScrollController();
+
     _controller =
         ScrollController(initialScrollOffset: widget.screenHeight * .3);
     _controller.addListener(_scrollListener);
     bottomPercentNotifier = ValueNotifier(1.0);
 
-    bloc.init();
+    // bloc.init();
 
     super.initState();
   }
@@ -64,7 +109,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   void dispose() {
     _controller.dispose();
 
-    bloc.init();
+    // bloc.init();
 
     super.dispose();
   }
@@ -128,6 +173,14 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+            child: LoadingAnimationWidget.fourRotatingDots(
+                color: Colors.orange, size: 100)),
+      );
+    }
     return Scaffold(
       body: Stack(
         children: [
@@ -160,7 +213,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                     for (var i = 0; i < bloc.listCategory.length; i++) ...[
                       SliverPersistentHeader(
                         delegate: MyHeaderTitle(
-                          bloc.listCategory[i].category,
+                          bloc.listCategory[i].name,
                           (visible) => bloc.refreshHeader(
                             i,
                             visible,
@@ -169,8 +222,8 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                         ),
                       ),
                       SliverBodyItems(
-                        // listItem: bloc.listCategory[i].products,
-                        listItem: dummyProducts,
+                        listItem: bloc.listCategory[i].products,
+                        // listItem: dummyProducts,
                       )
                     ],
                   ],

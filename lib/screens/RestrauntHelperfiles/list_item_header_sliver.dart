@@ -47,7 +47,7 @@ class ListItemHeaderSliver extends StatelessWidget {
                             color: Color.fromARGB(255, 109, 239, 131),
                             borderRadius: BorderRadius.circular(16)),
                         child: Text(
-                          bloc.listCategory[index].category,
+                          bloc.listCategory[index].name,
                           style: TextStyle(
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
