@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../screens/search_results.dart';
 
-
 class SearchBarWidget extends StatefulWidget {
   final ValueChanged<String> onSubmitted;
+  final Function(String text) onEntry;
 
-  SearchBarWidget({required this.onSubmitted});
+  SearchBarWidget({required this.onSubmitted, required this.onEntry});
 
   @override
   _SearchBarWidgetState createState() => _SearchBarWidgetState();
@@ -36,29 +36,31 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       enableInteractiveSelection: false,
       style: TextStyle(fontSize: 20),
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.only(left: 10),
+        contentPadding: const EdgeInsets.only(left: 10),
         hintText: 'Search...',
         suffixIcon: GestureDetector(
           onTap: () {
             print('Search icon pressed');
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SearchResults()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => SearchResults()));
             FocusScope.of(context).unfocus();
           },
-          child: Icon(Icons.search, color: Colors.grey, size: 30),
+          child: const Icon(Icons.search, color: Colors.grey, size: 30),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Color.fromARGB(116, 0, 0, 0),
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(
-            color: const Color.fromARGB(116, 0, 0, 0),
+          borderSide: const BorderSide(
+            color: Color.fromARGB(116, 0, 0, 0),
           ),
         ),
       ),
+      onChanged: widget.onEntry,
     );
   }
 }

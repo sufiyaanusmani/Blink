@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../components/searchbar.dart';
 import 'RestrauntHelperfiles/model/product_category.dart';
 
-
 class SearchResults extends StatefulWidget {
   static const String id = 'search_screen';
 
@@ -11,70 +10,67 @@ class SearchResults extends StatefulWidget {
   State<SearchResults> createState() => _SearchResultsState();
 }
 
-
-
-  List<Product2> dummyProducts = [
-    Product2(
-      name: "Product 1",
-      description: "Description for Product 1",
-      price: "19.99",
-      image: 'images/mac.jpg',
-    ),
-    Product2(
-      name: "Product 2",
-      description: "Description for Product 2",
-      price: "29.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 3",
-      description: "Description for Product 3",
-      price: "15.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 1",
-      description: "Description for Product 1",
-      price: "19.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 2",
-      description: "Description for Product 2",
-      price: "29.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 3",
-      description: "Description for Product 3",
-      price: "15.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 1",
-      description: "Description for Product 1",
-      price: "19.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 2",
-      description: "Description for Product 2",
-      price: "29.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 3",
-      description: "Description for Product 3",
-      price: "15.99",
-      image: "images/mac.jpg",
-    ),
-  ];
+List<Product2> dummyProducts = [
+  Product2(
+    name: "Product 1",
+    description: "Description for Product 1",
+    price: "19.99",
+    image: 'images/mac.jpg',
+  ),
+  Product2(
+    name: "Product 2",
+    description: "Description for Product 2",
+    price: "29.99",
+    image: "images/mac.jpg",
+  ),
+  Product2(
+    name: "Product 3",
+    description: "Description for Product 3",
+    price: "15.99",
+    image: "images/mac.jpg",
+  ),
+  Product2(
+    name: "Product 1",
+    description: "Description for Product 1",
+    price: "19.99",
+    image: "images/mac.jpg",
+  ),
+  Product2(
+    name: "Product 2",
+    description: "Description for Product 2",
+    price: "29.99",
+    image: "images/mac.jpg",
+  ),
+  Product2(
+    name: "Product 3",
+    description: "Description for Product 3",
+    price: "15.99",
+    image: "images/mac.jpg",
+  ),
+  Product2(
+    name: "Product 1",
+    description: "Description for Product 1",
+    price: "19.99",
+    image: "images/mac.jpg",
+  ),
+  Product2(
+    name: "Product 2",
+    description: "Description for Product 2",
+    price: "29.99",
+    image: "images/mac.jpg",
+  ),
+  Product2(
+    name: "Product 3",
+    description: "Description for Product 3",
+    price: "15.99",
+    image: "images/mac.jpg",
+  ),
+];
 
 class _SearchResultsState extends State<SearchResults> {
   late String searchText = '';
 
   bool showSearchResults = false;
-
 
   void onSearchTextChanged(String text) {
     setState(() {
@@ -95,10 +91,6 @@ class _SearchResultsState extends State<SearchResults> {
       child: Scaffold(
         body: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SearchBarWidget(onSubmitted: onSearchTextChanged),
-            ),
             Expanded(child: SearchList(listItem: dummyProducts)),
           ],
         ),
@@ -198,5 +190,3 @@ class SearchList extends StatelessWidget {
     );
   }
 }
-
-
