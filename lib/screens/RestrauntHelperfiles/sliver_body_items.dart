@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/controller/sliver_scroll_controller.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_category.dart';
+import 'package:food_delivery/classes/cart.dart';
 
 import '../../classes/product.dart';
 
@@ -41,7 +42,8 @@ class SliverBodyItems extends StatelessWidget {
           final product = listItem[index];
           return InkWell(
             onTap: () {
-              print("Item  ${index} added to cart");
+              Cart.addNewProduct(product);
+              print('pressed ${product.name}');
             },
             child: Padding(
               padding: const EdgeInsets.only(top: 0),
