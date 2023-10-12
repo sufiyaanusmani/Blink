@@ -354,120 +354,123 @@ class _YourCartScreenState extends State<YourCartScreen> {
             ),
 
             // bottom Slider
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 15.0),
-              //https://pub.dev/packages/slide_to_act_reborn
-              child: SlideAction(
-                innerColor: Color.fromARGB(255, 0, 0, 0),
-                outerColor: Color.fromARGB(255, 171, 90, 194),
-                elevation: 0,
-                sliderButtonIcon: Container(
-                  child: Text(
-                    'GO',
-                    style: TextStyle(
-                      fontFamily: 'Gruppo',
-                      fontSize: 25,
-                      fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                sliderRotate: false,
-                onSubmit: () async {
-                  if (Cart.cart.length == 0) {
-                    AnimatedSnackBar.material(
-                      'Cart is empty',
-                      borderRadius: BorderRadius.circular(10),
-                      duration: Duration(seconds: 4),
-                      type: AnimatedSnackBarType.error,
-                      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-                    ).show(context);
-                  } else {
-                    var db = Mysql();
-                    int orderID = 0;
-                    if (HomePage.preOrder == false) {
-                      orderID = await db.placeOrder(
-                          Cart.customerID, Cart.restaurantID, totalPrice);
-                    } else {
-                      orderID = await db.placePreOrder(
-                          Cart.customerID, Cart.restaurantID, totalPrice);
-                      HomePage.preOrder = false;
-                    }
-                    Iterable<ResultSetRow> rows = await db.getResults(
-                        'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
-                    print('line 371');
-                    print(orderID);
-                    int price = 0;
-                    String restaurantName = '';
-                    String status = '';
-                    print(rows.length);
-                    if (rows.length == 1) {
-                      for (var row in rows) {
-                        print(orderID);
-                        restaurantName = row.assoc()['name']!;
-                        status = row.assoc()['status']!;
-                        price = int.parse(row.assoc()['price']!);
-                      }
-                      Order order = Order(
-                          orderID: orderID,
-                          restaurantName: restaurantName,
-                          status: status,
-                          price: price);
-                      print(orderID);
-                      for (CartProduct product in Cart.cart) {
-                        db.addOrderDetail(
-                            orderID, product.product.id, product.quantity);
-                      }
-                      setState(() {
-                        Cart.cart = [];
-                        itemList = [];
-                        totalPrice = 0;
-                        HomePage.preOrderHour = 8;
-                        HomePage.preOrderMinute = 0;
-                        HomePage.preOrder = false;
-                        HomePage.preOrderText = "08:00 am";
-                      });
-
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (_, animation, __) => FadeTransition(
-                            opacity: animation,
-                            child: OrderStatusScreen(order: order),
-                          ),
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '> ',
+            AbsorbPointer(
+              absorbing: Cart.cart.length > 0 ? false : true,
+              child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                //https://pub.dev/packages/slide_to_act_reborn
+                child: SlideAction(
+                  innerColor: Color.fromARGB(255, 0, 0, 0),
+                  outerColor: Color.fromARGB(255, 171, 90, 194),
+                  elevation: 0,
+                  sliderButtonIcon: Container(
+                    child: Text(
+                      'GO',
                       style: TextStyle(
                         fontFamily: 'Gruppo',
-                        fontSize: 55,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w900,
                         color: Colors.white,
                       ),
                     ),
-                    Text(
-                      '> ',
-                      style: TextStyle(
-                        fontFamily: 'Gruppo',
-                        fontSize: 55,
-                        color: Color.fromARGB(171, 255, 255, 255),
+                  ),
+                  sliderRotate: false,
+                  onSubmit: () async {
+                    if (Cart.cart.length == 0) {
+                      AnimatedSnackBar.material(
+                        'Cart is empty',
+                        borderRadius: BorderRadius.circular(10),
+                        duration: Duration(seconds: 4),
+                        type: AnimatedSnackBarType.error,
+                        mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                      ).show(context);
+                    } else {
+                      var db = Mysql();
+                      int orderID = 0;
+                      if (HomePage.preOrder == false) {
+                        orderID = await db.placeOrder(
+                            Cart.customerID, Cart.restaurantID, totalPrice);
+                      } else {
+                        orderID = await db.placePreOrder(
+                            Cart.customerID, Cart.restaurantID, totalPrice);
+                        HomePage.preOrder = false;
+                      }
+                      Iterable<ResultSetRow> rows = await db.getResults(
+                          'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
+                      print('line 371');
+                      print(orderID);
+                      int price = 0;
+                      String restaurantName = '';
+                      String status = '';
+                      print(rows.length);
+                      if (rows.length == 1) {
+                        for (var row in rows) {
+                          print(orderID);
+                          restaurantName = row.assoc()['name']!;
+                          status = row.assoc()['status']!;
+                          price = int.parse(row.assoc()['price']!);
+                        }
+                        Order order = Order(
+                            orderID: orderID,
+                            restaurantName: restaurantName,
+                            status: status,
+                            price: price);
+                        print(orderID);
+                        for (CartProduct product in Cart.cart) {
+                          db.addOrderDetail(
+                              orderID, product.product.id, product.quantity);
+                        }
+                        setState(() {
+                          Cart.cart = [];
+                          itemList = [];
+                          totalPrice = 0;
+                          HomePage.preOrderHour = 8;
+                          HomePage.preOrderMinute = 0;
+                          HomePage.preOrder = false;
+                          HomePage.preOrderText = "08:00 am";
+                        });
+
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder: (_, animation, __) => FadeTransition(
+                              opacity: animation,
+                              child: OrderStatusScreen(order: order),
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '> ',
+                        style: TextStyle(
+                          fontFamily: 'Gruppo',
+                          fontSize: 55,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    Text(
-                      '>',
-                      style: TextStyle(
-                        fontFamily: 'Gruppo',
-                        fontSize: 55,
-                        color: Color.fromARGB(111, 255, 255, 255),
+                      Text(
+                        '> ',
+                        style: TextStyle(
+                          fontFamily: 'Gruppo',
+                          fontSize: 55,
+                          color: Color.fromARGB(171, 255, 255, 255),
+                        ),
                       ),
-                    ),
-                  ],
+                      Text(
+                        '>',
+                        style: TextStyle(
+                          fontFamily: 'Gruppo',
+                          fontSize: 55,
+                          color: Color.fromARGB(111, 255, 255, 255),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
