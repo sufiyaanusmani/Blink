@@ -3,7 +3,11 @@ import 'hours.dart';
 import 'minutes.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  static int preOrderHour = 8;
+  static int preOrderMinute = 0;
+  static String preOrderText = "08:00 am";
+  static bool preOrder = false;
+  HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -27,21 +31,23 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(0, 33, 33, 33),
       body: Container(
-        
         // padding: EdgeInsets.all(10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-
             SizedBox(
               width: 5,
             ),
 
-
             // hours wheel
             Container(
-              width: MediaQuery.of(context).size.width*0.15,
+              width: MediaQuery.of(context).size.width * 0.15,
               child: ListWheelScrollView.useDelegate(
+                onSelectedItemChanged: (index) {
+                  setState(() {
+                    HomePage.preOrderHour = selectedHours[index];
+                  });
+                },
                 controller: _controller,
                 itemExtent: 50,
                 perspective: 0.005,
@@ -60,19 +66,24 @@ class _HomePageState extends State<HomePage> {
 
             Container(
               alignment: Alignment.center,
-              padding: EdgeInsets.only(bottom:5),
+              padding: EdgeInsets.only(bottom: 5),
               child: const Text(
-                  ":",
-                  style: TextStyle(
-                    fontSize: 40,
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                  ),
+                ":",
+                style: TextStyle(
+                  fontSize: 40,
+                  color: const Color.fromARGB(255, 0, 0, 0),
                 ),
+              ),
             ),
             // minutes wheel
             Container(
-              width: MediaQuery.of(context).size.width*0.15,
+              width: MediaQuery.of(context).size.width * 0.15,
               child: ListWheelScrollView.useDelegate(
+                onSelectedItemChanged: (index) {
+                  setState(() {
+                    HomePage.preOrderMinute = selectedMinutes[index];
+                  });
+                },
                 itemExtent: 50,
                 perspective: 0.005,
                 diameterRatio: 1.2,
@@ -91,7 +102,6 @@ class _HomePageState extends State<HomePage> {
             SizedBox(
               width: 5,
             ),
-
           ],
         ),
       ),

@@ -261,7 +261,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               margin: EdgeInsets.only(left: 4, right: 4),
                               height: 30,
                               child: Text(
-                                '11:00 am',
+                                HomePage.preOrderText,
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),
@@ -368,8 +368,14 @@ class _YourCartScreenState extends State<YourCartScreen> {
                 onSubmit: () async {
                   var db = Mysql();
                   int orderID = 0;
-                  orderID = await db.placeOrder(
-                      Cart.customerID, Cart.restaurantID, totalPrice);
+                  if (HomePage.preOrder == false) {
+                    orderID = await db.placeOrder(
+                        Cart.customerID, Cart.restaurantID, totalPrice);
+                  } else {
+                    orderID = await db.placePreOrder(
+                        Cart.customerID, Cart.restaurantID, totalPrice);
+                    HomePage.preOrder = false;
+                  }
                   Iterable<ResultSetRow> rows = await db.getResults(
                       'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
                   print('line 371');
@@ -510,7 +516,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         width: double.infinity,
                         padding: EdgeInsets.only(right: 10),
                         child: Text(
-                          "Place you order in advance, ",
+                          "Place your order in advance",
                           style: TextStyle(
                             fontSize: 15,
                           ),
@@ -522,6 +528,11 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       InkResponse(
                         onTap: () {
                           Navigator.of(context).pop();
+                          setState(() {
+                            HomePage.preOrder = true;
+                            HomePage.preOrderText =
+                                "${HomePage.preOrderHour < 10 ? '0' + HomePage.preOrderHour.toString() : HomePage.preOrderHour.toString()}:${HomePage.preOrderMinute < 10 ? '0' + HomePage.preOrderMinute.toString() : HomePage.preOrderMinute.toString()} ${HomePage.preOrderHour >= 12 || HomePage.preOrderHour <= 4 ? 'pm' : 'am'}";
+                          });
                         },
                         splashColor: Color.fromARGB(255, 0, 0, 0),
                         highlightColor: Colors.transparent,
