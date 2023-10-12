@@ -403,7 +403,12 @@ class _YourCartScreenState extends State<YourCartScreen> {
                     }
                     setState(() {
                       Cart.cart = [];
+                      itemList = [];
                       totalPrice = 0;
+                      HomePage.preOrderHour = 8;
+                      HomePage.preOrderMinute = 0;
+                      HomePage.preOrder = false;
+                      HomePage.preOrderText = "08:00 am";
                     });
 
                     Navigator.push(
