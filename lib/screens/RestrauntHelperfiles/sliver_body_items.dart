@@ -1,3 +1,4 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/controller/sliver_scroll_controller.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_category.dart';
@@ -42,7 +43,39 @@ class SliverBodyItems extends StatelessWidget {
           final product = listItem[index];
           return InkWell(
             onTap: () {
-              Cart.addNewProduct(product);
+              if (Cart.cart.length == 0) {
+                Cart.addNewProduct(product);
+                AnimatedSnackBar.material(
+                  '${product.name} added to cart',
+                  borderRadius: BorderRadius.circular(10),
+                  duration: Duration(seconds: 4),
+                  type: AnimatedSnackBarType.success,
+                  mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                ).show(context);
+              } else if (Cart.cart.length > 0) {
+                if (Cart.cart[0].product.restraunt_id == product.restraunt_id) {
+                  Cart.addNewProduct(product);
+                  AnimatedSnackBar.material(
+                    '${product.name} added to cart',
+                    borderRadius: BorderRadius.circular(10),
+                    duration: Duration(seconds: 4),
+                    type: AnimatedSnackBarType.success,
+                    mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                  ).show(context);
+                } else {
+                  if (Cart.cart[0].product.restraunt_id !=
+                      product.restraunt_id) {
+                    AnimatedSnackBar.material(
+                      'Cannot add products from different restaurant',
+                      borderRadius: BorderRadius.circular(10),
+                      duration: Duration(seconds: 4),
+                      type: AnimatedSnackBarType.error,
+                      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                    ).show(context);
+                  }
+                }
+              }
+
               print('pressed ${product.name}');
             },
             child: Padding(

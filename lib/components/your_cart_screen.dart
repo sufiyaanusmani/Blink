@@ -139,6 +139,13 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                   onPressed: () {
                                     setState(() {
                                       Cart.cart[index].decreaseQuantity();
+                                      if (Cart.cart[index].quantity == 0) {
+                                        Cart.cart.removeAt(index);
+                                      }
+                                      if (Cart.cart.length == 0) {
+                                        Cart.cart = [];
+                                        Cart.restaurantID = -1;
+                                      }
                                       totalPrice = Cart.getTotalPrice();
                                     });
                                   },
