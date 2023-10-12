@@ -70,7 +70,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                           SlidableAction(
                             onPressed: (context) {
                               setState(() {
-                                itemList.removeAt(index);
+                                Cart.cart.removeAt(index);
                               });
                             },
                             borderRadius: BorderRadius.circular(20),
