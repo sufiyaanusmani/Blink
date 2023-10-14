@@ -273,11 +273,11 @@ class Shimmer extends StatelessWidget {
                 pinned: true,
                 delegate: _HeaderSliverShimmer(),
               ),
-              for (var i = 0; i < 5; i++) ...[
+              for (var i = 0; i < 1; i++) ...[
                 SliverPersistentHeader(
                   delegate: MyHeaderTitleShimmer(),
                 ),
-                // const SliverBodyItemsShimmer(),
+                SliverBodyItemsShimmer(),
               ],
             ],
           )
@@ -355,51 +355,45 @@ class _HeaderSliverShimmer extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final percent = shrinkOffset / _maxHeaderExtent;
-
     return Stack(
       children: [
         Positioned(
-          // bottom: 0,
           left: 0,
           right: 0,
           child: Container(
             height: _maxHeaderExtent,
             color: Colors.white,
-            // decoration: BoxDecoration(
-            //   borderRadius: BorderRadius.circular(20),
-            //   color: Colors.amber,
-            // ),
             child: Column(
               children: [
                 Expanded(
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 400),
-                    child: Container(
-                        height: 40,
-                        margin: const EdgeInsets.only(
-                          // top: 8,
-                          // bottom: 8,
-                          right: 8,
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 40,
+                          width: 45,
+                          margin:
+                              EdgeInsets.only(bottom: 5, left: 10, right: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(16)),
                         ),
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 109, 239, 131),
-                            borderRadius: BorderRadius.circular(16)),
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.black38,
-                          highlightColor: Colors.grey.shade600,
-                          period: const Duration(milliseconds: 600),
-                          child: Container(
-                            margin: EdgeInsets.only(left: 5, right: 5, top: 5),
-                            height: 330,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.grey.withOpacity(0.5)),
-                          ),
-                        )),
+                        Container(
+                          height: 40,
+                          width: 50,
+                          margin:
+                              EdgeInsets.only(bottom: 5, left: 10, right: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade100,
+                              borderRadius: BorderRadius.circular(16)),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -431,15 +425,14 @@ class MyHeaderTitleShimmer extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
-      height: 330,
       alignment: Alignment.centerLeft,
       child: Container(
         margin: EdgeInsets.only(left: 5, right: 5, top: 5),
-        height: 330,
-        width: double.infinity,
+        height: 30,
+        width: 100,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Colors.grey.withOpacity(0.5)),
+            color: Colors.grey.shade200),
       ),
     );
   }
@@ -464,49 +457,18 @@ class SliverBodyItemsShimmer extends StatelessWidget {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          return Column(
-            children: [
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      flex: 7,
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Shimmer.fromColors(
-                          baseColor: Colors.grey,
-                          highlightColor: Colors.grey,
-                          child: Container(
-                            height: 20.0,
-                            color: Colors.white,
-                          ),
-                          period: Duration(milliseconds: 100),
-                        ),
-                      ),
-                    ),
-                    Shimmer.fromColors(
-                      baseColor: Colors.black38,
-                      highlightColor: Colors.grey.shade600,
-                      period: const Duration(milliseconds: 600),
-                      child: Container(
-                        margin: EdgeInsets.only(left: 5, right: 5, top: 5),
-                        height: 330,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.grey.withOpacity(0.5)),
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Divider(),
-            ],
-          );
+          return Container(
+              height: 100,
+              margin: EdgeInsets.all(10),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    topLeft: Radius.circular(20)),
+              ));
         },
-        childCount: 3,
+        childCount: 1, // Three shimmering containers
       ),
     );
   }
