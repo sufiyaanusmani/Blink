@@ -1,3 +1,4 @@
+import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:food_delivery/classes/restaurant.dart';
@@ -173,11 +174,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   @override
   Widget build(BuildContext context) {
     if (_loading) {
-      return Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-            child: LoadingAnimationWidget.fourRotatingDots(
-                color: Colors.orange, size: 100)),
+      return Shimmer(
+        controller: _controller,
+        restaurant: widget.restaurant,
       );
     }
     return Scaffold(
@@ -234,6 +233,66 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   }
 }
 
+class Shimmer extends StatelessWidget {
+  const Shimmer({
+    super.key,
+    // required this.bloc,
+    required ScrollController controller,
+    // required this.widget,
+    required this.restaurant,
+  }) : _controller = controller;
+
+  // final SliverScrollController bloc;
+  final ScrollController _controller;
+  // final RestaurantScreen widget;
+  final Restaurant restaurant;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: [
+          CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            controller: _controller,
+            slivers: [
+              SliverPersistentHeader(
+                  pinned: true,
+                  delegate: BuilderPersistentDelegate(
+                      maxExtent: MediaQuery.of(context).size.height,
+                      minExtent: 160,
+                      builder: (percent) {
+                        final bottomPercent = (percent / .3).clamp(0.0, 1.0);
+                        return AnimatedDetailHeader(
+                          topPercent: ((1 - percent) / .7).clamp(0.0, 1.0),
+                          bottomPercent: bottomPercent,
+                          restaurant: restaurant,
+                        );
+                      })),
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: _HeaderSliverShimmer(),
+              ),
+              for (var i = 0; i < 5; i++) ...[
+                SliverPersistentHeader(
+                  delegate: MyHeaderTitleShimmer(),
+                ),
+                // const SliverBodyItemsShimmer(),
+              ],
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  static fromColors(
+      {required Color baseColor,
+      required Color highlightColor,
+      required Duration period,
+      required Container child}) {}
+}
+
 const _maxHeaderExtent = 40.0;
 
 class _HeaderSliver extends SliverPersistentHeaderDelegate {
@@ -288,6 +347,169 @@ class _HeaderSliver extends SliverPersistentHeaderDelegate {
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
       false;
+}
+
+//   SHIMMER
+class _HeaderSliverShimmer extends SliverPersistentHeaderDelegate {
+  _HeaderSliverShimmer();
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final percent = shrinkOffset / _maxHeaderExtent;
+
+    return Stack(
+      children: [
+        Positioned(
+          // bottom: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            height: _maxHeaderExtent,
+            color: Colors.white,
+            // decoration: BoxDecoration(
+            //   borderRadius: BorderRadius.circular(20),
+            //   color: Colors.amber,
+            // ),
+            child: Column(
+              children: [
+                Expanded(
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 400),
+                    child: Container(
+                        height: 40,
+                        margin: const EdgeInsets.only(
+                          // top: 8,
+                          // bottom: 8,
+                          right: 8,
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 109, 239, 131),
+                            borderRadius: BorderRadius.circular(16)),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.black38,
+                          highlightColor: Colors.grey.shade600,
+                          period: const Duration(milliseconds: 600),
+                          child: Container(
+                            margin: EdgeInsets.only(left: 5, right: 5, top: 5),
+                            height: 330,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.grey.withOpacity(0.5)),
+                          ),
+                        )),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  @override
+  // TODO: implement maxExtent
+  double get maxExtent => _maxHeaderExtent;
+
+  @override
+  // TODO: implement minExtent
+  double get minExtent => _maxHeaderExtent;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
+}
+
+//   SHIMMER
+class MyHeaderTitleShimmer extends SliverPersistentHeaderDelegate {
+  const MyHeaderTitleShimmer();
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      height: 330,
+      alignment: Alignment.centerLeft,
+      child: Container(
+        margin: EdgeInsets.only(left: 5, right: 5, top: 5),
+        height: 330,
+        width: double.infinity,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.grey.withOpacity(0.5)),
+      ),
+    );
+  }
+
+  @override
+  double get maxExtent => headerTitle;
+
+  @override
+  double get minExtent => headerTitle;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      false;
+}
+
+//    SHIMMER
+class SliverBodyItemsShimmer extends StatelessWidget {
+  const SliverBodyItemsShimmer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (context, index) {
+          return Column(
+            children: [
+              Divider(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 7,
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Shimmer.fromColors(
+                          baseColor: Colors.grey,
+                          highlightColor: Colors.grey,
+                          child: Container(
+                            height: 20.0,
+                            color: Colors.white,
+                          ),
+                          period: Duration(milliseconds: 100),
+                        ),
+                      ),
+                    ),
+                    Shimmer.fromColors(
+                      baseColor: Colors.black38,
+                      highlightColor: Colors.grey.shade600,
+                      period: const Duration(milliseconds: 600),
+                      child: Container(
+                        margin: EdgeInsets.only(left: 5, right: 5, top: 5),
+                        height: 330,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.grey.withOpacity(0.5)),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Divider(),
+            ],
+          );
+        },
+        childCount: 3,
+      ),
+    );
+  }
 }
 
 class BuilderPersistentDelegate extends SliverPersistentHeaderDelegate {
