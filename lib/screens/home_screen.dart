@@ -1,3 +1,4 @@
+import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
@@ -40,6 +41,14 @@ class _HomeScreenState extends State<HomeScreen> {
   List<RestaurantCard> restaurantCards = [];
 
   bool notificationWidget = false;
+
+  bool loading = true;
+
+  void LoadingFinished() {
+    setState(() {
+      loading = !loading;
+    });
+  }
 
   void toggle() {
     setState(() {
@@ -130,7 +139,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   icon: Icon(Icons.notifications),
                   iconSize: 25,
                   color: Colors.grey,
-                  onPressed: toggle,
+                  // onPressed: toggle,
+                  onPressed: LoadingFinished,
                 ),
                 decoration: BoxDecoration(
                   color: Color.fromARGB(110, 33, 33, 33),
@@ -161,35 +171,54 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
-          SizedBox(
-            height: 250,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              physics: BouncingScrollPhysics(),
-              // itemCount: 5,
-              padding: EdgeInsets.only(
-                top: 10.0,
-                bottom: 10,
+          if (loading)
+            SizedBox(
+              height: 250,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
+                // itemCount: 5,
+                padding: EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10,
+                ),
+                children: [
+                  Foodshimmer(),
+                  Foodshimmer(),
+                  Foodshimmer(),
+                ],
               ),
-              children: [
-                SmallRestaurantCard(
-                  imageID: 'kfc',
-                  itemName: 'itemname',
-                  itemDesc: 'itemDisc',
-                ),
-                SmallRestaurantCard(
-                  imageID: 'mac',
-                  itemName: 'itemname',
-                  itemDesc: 'itemDisc',
-                ),
-                SmallRestaurantCard(
-                  imageID: 'pizzahut',
-                  itemName: 'itemname',
-                  itemDesc: 'itemDisc',
-                ),
-              ],
             ),
-          ),
+          if (!loading)
+            SizedBox(
+              height: 250,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
+                // itemCount: 5,
+                padding: EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10,
+                ),
+                children: [
+                  SmallRestaurantCard(
+                    imageID: 'kfc',
+                    itemName: 'itemname',
+                    itemDesc: 'itemDisc',
+                  ),
+                  SmallRestaurantCard(
+                    imageID: 'mac',
+                    itemName: 'itemname',
+                    itemDesc: 'itemDisc',
+                  ),
+                  SmallRestaurantCard(
+                    imageID: 'pizzahut',
+                    itemName: 'itemname',
+                    itemDesc: 'itemDisc',
+                  ),
+                ],
+              ),
+            ),
           Divider(),
           SizedBox(height: 20),
           Container(
@@ -204,9 +233,19 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           SizedBox(height: 15),
-          Column(
-            children: restaurantCards,
-          ),
+
+          if (loading)
+            Column(
+              children: [
+                Resshimmer(),
+                Resshimmer(),
+                Resshimmer(),
+              ],
+            ),
+          if (!loading)
+            Column(
+              children: restaurantCards,
+            ),
           // ListView.builder(
           //   itemBuilder: (context, index) {
           //     return RestaurantCard(restaurant: restaurants[index]);
@@ -216,6 +255,54 @@ class _HomeScreenState extends State<HomeScreen> {
           //   shrinkWrap: true,
           // ),
         ],
+      ),
+    );
+  }
+}
+
+class Resshimmer extends StatelessWidget {
+  const Resshimmer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.black38,
+      highlightColor: Colors.grey.shade600,
+      period: const Duration(milliseconds: 600),
+      child: Container(
+        margin: EdgeInsets.only(left: 5, right: 5, top: 5),
+        height: 330,
+        width: double.infinity,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20),
+            color: Colors.grey.withOpacity(0.5)),
+      ),
+    );
+  }
+}
+
+class Foodshimmer extends StatelessWidget {
+  const Foodshimmer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+      baseColor: Colors.black38,
+      highlightColor: Colors.grey.shade600,
+      period: const Duration(milliseconds: 600),
+      child: Container(
+        margin: EdgeInsets.only(
+          left: 4,
+        ),
+        height: 300,
+        width: 140,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: Colors.grey.withOpacity(0.5)),
       ),
     );
   }
@@ -248,7 +335,7 @@ class OrderNotification extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 5),
+                  SizedBox(height: 10),
                   Container(
                     padding: EdgeInsets.only(left: 10, right: 10, top: 5),
                     child: Row(
