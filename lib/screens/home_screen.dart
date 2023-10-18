@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
@@ -131,7 +132,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(true);
+                    SystemNavigator.pop();
+                    // Navigator.of(context).pop(true);
                   }, // <-- SEE HERE
                   child: new Text('Yes'),
                 ),
