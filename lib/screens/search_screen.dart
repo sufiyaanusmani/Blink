@@ -24,7 +24,7 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   bool _loading = false;
-  List<String> recentSearches = [];
+  List<Product> recentSearches = [];
 
   List<Product> products = [];
 
@@ -65,21 +65,27 @@ class _SearchScreenState extends State<SearchScreen> {
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: SearchBarWidget(
-                  onSubmitted: onSearchTextChanged,
-                  onEntry: (text) {
-                    setState(() {
-                      recentSearches = [];
-                    });
-                    for (Product product in products) {
-                      if (product.name
-                          .toLowerCase()
-                          .contains(text.toLowerCase())) {
-                        setState(() {
-                          recentSearches.add(product.name);
-                        });
-                      }
+                onSubmitted: onSearchTextChanged,
+                onEntry: (text) {
+                  setState(() {
+                    recentSearches = [];
+                  });
+                  for (Product product in products) {
+                    if (product.name
+                        .toLowerCase()
+                        .contains(text.toLowerCase())) {
+                      setState(() {
+                        recentSearches.add(product);
+                      });
                     }
-                  }),
+                  }
+                },
+                onClick: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) =>
+                          SearchResults(products: recentSearches)));
+                },
+              ),
             ),
             Container(
               alignment: Alignment.centerLeft,
@@ -110,7 +116,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               size: 20,
                             ),
                             SizedBox(width: 7),
-                            Text(searchItem,
+                            Text(searchItem.name,
                                 style: TextStyle(
                                   color: Colors.black,
                                   fontWeight: FontWeight.w500,
