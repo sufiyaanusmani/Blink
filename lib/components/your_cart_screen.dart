@@ -386,59 +386,69 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       ).show(context);
                     } else {
                       var db = Mysql();
-                      int orderID = 0;
-                      if (HomePage.preOrder == false) {
-                        orderID = await db.placeOrder(
-                            Cart.customerID, Cart.restaurantID, totalPrice);
+                      if (await db.alreadyOrdered(Cart.customerID)) {
+                        AnimatedSnackBar.material(
+                          'You can only place one order at a time',
+                          borderRadius: BorderRadius.circular(10),
+                          duration: Duration(seconds: 4),
+                          type: AnimatedSnackBarType.error,
+                          mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                        ).show(context);
                       } else {
-                        orderID = await db.placePreOrder(
-                            Cart.customerID, Cart.restaurantID, totalPrice);
-                        HomePage.preOrder = false;
-                      }
-                      Iterable<ResultSetRow> rows = await db.getResults(
-                          'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
-                      print('line 371');
-                      print(orderID);
-                      int price = 0;
-                      String restaurantName = '';
-                      String status = '';
-                      print(rows.length);
-                      if (rows.length == 1) {
-                        for (var row in rows) {
-                          print(orderID);
-                          restaurantName = row.assoc()['name']!;
-                          status = row.assoc()['status']!;
-                          price = int.parse(row.assoc()['price']!);
-                        }
-                        Order order = Order(
-                            orderID: orderID,
-                            restaurantName: restaurantName,
-                            status: status,
-                            price: price);
-                        print(orderID);
-                        for (CartProduct product in Cart.cart) {
-                          db.addOrderDetail(
-                              orderID, product.product.id, product.quantity);
-                        }
-                        setState(() {
-                          Cart.cart = [];
-                          itemList = [];
-                          totalPrice = 0;
-                          HomePage.preOrderHour = 8;
-                          HomePage.preOrderMinute = 0;
+                        int orderID = 0;
+                        if (HomePage.preOrder == false) {
+                          orderID = await db.placeOrder(
+                              Cart.customerID, Cart.restaurantID, totalPrice);
+                        } else {
+                          orderID = await db.placePreOrder(
+                              Cart.customerID, Cart.restaurantID, totalPrice);
                           HomePage.preOrder = false;
-                          HomePage.preOrderText = "08:00 am";
-                        });
+                        }
+                        Iterable<ResultSetRow> rows = await db.getResults(
+                            'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
+                        print('line 371');
+                        print(orderID);
+                        int price = 0;
+                        String restaurantName = '';
+                        String status = '';
+                        print(rows.length);
+                        if (rows.length == 1) {
+                          for (var row in rows) {
+                            print(orderID);
+                            restaurantName = row.assoc()['name']!;
+                            status = row.assoc()['status']!;
+                            price = int.parse(row.assoc()['price']!);
+                          }
+                          Order order = Order(
+                              orderID: orderID,
+                              restaurantName: restaurantName,
+                              status: status,
+                              price: price);
+                          print(orderID);
+                          for (CartProduct product in Cart.cart) {
+                            db.addOrderDetail(
+                                orderID, product.product.id, product.quantity);
+                          }
+                          setState(() {
+                            Cart.cart = [];
+                            itemList = [];
+                            totalPrice = 0;
+                            HomePage.preOrderHour = 8;
+                            HomePage.preOrderMinute = 0;
+                            HomePage.preOrder = false;
+                            HomePage.preOrderText = "08:00 am";
+                          });
 
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            pageBuilder: (_, animation, __) => FadeTransition(
-                              opacity: animation,
-                              child: OrderStatusScreen(order: order),
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder: (_, animation, __) => FadeTransition(
+                                opacity: animation,
+                                child: OrderStatusScreen(order: order),
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       }
                     }
                   },

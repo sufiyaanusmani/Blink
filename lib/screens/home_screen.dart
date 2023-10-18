@@ -139,11 +139,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icon(Icons.notifications),
                     iconSize: 25,
                     color: Colors.grey,
-                    // onPressed: toggle,
-                    onPressed: () {
-                      print('pressed');
-                      print('pressed');
-                    },
+                    onPressed: toggle,
+                    // onPressed: () {
+                    //   print('pressed');
+                    //   print('pressed');
+                    // },
                   ),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(110, 33, 33, 33),
@@ -284,11 +284,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icon(Icons.notifications),
                     iconSize: 25,
                     color: Colors.grey,
-                    // onPressed: toggle,
-                    onPressed: () {
-                      print('pressed');
-                      print('pressed');
-                    },
+                    onPressed: toggle,
+                    // onPressed: () {
+                    //   print('pressed');
+                    //   print('pressed');
+                    // },
                   ),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(110, 33, 33, 33),

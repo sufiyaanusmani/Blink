@@ -89,4 +89,15 @@ class Mysql {
     await stmt.deallocate();
     conn.close();
   }
+
+  Future<bool> alreadyOrdered(int customerID) async {
+    var db = Mysql();
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT * FROM Orders WHERE customer_id=$customerID AND status IN ("pending", "preparing");');
+    if (rows.length == 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
