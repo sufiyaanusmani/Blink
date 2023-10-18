@@ -81,9 +81,13 @@ class _SearchScreenState extends State<SearchScreen> {
                   }
                 },
                 onClick: () {
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
                       builder: (context) =>
-                          SearchResults(products: recentSearches)));
+                          SearchResults(products: recentSearches),
+                    ),
+                  );
                 },
               ),
             ),
