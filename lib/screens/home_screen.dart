@@ -45,11 +45,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   bool loading = true;
 
-  void LoadingFinished() {
-    setState(() {
-      loading = !loading;
-    });
-  }
+  // void LoadingFinished() {
+  //   setState(() {
+  //     loading = !loading;
+  //   });
+  // }
 
   void toggle() {
     setState(() {
@@ -73,6 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // }
 
   void getRestaurants() async {
+    setState(() {
+      loading = true;
+    });
     List<Restaurant> r = await Restaurant.getRestaurants();
     List<RestaurantCard> tempRestaurantCards = [];
     for (Restaurant res in r) {
@@ -84,6 +87,9 @@ class _HomeScreenState extends State<HomeScreen> {
         restaurantCards = tempRestaurantCards;
       });
     }
+    setState(() {
+      loading = false;
+    });
   }
 
   // void getRestaurantsCards() {
@@ -110,6 +116,81 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (loading == true) {
+      return Scaffold(
+        body: ListView(
+          scrollDirection: Axis.vertical,
+          // itemCount: 5,
+          padding: EdgeInsets.all(10.0),
+          children: [
+            // OrderNotification(show: notificationWidget, total: total),
+            SizedBox(height: 5),
+
+            SizedBox(height: 30),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                'Trending',
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 250,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
+                // itemCount: 5,
+                padding: EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10,
+                ),
+                children: [
+                  Foodshimmer(),
+                  Foodshimmer(),
+                  Foodshimmer(),
+                ],
+              ),
+            ),
+
+            Divider(),
+            SizedBox(height: 20),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                'Discover',
+                style: TextStyle(
+                  fontSize: 40,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            SizedBox(height: 15),
+
+            Column(
+              children: [
+                Resshimmer(),
+                Resshimmer(),
+                Resshimmer(),
+              ],
+            ),
+
+            // ListView.builder(
+            //   itemBuilder: (context, index) {
+            //     return RestaurantCard(restaurant: restaurants[index]);
+            //   },
+            //   itemCount: restaurants.length,
+            //   scrollDirection: Axis.vertical,
+            //   shrinkWrap: true,
+            // ),
+          ],
+        ),
+      );
+    }
     double total = foodItems.fold(0, (sum, item) => sum + item.price);
 
     // User user = ModalRoute.of(context)!.settings.arguments as User;
@@ -168,7 +249,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     iconSize: 25,
                     color: Colors.grey,
                     // onPressed: toggle,
-                    onPressed: LoadingFinished,
+                    onPressed: () {
+                      print('pressed');
+                      print('pressed');
+                    },
                   ),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(110, 33, 33, 33),
@@ -199,54 +283,35 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            if (loading)
-              SizedBox(
-                height: 250,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
-                  // itemCount: 5,
-                  padding: EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10,
-                  ),
-                  children: [
-                    Foodshimmer(),
-                    Foodshimmer(),
-                    Foodshimmer(),
-                  ],
+            SizedBox(
+              height: 250,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
+                // itemCount: 5,
+                padding: EdgeInsets.only(
+                  top: 10.0,
+                  bottom: 10,
                 ),
-              ),
-            if (!loading)
-              SizedBox(
-                height: 250,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  physics: BouncingScrollPhysics(),
-                  // itemCount: 5,
-                  padding: EdgeInsets.only(
-                    top: 10.0,
-                    bottom: 10,
+                children: [
+                  SmallRestaurantCard(
+                    imageID: 'kfc',
+                    itemName: 'itemname',
+                    itemDesc: 'itemDisc',
                   ),
-                  children: [
-                    SmallRestaurantCard(
-                      imageID: 'kfc',
-                      itemName: 'itemname',
-                      itemDesc: 'itemDisc',
-                    ),
-                    SmallRestaurantCard(
-                      imageID: 'mac',
-                      itemName: 'itemname',
-                      itemDesc: 'itemDisc',
-                    ),
-                    SmallRestaurantCard(
-                      imageID: 'pizzahut',
-                      itemName: 'itemname',
-                      itemDesc: 'itemDisc',
-                    ),
-                  ],
-                ),
+                  SmallRestaurantCard(
+                    imageID: 'mac',
+                    itemName: 'itemname',
+                    itemDesc: 'itemDisc',
+                  ),
+                  SmallRestaurantCard(
+                    imageID: 'pizzahut',
+                    itemName: 'itemname',
+                    itemDesc: 'itemDisc',
+                  ),
+                ],
               ),
+            ),
             Divider(),
             SizedBox(height: 20),
             Container(
@@ -262,18 +327,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             SizedBox(height: 15),
 
-            if (loading)
-              Column(
-                children: [
-                  Resshimmer(),
-                  Resshimmer(),
-                  Resshimmer(),
-                ],
-              ),
-            if (!loading)
-              Column(
-                children: restaurantCards,
-              ),
+            Column(
+              children: restaurantCards,
+            )
             // ListView.builder(
             //   itemBuilder: (context, index) {
             //     return RestaurantCard(restaurant: restaurants[index]);
