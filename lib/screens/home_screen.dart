@@ -118,6 +118,42 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (loading == true) {
       return Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.grey.shade800,
+          shadowColor: Colors.grey.shade800,
+          automaticallyImplyLeading: false,
+          title: Container(
+            // padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Blink',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 30,
+                  ),
+                ),
+                Container(
+                  child: IconButton(
+                    icon: Icon(Icons.notifications),
+                    iconSize: 25,
+                    color: Colors.grey,
+                    // onPressed: toggle,
+                    onPressed: () {
+                      print('pressed');
+                      print('pressed');
+                    },
+                  ),
+                  decoration: BoxDecoration(
+                    color: Color.fromARGB(110, 33, 33, 33),
+                    borderRadius: BorderRadius.all(Radius.circular(9)),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
         body: ListView(
           scrollDirection: Axis.vertical,
           // itemCount: 5,
