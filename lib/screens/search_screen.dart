@@ -81,13 +81,15 @@ class _SearchScreenState extends State<SearchScreen> {
                   }
                 },
                 onClick: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          SearchResults(products: recentSearches),
-                    ),
-                  );
+                  if (recentSearches.length > 0) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            SearchResults(products: recentSearches),
+                      ),
+                    );
+                  }
                 },
               ),
             ),
@@ -95,7 +97,7 @@ class _SearchScreenState extends State<SearchScreen> {
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.all(16.0),
               child: const Text(
-                'Recent Search',
+                'Results',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
@@ -107,41 +109,66 @@ class _SearchScreenState extends State<SearchScreen> {
                 itemCount: recentSearches.length,
                 itemBuilder: (context, index) {
                   final searchItem = recentSearches[index];
-                  return Container(
-                    padding: EdgeInsets.only(left: 16, bottom: 18, right: 17),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.access_time,
-                              color: Colors.grey,
-                              size: 20,
-                            ),
-                            SizedBox(width: 7),
-                            Text(searchItem.name,
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 17,
-                                )),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            // Implement the delete function here
-                            setState(() {
-                              recentSearches.removeAt(index);
-                            });
-                          },
-                          child: Icon(
-                            Icons.close_sharp,
-                            color: Colors.grey,
-                            // size: 17,
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        recentSearches = [];
+                      });
+                      for (Product product in products) {
+                        if (product.name
+                            .toLowerCase()
+                            .contains(searchItem.name.toLowerCase())) {
+                          setState(() {
+                            recentSearches.add(product);
+                          });
+                        }
+                      }
+                      if (recentSearches.length > 0) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SearchResults(products: recentSearches),
                           ),
-                        ),
-                      ],
+                        );
+                      }
+                    },
+                    child: Container(
+                      padding: EdgeInsets.only(left: 16, bottom: 18, right: 17),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.search,
+                                color: Colors.grey,
+                                size: 20,
+                              ),
+                              SizedBox(width: 7),
+                              Text(searchItem.name,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 17,
+                                  )),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              // Implement the delete function here
+                              setState(() {
+                                recentSearches.removeAt(index);
+                              });
+                            },
+                            child: Icon(
+                              Icons.close_sharp,
+                              color: Colors.grey,
+                              // size: 17,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   );
                 },
