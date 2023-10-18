@@ -50,10 +50,11 @@ class Mysql {
   }
 
   Future<int> placePreOrder(int customerID, int restaurantID, int price) async {
+    int orderID = await placeOrder(customerID, restaurantID, price);
     var conn = await getConnection();
     await conn.connect();
     var stmt = await conn.prepare(
-        'INSERT INTO Orders (customer_id, restaurant_id, price, preschedule) VALUES (?, ?, ?, CONCAT(CONCAT(CURRENT_DATE, " "), ?))');
+        'INSERT INTO Preschedule (order_id, time) VALUES (?, CONCAT(CONCAT(CURRENT_DATE, " "), ?))');
     int hour = HomePage.preOrderHour;
     if (HomePage.preOrderText.toLowerCase().contains("pm") &&
         HomePage.preOrderHour != 12) {
@@ -63,18 +64,9 @@ class Mysql {
       hour = 0;
     }
     String time = "$hour:${HomePage.preOrderMinute}";
-    await stmt.execute([customerID, restaurantID, price, time]);
+    await stmt.execute([orderID, time]);
     await stmt.deallocate();
     conn.close();
-    var db = Mysql();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=$customerID ORDER BY placed_at DESC LIMIT 1;');
-    int orderID = 0;
-    if (rows.length == 1) {
-      for (var row in rows) {
-        orderID = int.parse(row.assoc()['order_id']!);
-      }
-    }
     return orderID;
   }
 
