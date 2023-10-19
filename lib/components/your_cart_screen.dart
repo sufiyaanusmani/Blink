@@ -9,7 +9,6 @@ import 'package:mysql_client/mysql_client.dart';
 import 'package:slide_to_act_reborn/slide_to_act_reborn.dart';
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:food_delivery/classes/cart.dart';
-import 'package:food_delivery/classes/order_detail.dart';
 
 class YourCartScreen extends StatefulWidget {
   @override

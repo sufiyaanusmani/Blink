@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:mysql_client/mysql_client.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
@@ -304,7 +305,8 @@ class _HomeScreenState extends State<HomeScreen> {
           // itemCount: 5,
           padding: EdgeInsets.all(10.0),
           children: [
-            OrderNotification(show: notificationWidget, total: total),
+            OrderNotification(
+                show: notificationWidget, customerID: widget.user.id),
             SizedBox(height: 5),
 
             SizedBox(height: 30),
@@ -429,25 +431,63 @@ class Foodshimmer extends StatelessWidget {
   }
 }
 
-class OrderNotification extends StatelessWidget {
-  const OrderNotification({
+class OrderNotification extends StatefulWidget {
+  OrderNotification({
     super.key,
-    required this.total,
+    required this.customerID,
     required this.show,
   });
 
-  final double total;
+  final int customerID;
   final bool show;
+
+  @override
+  State<OrderNotification> createState() => _OrderNotificationState();
+}
+
+class _OrderNotificationState extends State<OrderNotification> {
+  late int orderID = 0;
+
+  late String status = 'Pending';
+
+  late String restaurantName = '';
+  late String time = "None";
+
+  late int price = 0;
+  void getOrderInfo() async {
+    var db = Mysql();
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT O.order_id, O.status, R.name, O.price, P.time FROM Orders O INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) LEFT JOIN Preschedule P ON (O.order_id = P.order_id) WHERE O.customer_id=${widget.customerID} AND O.status IN ("pending", "preparing");');
+    if (rows.length == 1) {
+      for (var row in rows) {
+        setState(() {
+          orderID = int.parse(row.assoc()['order_id']!);
+          status = row.assoc()['status']!;
+          restaurantName = row.assoc()['name']!;
+          price = int.parse(row.assoc()['price']!);
+          time = row.assoc()['time']!;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getOrderInfo();
+    print(widget.customerID);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
-      height: show ? 400 : 0,
+      height: widget.show ? 400 : 0,
       decoration: BoxDecoration(
           color: Colors.amber,
           borderRadius: BorderRadius.all(Radius.circular(20))),
-      child: !show
+      child: !widget.show
           ? SizedBox(width: 0)
           : AnimatedContainer(
               duration: Duration(milliseconds: 100),
@@ -469,7 +509,7 @@ class OrderNotification extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          "#1246",
+                          "#$orderID",
                           style: TextStyle(fontSize: 20, color: Colors.black54),
                         ),
                       ],
@@ -497,7 +537,7 @@ class OrderNotification extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          "Pending",
+                          status,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -527,7 +567,7 @@ class OrderNotification extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          "11:40",
+                          time,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -557,7 +597,7 @@ class OrderNotification extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          "Pizza fast",
+                          restaurantName,
                           style: TextStyle(
                             fontSize: 20,
                           ),
@@ -639,7 +679,7 @@ class OrderNotification extends StatelessWidget {
                           style: TextStyle(fontSize: 20),
                         ),
                         Text(
-                          '${total.toStringAsFixed(2)} rs',
+                          'Rs. $price',
                           style: TextStyle(fontSize: 20, color: Colors.black54),
                         ),
                       ],
