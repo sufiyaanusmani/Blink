@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/screens/create_new_account_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/services/navigator.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -15,16 +14,16 @@ import 'package:food_delivery/arguments/home_screen_arguments.dart';
 import 'package:food_delivery/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class LoginScreen extends StatefulWidget {
-  static const id = 'login_screen';
+class CreateNewAccountScreen extends StatefulWidget {
+  static const id = 'create_new_account_screen';
 
-  LoginScreen({super.key});
+  CreateNewAccountScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<CreateNewAccountScreen> createState() => _CreateNewAccountScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
   var username;
   List<Restaurant> restaurants = [];
   var password;
@@ -32,6 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String loginFailedMessage = '';
   late int loginID;
   late String firstName;
+  late String lastName;
+  late String email;
 
   Widget buildBottomSheet(BuildContext context) {
     return BottomContainer();
@@ -120,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 AnimatedTextKit(
                   animatedTexts: [
                     TypewriterAnimatedText(
-                      'Hello Again!',
+                      'Create New Account',
                       textAlign: TextAlign.center,
                       textStyle: GoogleFonts.lato(
                         textStyle: TextStyle(
@@ -132,19 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Welcome back, you\'ve been missed',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
+                  height: 40,
                 ),
                 PlainTextField(
                   hintText: 'Enter Username',
@@ -152,17 +141,50 @@ class _LoginScreenState extends State<LoginScreen> {
                     username = text;
                   },
                   labelText: 'Username',
-                  controller: _usernameTextController,
+                  controller: TextEditingController(),
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 15,
+                ),
+                PlainTextField(
+                  hintText: 'First Name',
+                  onChange: (text) {
+                    firstName = text;
+                  },
+                  labelText: 'First Name',
+                  controller: TextEditingController(),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                PlainTextField(
+                  hintText: 'Last Name',
+                  onChange: (text) {
+                    lastName = text;
+                  },
+                  labelText: 'Last Name',
+                  controller: TextEditingController(),
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                PlainTextField(
+                  hintText: 'Email',
+                  onChange: (text) {
+                    email = text;
+                  },
+                  labelText: 'Email',
+                  controller: TextEditingController(),
+                ),
+                SizedBox(
+                  height: 15,
                 ),
                 PasswordTextField(
                   hintText: 'Enter Password',
                   onChange: (text) {
                     password = text;
                   },
-                  controller: _passwordTextController,
+                  controller: TextEditingController(),
                 ),
                 SizedBox(
                   height: 20,
@@ -177,22 +199,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       color: Colors.red,
                     ),
                   ),
-                ),
-                GestureDetector(
-                  child: Text(
-                    'Forgot Password',
-                    textAlign: TextAlign.end,
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    showModalBottomSheet(
-                        context: context, builder: buildBottomSheet);
-                  },
                 ),
                 SizedBox(
                   height: 20,
@@ -237,48 +243,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 SizedBox(
                   height: 20,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      "or",
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Expanded(
-                      child: Divider(),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                LargeButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreateNewAccountScreen()));
-                  },
-                  color: Colors.white,
-                  verticalPadding: 10,
-                  buttonChild: Text(
-                    'Create a new account',
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
                 ),
               ],
             ),

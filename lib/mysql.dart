@@ -1,3 +1,5 @@
+import 'dart:html';
+
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:mysql_client/mysql_client.dart';
 
@@ -98,6 +100,30 @@ class Mysql {
       return true;
     } else {
       return false;
+    }
+  }
+
+  Future<int> createNewAccount(String firstName, String lastName, String email,
+      String username, String password) async {
+    int customerID;
+    var conn = await getConnection();
+    await conn.connect();
+    var stmt = await conn.prepare(
+        'INSERT INTO Customer (first_name, last_name, email, username) VALUES (?, ?, ?, ?)');
+    await stmt.execute([firstName, lastName, email]);
+    await stmt.deallocate();
+    conn.close();
+    var db = Mysql();
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT customer_id FROM Customer WHERE first_name=$firstName AND last_name=$lastName AND email=$email AND username=$username');
+    if (rows.length == 1) {
+      for (var row in rows) {
+        customerID = int.parse(row.assoc()['customer_id']!);
+      }
+      conn = await getConnection();
+      await conn.connect();
+      var stmt = await conn.prepare(
+          'INSERT INTO Customer (first_name, last_name, email, username) VALUES (?, ?, ?, ?)');
     }
   }
 }

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class PlainTextField extends StatelessWidget {
   final String hintText;
+  final String labelText;
   final Function(String) onChange;
   TextEditingController controller;
   PlainTextField(
       {required this.hintText,
       required this.onChange,
-      required this.controller});
+      required this.controller,
+      required this.labelText});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class PlainTextField extends StatelessWidget {
           decoration: InputDecoration(
               hintText: this.hintText,
               border: InputBorder.none,
-              labelText: 'Username'),
+              labelText: this.labelText),
           onChanged: onChange,
         ),
       ),
