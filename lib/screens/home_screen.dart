@@ -24,18 +24,13 @@ class HomeScreen extends StatefulWidget {
 
 class FoodItem {
   String name;
-  double price;
+  int price;
   int count;
 
-  FoodItem({required this.name, required this.price, this.count = 1});
+  FoodItem({required this.name, required this.price, required this.count});
 }
 
-final List<FoodItem> foodItems = [
-  FoodItem(name: 'Pizza', price: 10.0, count: 1),
-  FoodItem(name: 'Burger', price: 5.0, count: 1),
-  FoodItem(name: 'Fries', price: 3.0, count: 1),
-  FoodItem(name: 'Soda', price: 2.0, count: 1),
-];
+late List<FoodItem> foodItems = [];
 
 class _HomeScreenState extends State<HomeScreen> {
   var db = Mysql();
@@ -105,11 +100,30 @@ class _HomeScreenState extends State<HomeScreen> {
   //   }
   // }
 
+  void getOrder() async {
+    var db = Mysql();
+    List<FoodItem> temp = [];
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT P.name, D.quantity, (D.quantity * P.price) AS price FROM Orders O INNER JOIN OrderDetail D ON (O.order_id = D.order_id) INNER JOIN Product P ON (D.product_id = P.product_id) WHERE O.customer_id = ${widget.user.id};');
+    if (rows.length == 1) {
+      for (var row in rows) {
+        temp.add(FoodItem(
+            name: row.assoc()['name']!,
+            price: int.parse(row.assoc()['price']!),
+            count: int.parse(row.assoc()['quantity']!)));
+      }
+      setState(() {
+        foodItems = temp;
+      });
+    }
+  }
+
   @override
   void initState() {
     if (restaurantCards.isEmpty) {
       getRestaurants();
     }
+    getOrder();
     Cart.customerID = widget.user.id;
     // TODO: implement initState
     super.initState();
@@ -465,7 +479,10 @@ class _OrderNotificationState extends State<OrderNotification> {
           status = row.assoc()['status']!;
           restaurantName = row.assoc()['name']!;
           price = int.parse(row.assoc()['price']!);
-          time = row.assoc()['time']!;
+          var timeTemp = row.assoc()['time'] ?? 'None';
+          setState(() {
+            time = timeTemp;
+          });
         });
       }
     }
@@ -617,51 +634,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                           child: Column(
                             children: [
                               if (index == 0) Divider(color: Colors.black87),
-                              Row(
-                                children: [
-                                  SizedBox(width: 8),
-                                  Container(
-                                    padding: EdgeInsets.only(
-                                        top: 3, left: 3, bottom: 3),
-                                    decoration: BoxDecoration(
-                                      // color: Colors.white38,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(30)),
-                                      border: Border.all(
-                                        color: Colors.black45,
-                                        width: 1.0,
-                                      ),
-                                    ),
-                                    child: Text(
-                                      '${foodItem.count}× ',
-                                      style: TextStyle(
-                                          fontSize: 20, color: Colors.black54),
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          "${foodItem.name}",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                        Text(
-                                          "${foodItem.price} rs",
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.black54),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(width: 10),
-                                ],
-                              ),
+                              OrderStatusProductRow(foodItem: foodItem),
                               Divider(color: Colors.black87),
                             ],
                           ),
@@ -691,6 +664,56 @@ class _OrderNotificationState extends State<OrderNotification> {
                 ],
               ),
             ),
+    );
+  }
+}
+
+class OrderStatusProductRow extends StatelessWidget {
+  const OrderStatusProductRow({
+    super.key,
+    required this.foodItem,
+  });
+
+  final FoodItem foodItem;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(width: 8),
+        Container(
+          padding: EdgeInsets.only(top: 3, left: 3, bottom: 3),
+          decoration: BoxDecoration(
+            // color: Colors.white38,
+            borderRadius: BorderRadius.all(Radius.circular(30)),
+            border: Border.all(
+              color: Colors.black45,
+              width: 1.0,
+            ),
+          ),
+          child: Text(
+            '${foodItem.count}× ',
+            style: TextStyle(fontSize: 20, color: Colors.black54),
+          ),
+        ),
+        SizedBox(width: 10),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "${foodItem.name}",
+              style: TextStyle(
+                fontSize: 20,
+              ),
+            ),
+            Text(
+              "${foodItem.price} rs",
+              style: TextStyle(fontSize: 15, color: Colors.black54),
+            ),
+          ],
+        ),
+        SizedBox(width: 10),
+      ],
     );
   }
 }
