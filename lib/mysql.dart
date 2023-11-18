@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:mysql_client/mysql_client.dart';
 
@@ -105,25 +103,36 @@ class Mysql {
 
   Future<int> createNewAccount(String firstName, String lastName, String email,
       String username, String password) async {
-    int customerID;
+    int customerID = -1;
+    var db = Mysql();
     var conn = await getConnection();
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT * FROM Customer WHERE email="$email" OR username="$username";');
+    if (rows.length > 0) {
+      return -1;
+    }
+    conn = await getConnection();
     await conn.connect();
-    var stmt = await conn.prepare(
-        'INSERT INTO Customer (first_name, last_name, email, username) VALUES (?, ?, ?, ?)');
-    await stmt.execute([firstName, lastName, email]);
+    var stmt = await conn
+        .prepare('INSERT INTO Account (username, password) VALUES ("?", "?");');
+    await stmt.execute([username, password]);
     await stmt.deallocate();
     conn.close();
-    var db = Mysql();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT customer_id FROM Customer WHERE first_name=$firstName AND last_name=$lastName AND email=$email AND username=$username');
+    var conn1 = await getConnection();
+    await conn1.connect();
+    stmt = await conn1.prepare(
+        'INSERT INTO Customer (first_name, last_name, email, username) VALUES ("?", "?", "?", "?");');
+    await stmt.execute([firstName, lastName, email, username]);
+    await stmt.deallocate();
+    conn1.close();
+    rows = await db.getResults(
+        'SELECT customer_id FROM Customer WHERE first_name="$firstName" AND last_name="$lastName" AND email="$email"S AND username=$username;');
+
     if (rows.length == 1) {
       for (var row in rows) {
         customerID = int.parse(row.assoc()['customer_id']!);
       }
-      conn = await getConnection();
-      await conn.connect();
-      var stmt = await conn.prepare(
-          'INSERT INTO Customer (first_name, last_name, email, username) VALUES (?, ?, ?, ?)');
     }
+    return customerID;
   }
 }
