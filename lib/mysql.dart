@@ -32,10 +32,15 @@ class Mysql {
   Future<int> placeOrder(int customerID, int restaurantID, int price) async {
     var conn = await getConnection();
     await conn.connect();
-    var stmt = await conn.prepare(
-        'INSERT INTO Orders (customer_id, restaurant_id, price) VALUES (?, ?, ?)');
-    await stmt.execute([customerID, restaurantID, price]);
-    await stmt.deallocate();
+    await conn.transactional((conn) async {
+      await conn.execute(
+          "INSERT INTO Orders (customer_id, restaurant_id, price) VALUES ($customerID, $restaurantID, $price);");
+    });
+
+    // var stmt = await conn.prepare(
+    //     'START TRANSACTION;COMMIT;');
+    // await stmt.execute([customerID, restaurantID, price]);
+    // await stmt.deallocate();
     conn.close();
     var db = Mysql();
     Iterable<ResultSetRow> rows = await db.getResults(
@@ -83,10 +88,10 @@ class Mysql {
   void incrementViewCount(int restaurantID) async {
     var conn = await getConnection();
     await conn.connect();
-    var stmt = await conn
-        .prepare('UPDATE Impressions SET views=views+1 WHERE restaurant_id=?');
-    await stmt.execute([restaurantID]);
-    await stmt.deallocate();
+    await conn.transactional((conn) async {
+      await conn.execute(
+          "UPDATE Impressions SET views=views+1 WHERE restaurant_id=$restaurantID;");
+    });
     conn.close();
   }
 
@@ -113,18 +118,13 @@ class Mysql {
     }
     conn = await getConnection();
     await conn.connect();
-    var stmt = await conn
-        .prepare('INSERT INTO Account (username, password) VALUES ("?", "?");');
-    await stmt.execute([username, password]);
-    await stmt.deallocate();
+    await conn.transactional((conn) async {
+      await conn.execute(
+          'INSERT INTO Account (username, password) VALUES ("$username", "$password");');
+      await conn.execute(
+          'INSERT INTO Customer (first_name, last_name, email, username) VALUES ("$firstName", "$lastName", "$email", "$username");');
+    });
     conn.close();
-    var conn1 = await getConnection();
-    await conn1.connect();
-    stmt = await conn1.prepare(
-        'INSERT INTO Customer (first_name, last_name, email, username) VALUES ("?", "?", "?", "?");');
-    await stmt.execute([firstName, lastName, email, username]);
-    await stmt.deallocate();
-    conn1.close();
     rows = await db.getResults(
         'SELECT customer_id FROM Customer WHERE first_name="$firstName" AND last_name="$lastName" AND email="$email"S AND username=$username;');
 
