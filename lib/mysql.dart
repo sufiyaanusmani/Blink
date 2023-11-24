@@ -135,4 +135,24 @@ class Mysql {
     }
     return customerID;
   }
+
+  void likeProduct(int customerID, int productID) async {
+    var conn = await getConnection();
+    await conn.connect();
+    var stmt = await conn.prepare(
+        'INSERT INTO Favourites (customer_id, product_id) VALUES (?, ?)');
+    await stmt.execute([customerID, productID]);
+    await stmt.deallocate();
+    conn.close();
+  }
+
+  void dislikeProduct(int customerID, int productID) async {
+    var conn = await getConnection();
+    await conn.connect();
+    var stmt = await conn
+        .prepare('DELETE FROM Favourites WHERE customer_id=? AND product_id=?');
+    await stmt.execute([customerID, productID]);
+    await stmt.deallocate();
+    conn.close();
+  }
 }

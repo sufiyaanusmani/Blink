@@ -225,6 +225,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                       ),
                       SliverBodyItems(
                         listItem: bloc.listCategory[i].products,
+                        customerID: widget.customerID,
                         // listItem: dummyProducts,
                       )
                     ],

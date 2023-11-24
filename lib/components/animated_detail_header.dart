@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_delivery/classes/menu.dart';
 
 class AnimatedDetailHeader extends StatelessWidget {
   const AnimatedDetailHeader(
@@ -120,10 +119,8 @@ class AnimatedDetailHeader extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.elliptical(
-                      30, 10),
-                  topRight: Radius.elliptical(
-                      30, 10),
+                  topLeft: Radius.elliptical(30, 10),
+                  topRight: Radius.elliptical(30, 10),
                 ),
               ),
             ),
