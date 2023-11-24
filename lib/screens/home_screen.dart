@@ -76,7 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
     List<RestaurantCard> tempRestaurantCards = [];
     for (Restaurant res in r) {
       print('got a card');
-      tempRestaurantCards.add(RestaurantCard(restaurant: res));
+      tempRestaurantCards
+          .add(RestaurantCard(restaurant: res, customerID: widget.user.id));
     }
     if (this.mounted) {
       setState(() {

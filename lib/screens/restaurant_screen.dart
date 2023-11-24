@@ -18,11 +18,15 @@ class RestaurantScreen extends StatefulWidget {
   static const String id = 'restaurant_screen';
 
   const RestaurantScreen(
-      {Key? key, required this.screenHeight, required this.restaurant})
+      {Key? key,
+      required this.screenHeight,
+      required this.restaurant,
+      required this.customerID})
       : super(key: key);
 
   final double screenHeight;
   final Restaurant restaurant;
+  final int customerID;
 
   @override
   State<RestaurantScreen> createState() => _RestaurantScreenState();
@@ -101,7 +105,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     bottomPercentNotifier = ValueNotifier(1.0);
 
     // bloc.init();
-
+    print(widget.customerID);
     super.initState();
   }
 
