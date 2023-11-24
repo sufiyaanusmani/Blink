@@ -106,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
     List<FoodItem> temp = [];
     Iterable<ResultSetRow> rows = await db.getResults(
         'SELECT P.name, D.quantity, (D.quantity * P.price) AS price FROM Orders O INNER JOIN OrderDetail D ON (O.order_id = D.order_id) INNER JOIN Product P ON (D.product_id = P.product_id) WHERE O.customer_id = ${widget.user.id};');
-    if (rows.length == 1) {
+    if (rows.length >= 1) {
       for (var row in rows) {
         temp.add(FoodItem(
             name: row.assoc()['name']!,
@@ -533,7 +533,6 @@ class _OrderNotificationState extends State<OrderNotification> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 15),
                   Container(
                     padding: EdgeInsets.only(left: 10, right: 10),
                     child: Row(
@@ -545,7 +544,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                               Icons.local_fire_department_sharp,
                               color: Colors.black54,
                             ),
-                            SizedBox(width: 5),
+                            SizedBox(width: 4),
                             Text(
                               "Status",
                               style: TextStyle(
