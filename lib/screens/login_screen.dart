@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/screens/create_new_account_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/services/navigator.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -45,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
     //     'SELECT * FROM Customer WHERE username="$username" AND password="$password";');
     // conn.close();
     Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT * FROM Customer WHERE username="$username" AND password="$password";');
+        'SELECT * FROM Customer C INNER JOIN Account A ON (C.username = A.username) WHERE C.username="$username" AND A.password="$password";');
     if (rows.length == 1) {
       for (var row in rows) {
         loginID = int.parse(row.assoc()['customer_id']!);
@@ -150,6 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   onChange: (text) {
                     username = text;
                   },
+                  labelText: 'Username',
                   controller: _usernameTextController,
                 ),
                 SizedBox(
@@ -245,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 15,
                     ),
                     Text(
-                      "or continue with",
+                      "or",
                     ),
                     SizedBox(
                       width: 15,
@@ -259,14 +261,25 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 20,
                 ),
                 LargeButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => CreateNewAccountScreen()));
+                  },
                   color: Colors.white,
                   verticalPadding: 10,
-                  buttonChild: Image.asset(
-                    'images/google.png',
-                    height: 40,
+                  buttonChild: Text(
+                    'Create a new account',
+                    style: GoogleFonts.lato(
+                      textStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),

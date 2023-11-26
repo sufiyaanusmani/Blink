@@ -1,5 +1,6 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/controller/sliver_scroll_controller.dart';
 import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_category.dart';
 import 'package:food_delivery/classes/cart.dart';
@@ -30,17 +31,25 @@ import '../../classes/product.dart';
 //   });
 // }
 
-class SliverBodyItems extends StatelessWidget {
-  const SliverBodyItems({Key? key, required this.listItem}) : super(key: key);
+class SliverBodyItems extends StatefulWidget {
+  const SliverBodyItems(
+      {Key? key, required this.listItem, required this.customerID})
+      : super(key: key);
 
   final List<Product> listItem;
+  final int customerID;
 
+  @override
+  State<SliverBodyItems> createState() => _SliverBodyItemsState();
+}
+
+class _SliverBodyItemsState extends State<SliverBodyItems> {
   @override
   Widget build(BuildContext context) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (context, index) {
-          final product = listItem[index];
+          final product = widget.listItem[index];
           return InkWell(
             onTap: () {
               if (Cart.cart.length == 0) {
@@ -161,12 +170,30 @@ class SliverBodyItems extends StatelessWidget {
                                 ),
                                 child: InkWell(
                                   onTap: () {
-                                    print("product: ${product.name} Liked");
+                                    var db = Mysql();
+                                    if (product.liked == false) {
+                                      setState(() {
+                                        product.liked = true;
+                                      });
+                                      db.likeProduct(
+                                          widget.customerID, product.id);
+                                    } else {
+                                      setState(() {
+                                        product.liked = false;
+                                      });
+                                      db.dislikeProduct(
+                                          widget.customerID, product.id);
+                                    }
                                   },
-                                  child: Icon(
-                                    Icons.favorite_border,
-                                    color: Colors.black45,
-                                  ),
+                                  child: product.liked == true
+                                      ? Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        )
+                                      : Icon(
+                                          Icons.favorite_outline,
+                                          color: Colors.black,
+                                        ),
                                 ),
                               ),
                             )
@@ -175,7 +202,7 @@ class SliverBodyItems extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (index == listItem.length - 1) ...[
+                  if (index == widget.listItem.length - 1) ...[
                     const SizedBox(height: 32),
                     Container(
                       height: .5,
@@ -188,7 +215,7 @@ class SliverBodyItems extends StatelessWidget {
             ),
           );
         },
-        childCount: listItem.length,
+        childCount: widget.listItem.length,
       ),
     );
   }

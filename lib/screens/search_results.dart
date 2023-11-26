@@ -1,71 +1,19 @@
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 
+import '../classes/cart.dart';
+import '../classes/product.dart';
 import '../components/searchbar.dart';
 import 'RestrauntHelperfiles/model/product_category.dart';
 
 class SearchResults extends StatefulWidget {
   static const String id = 'search_screen';
+  late List<Product> products = [];
 
+  SearchResults({required this.products});
   @override
   State<SearchResults> createState() => _SearchResultsState();
 }
-
-List<Product2> dummyProducts = [
-  Product2(
-    name: "Product 1",
-    description: "Description for Product 1",
-    price: "19.99",
-    image: 'images/mac.jpg',
-  ),
-  Product2(
-    name: "Product 2",
-    description: "Description for Product 2",
-    price: "29.99",
-    image: "images/mac.jpg",
-  ),
-  Product2(
-    name: "Product 3",
-    description: "Description for Product 3",
-    price: "15.99",
-    image: "images/mac.jpg",
-  ),
-  Product2(
-    name: "Product 1",
-    description: "Description for Product 1",
-    price: "19.99",
-    image: "images/mac.jpg",
-  ),
-  Product2(
-    name: "Product 2",
-    description: "Description for Product 2",
-    price: "29.99",
-    image: "images/mac.jpg",
-  ),
-  Product2(
-    name: "Product 3",
-    description: "Description for Product 3",
-    price: "15.99",
-    image: "images/mac.jpg",
-  ),
-  Product2(
-    name: "Product 1",
-    description: "Description for Product 1",
-    price: "19.99",
-    image: "images/mac.jpg",
-  ),
-  Product2(
-    name: "Product 2",
-    description: "Description for Product 2",
-    price: "29.99",
-    image: "images/mac.jpg",
-  ),
-  Product2(
-    name: "Product 3",
-    description: "Description for Product 3",
-    price: "15.99",
-    image: "images/mac.jpg",
-  ),
-];
 
 class _SearchResultsState extends State<SearchResults> {
   late String searchText = '';
@@ -91,7 +39,7 @@ class _SearchResultsState extends State<SearchResults> {
       child: Scaffold(
         body: Column(
           children: [
-            Expanded(child: SearchList(listItem: dummyProducts)),
+            Expanded(child: SearchList(listItem: widget.products)),
           ],
         ),
       ),
@@ -102,7 +50,7 @@ class _SearchResultsState extends State<SearchResults> {
 class SearchList extends StatelessWidget {
   const SearchList({Key? key, required this.listItem}) : super(key: key);
 
-  final List<Product2> listItem;
+  final List<Product> listItem;
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +60,37 @@ class SearchList extends StatelessWidget {
         final product = listItem[index];
         return InkWell(
           onTap: () {
-            print("Item ${index} added to cart");
+            if (Cart.cart.length == 0) {
+              Cart.addNewProduct(product);
+              AnimatedSnackBar.material(
+                '${product.name} added to cart',
+                borderRadius: BorderRadius.circular(10),
+                duration: Duration(seconds: 4),
+                type: AnimatedSnackBarType.success,
+                mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+              ).show(context);
+            } else if (Cart.cart.length > 0) {
+              if (Cart.cart[0].product.restraunt_id == product.restraunt_id) {
+                Cart.addNewProduct(product);
+                AnimatedSnackBar.material(
+                  '${product.name} added to cart',
+                  borderRadius: BorderRadius.circular(10),
+                  duration: Duration(seconds: 4),
+                  type: AnimatedSnackBarType.success,
+                  mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                ).show(context);
+              } else {
+                if (Cart.cart[0].product.restraunt_id != product.restraunt_id) {
+                  AnimatedSnackBar.material(
+                    'Cannot add products from different restaurant',
+                    borderRadius: BorderRadius.circular(10),
+                    duration: Duration(seconds: 4),
+                    type: AnimatedSnackBarType.error,
+                    mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                  ).show(context);
+                }
+              }
+            }
           },
           child: Padding(
             padding: const EdgeInsets.only(top: 0),
@@ -139,7 +117,7 @@ class SearchList extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                product.description,
+                                product.category_name,
                                 maxLines: 4,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w300,
@@ -147,7 +125,7 @@ class SearchList extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                product.price,
+                                "Rs. ${product.price}",
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18,
@@ -164,7 +142,7 @@ class SearchList extends StatelessWidget {
                           image: DecorationImage(
                             fit: BoxFit.cover,
                             image: AssetImage(
-                              product.image,
+                              "images/kfc.jpg",
                             ),
                           ),
                         ),

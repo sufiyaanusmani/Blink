@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/screens/home_screen.dart';
-import 'package:food_delivery/screens/restaurant_screen.dart';
-import 'package:food_delivery/screens/settings_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
 class NavigationExample extends StatefulWidget {

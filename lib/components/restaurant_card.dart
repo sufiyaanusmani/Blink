@@ -9,8 +9,9 @@ import 'package:food_delivery/classes/restaurant.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
+  final int customerID;
 
-  RestaurantCard({required this.restaurant});
+  RestaurantCard({required this.restaurant, required this.customerID});
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +108,7 @@ class RestaurantCard extends StatelessWidget {
               child: RestaurantScreen(
                 screenHeight: MediaQuery.of(context).size.height.toDouble(),
                 restaurant: restaurant,
+                customerID: customerID,
               ),
             ),
           ),

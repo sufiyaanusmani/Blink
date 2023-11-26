@@ -5,8 +5,12 @@ import '../screens/search_results.dart';
 class SearchBarWidget extends StatefulWidget {
   final ValueChanged<String> onSubmitted;
   final Function(String text) onEntry;
+  final VoidCallback onClick;
 
-  SearchBarWidget({required this.onSubmitted, required this.onEntry});
+  SearchBarWidget(
+      {required this.onSubmitted,
+      required this.onEntry,
+      required this.onClick});
 
   @override
   _SearchBarWidgetState createState() => _SearchBarWidgetState();
@@ -39,12 +43,13 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
         contentPadding: const EdgeInsets.only(left: 10),
         hintText: 'Search...',
         suffixIcon: GestureDetector(
-          onTap: () {
-            print('Search icon pressed');
-            Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => SearchResults()));
-            FocusScope.of(context).unfocus();
-          },
+          onTap: widget.onClick,
+          //     () {
+          //   print('Search icon pressed');
+          //   // Navigator.of(context).pushReplacement(
+          //   //     MaterialPageRoute(builder: (context) => SearchResults()));
+          //   // FocusScope.of(context).unfocus();
+          // },
           child: const Icon(Icons.search, color: Colors.grey, size: 30),
         ),
         focusedBorder: OutlineInputBorder(

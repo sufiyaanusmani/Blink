@@ -1,3 +1,4 @@
+import 'package:food_delivery/classes/cart.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/mysql.dart';
 
@@ -8,6 +9,7 @@ class Product {
   int category_id;
   String category_name;
   int price;
+  bool liked;
 
   Product(
       {required this.id,
@@ -15,7 +17,8 @@ class Product {
       required this.restraunt_id,
       required this.category_id,
       required this.category_name,
-      required this.price});
+      required this.price,
+      required this.liked});
 
   static Future<List<Product>> getProducts(int restaurantID) async {
     var db = Mysql();
@@ -31,8 +34,21 @@ class Product {
           restraunt_id: int.parse(row.assoc()['restaurant_id']!),
           category_id: int.parse(row.assoc()['category_id']!),
           category_name: row.assoc()['category_name']!,
-          price: int.parse(row.assoc()['price']!));
+          price: int.parse(row.assoc()['price']!),
+          liked: false);
       products.add(product);
+    }
+
+    rows = await db.getResults(
+        'SELECT product_id FROM Favourites WHERE customer_id=${Cart.customerID}');
+
+    for (var row in rows) {
+      int prod = int.parse(row.assoc()['product_id']!);
+      for (int i = 0; i < products.length; i++) {
+        if (prod == products[i].id) {
+          products[i].liked = true;
+        }
+      }
     }
 
     return products;
@@ -52,8 +68,21 @@ class Product {
           restraunt_id: int.parse(row.assoc()['restaurant_id']!),
           category_id: int.parse(row.assoc()['category_id']!),
           category_name: row.assoc()['category_name']!,
-          price: int.parse(row.assoc()['price']!));
+          price: int.parse(row.assoc()['price']!),
+          liked: false);
       products.add(product);
+    }
+
+    rows = await db.getResults(
+        'SELECT product_id FROM Favourites WHERE customer_id=${Cart.customerID}');
+
+    for (var row in rows) {
+      int prod = int.parse(row.assoc()['product_id']!);
+      for (int i = 0; i < products.length; i++) {
+        if (prod == products[i].id) {
+          products[i].liked = true;
+        }
+      }
     }
 
     return products;
