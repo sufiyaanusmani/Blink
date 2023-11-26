@@ -17,25 +17,34 @@ class SettingSwitch extends StatefulWidget {
 class _SettingSwitchState extends State<SettingSwitch> {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Column(
-          children: [
-            Text(widget.primaryTitle),
-            Text(widget.secondaryTitle),
-          ],
-        ),
-        Switch(
-          value: widget.switchValue,
-          onChanged: (bool value) {
-            setState(() {
-              widget.switchValue = value;
-            });
-          },
-        ),
-      ],
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(widget.primaryTitle,
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+              Text(widget.secondaryTitle),
+            ],
+          ),
+          Switch(
+            value: widget.switchValue,
+            activeColor: Colors.orangeAccent,
+            activeTrackColor: Colors.orange,
+            inactiveThumbColor: Colors.grey.shade400,
+            inactiveTrackColor: Colors.grey.shade600,
+            onChanged: (bool value) {
+              setState(() {
+                widget.switchValue = value;
+              });
+            },
+          ),
+        ],
+      ),
     );
   }
 }
