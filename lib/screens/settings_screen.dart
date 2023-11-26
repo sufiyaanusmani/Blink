@@ -31,10 +31,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        Header(),
-        SizedBox(
-          height: 30.0,
-        ),
+        const Header(),
+        const SizedBox(height: 30.0),
         Divider(color: Colors.grey.shade300, thickness: 1),
         SettingSwitch(
           primaryTitle: 'Dark Mode',
@@ -61,6 +59,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
           subtitle: "View past orders",
           onPressed: () {
             print('pressed');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => OrdersPage()),
+            );
           },
         ),
         Divider(color: Colors.grey.shade300, thickness: 1),
@@ -98,7 +100,7 @@ class Header extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 210,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.black,
           ),
         ),
@@ -123,22 +125,22 @@ class Header extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 100,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Colors.white,
             borderRadius:
                 BorderRadius.vertical(top: Radius.elliptical(230, 100)),
           ),
         ),
         Positioned(
-          top: 70, // Adjust the position of your centered image
+          top: 70,
           left: (MediaQuery.of(context).size.width / 2) - 50,
           child: Container(
-            width: 100, // Adjust the size of your centered image
+            width: 100,
             height: 100,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.white,
-              border: Border.all(color: Colors.black54, width: 1),
+              border: Border.all(color: Colors.black38, width: 2),
             ),
             child: ClipOval(
               child: Opacity(
@@ -151,13 +153,89 @@ class Header extends StatelessWidget {
             ),
           ),
         ),
-        Text(
+        const Text(
           'Yousuf ahmed',
           style: TextStyle(
             fontSize: 40.0,
           ),
         ),
       ],
+    );
+  }
+}
+
+class OrdersPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Orders Information'),
+        backgroundColor: Colors.black,
+      ),
+      body: OrdersList(),
+    );
+  }
+}
+
+class OrdersList extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: ListView.builder(
+        itemCount: 15,
+        physics: BouncingScrollPhysics(),
+        itemBuilder: (context, index) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Divider(color: Colors.grey.shade300, thickness: 1),
+              Container(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Order #$index',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.w500)),
+                    Text('24/7/2023'),
+                  ],
+                ),
+              ),
+              SizedBox(height: 5),
+              ListView.builder(
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: 5,
+                itemBuilder: (context, itemIndex) {
+                  return Container(
+                    padding:
+                        EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
+                    child: Text('Item ${itemIndex + 1}'),
+                  );
+                },
+              ),
+              SizedBox(height: 10),
+              Container(
+                padding: EdgeInsets.all(10),
+                decoration:
+                    BoxDecoration(color: Colors.orangeAccent.withOpacity(0.5)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Total price: ',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w400)),
+                    Text('200rs',
+                        style: TextStyle(
+                            fontSize: 17, fontWeight: FontWeight.w400)),
+                  ],
+                ),
+              ),
+              SizedBox(height: 35),
+            ],
+          );
+        },
+      ),
     );
   }
 }
