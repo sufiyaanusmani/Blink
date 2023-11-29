@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/components/setting_switch.dart';
 import 'package:food_delivery/components/title_button.dart';
+import 'package:food_delivery/mysql.dart';
+import 'package:mysql_client/mysql_client.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String id = 'settings_screen';
-  const SettingsScreen({super.key});
+  final int customerID;
+  const SettingsScreen({super.key, required this.customerID});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -27,11 +30,42 @@ Feedback Form
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool light = true;
+  late String name = '';
+
+  void loadName() async {
+    var db = Mysql();
+    String tempFirstName, tempLastName;
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT first_name, last_name FROM Customer WHERE customer_id=${widget.customerID}');
+    if (rows.length == 1) {
+      for (var row in rows) {
+        tempFirstName = row.assoc()['first_name']!;
+        tempLastName = row.assoc()['last_name']!;
+        setState(() {
+          name = '$tempFirstName $tempLastName';
+        });
+      }
+    }
+  }
+
+  void loadAllInfo() async {
+    loadName();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    loadAllInfo();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        const Header(),
+        Header(
+          name: name,
+        ),
         const SizedBox(height: 30.0),
         Divider(color: Colors.grey.shade300, thickness: 1),
         SettingSwitch(
@@ -99,9 +133,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 }
 
 class Header extends StatelessWidget {
-  const Header({
-    super.key,
-  });
+  final String name;
+  const Header({super.key, required this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -164,8 +197,8 @@ class Header extends StatelessWidget {
             ),
           ),
         ),
-        const Text(
-          'Yousuf ahmed',
+        Text(
+          name,
           style: TextStyle(
             fontSize: 40.0,
           ),

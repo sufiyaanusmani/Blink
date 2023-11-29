@@ -67,7 +67,7 @@ class _MainNavigatorState extends State<MainNavigator> {
         // LoginScreen(),
         SearchScreen(),
         CartScreen(),
-        SettingsScreen(),
+        SettingsScreen(customerID: homeScreenArguments.user.id),
       ][currentPageIndex],
     );
   }

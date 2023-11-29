@@ -47,6 +47,28 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
     // getSharedPreferences();
   }
 
+  bool isValidUsername(String value) {
+    final validCharacters = RegExp(r'^[a-zA-Z][a-zA-Z0-9.]*[a-zA-Z0-9]$');
+
+    return validCharacters.hasMatch(value);
+  }
+
+  bool isValidName(String value) {
+    final validCharacters = RegExp(r'^[a-zA-Z ]+$');
+    return validCharacters.hasMatch(value);
+  }
+
+  bool isValidEmail(String value) {
+    final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    return emailRegex.hasMatch(value);
+  }
+
+  bool isValidPassword(String value) {
+    return value.length >= 8 && // Minimum length requirement
+        RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|":;<>,.?/~`]).*$')
+            .hasMatch(value); // Complex password requirements
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -156,6 +178,26 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                         password == '') {
                       setState(() {
                         loginFailedMessage = 'Enter all fields';
+                      });
+                    } else if (!isValidUsername(username)) {
+                      setState(() {
+                        loginFailedMessage = 'Invalid Username Format';
+                      });
+                    } else if (!isValidName(firstName)) {
+                      setState(() {
+                        loginFailedMessage = 'Invalid First Name Format';
+                      });
+                    } else if (!isValidName(lastName)) {
+                      setState(() {
+                        loginFailedMessage = 'Invalid Name Format';
+                      });
+                    } else if (!isValidEmail(email)) {
+                      setState(() {
+                        loginFailedMessage = 'Invalid Email Format';
+                      });
+                    } else if (!isValidPassword(password)) {
+                      setState(() {
+                        loginFailedMessage = 'Invalid Password Format';
                       });
                     } else {
                       setState(() {
