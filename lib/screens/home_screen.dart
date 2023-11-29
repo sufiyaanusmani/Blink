@@ -30,8 +30,6 @@ class FoodItem {
   FoodItem({required this.name, required this.price, required this.count});
 }
 
-late List<FoodItem> foodItems = [];
-
 class _HomeScreenState extends State<HomeScreen> {
   var db = Mysql();
   String firstName = '';
@@ -101,33 +99,15 @@ class _HomeScreenState extends State<HomeScreen> {
   //   }
   // }
 
-  void getOrder() async {
-    var db = Mysql();
-    List<FoodItem> temp = [];
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT P.name, D.quantity, (D.quantity * P.price) AS price FROM Orders O INNER JOIN OrderDetail D ON (O.order_id = D.order_id) INNER JOIN Product P ON (D.product_id = P.product_id) WHERE O.customer_id = ${widget.user.id};');
-    if (rows.length >= 1) {
-      for (var row in rows) {
-        temp.add(FoodItem(
-            name: row.assoc()['name']!,
-            price: int.parse(row.assoc()['price']!),
-            count: int.parse(row.assoc()['quantity']!)));
-      }
-      setState(() {
-        foodItems = temp;
-      });
-    }
-  }
-
   @override
   void initState() {
     if (restaurantCards.isEmpty) {
       getRestaurants();
     }
-    getOrder();
     Cart.customerID = widget.user.id;
     // TODO: implement initState
     super.initState();
+    print(widget.user.firstName);
   }
 
   @override
@@ -243,7 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       );
     }
-    double total = foodItems.fold(0, (sum, item) => sum + item.price);
+    // double total = foodItems.fold(0, (sum, item) => sum + item.price);
 
     // User user = ModalRoute.of(context)!.settings.arguments as User;
     // widget.loginID = user.id;
@@ -320,8 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
           // itemCount: 5,
           padding: EdgeInsets.all(10.0),
           children: [
-            OrderNotification(
-                show: notificationWidget, customerID: widget.user.id),
+            OrderNotification(customerID: widget.user.id),
             SizedBox(height: 5),
 
             SizedBox(height: 30),
@@ -447,14 +426,9 @@ class Foodshimmer extends StatelessWidget {
 }
 
 class OrderNotification extends StatefulWidget {
-  OrderNotification({
-    super.key,
-    required this.customerID,
-    required this.show,
-  });
+  OrderNotification({super.key, required this.customerID});
 
   final int customerID;
-  final bool show;
 
   @override
   State<OrderNotification> createState() => _OrderNotificationState();
@@ -462,18 +436,21 @@ class OrderNotification extends StatefulWidget {
 
 class _OrderNotificationState extends State<OrderNotification> {
   late int orderID = 0;
-
+  late bool show = false;
   late String status = 'Pending';
 
   late String restaurantName = '';
   late String time = "None";
-
+  late List<FoodItem> foodItems = [];
   late int price = 0;
   void getOrderInfo() async {
     var db = Mysql();
     Iterable<ResultSetRow> rows = await db.getResults(
         'SELECT O.order_id, O.status, R.name, O.price, P.time FROM Orders O INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) LEFT JOIN Preschedule P ON (O.order_id = P.order_id) WHERE O.customer_id=${widget.customerID} AND O.status IN ("pending", "preparing");');
     if (rows.length == 1) {
+      setState(() {
+        show = true;
+      });
       for (var row in rows) {
         setState(() {
           orderID = int.parse(row.assoc()['order_id']!);
@@ -486,6 +463,28 @@ class _OrderNotificationState extends State<OrderNotification> {
           });
         });
       }
+    } else {
+      setState(() {
+        show = false;
+      });
+    }
+  }
+
+  void getOrder() async {
+    var db = Mysql();
+    List<FoodItem> temp = [];
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT P.name, D.quantity, (D.quantity * P.price) AS price FROM Orders O INNER JOIN OrderDetail D ON (O.order_id = D.order_id) INNER JOIN Product P ON (D.product_id = P.product_id) WHERE O.customer_id = ${widget.customerID};');
+    if (rows.length >= 1) {
+      for (var row in rows) {
+        temp.add(FoodItem(
+            name: row.assoc()['name']!,
+            price: int.parse(row.assoc()['price']!),
+            count: int.parse(row.assoc()['quantity']!)));
+      }
+      setState(() {
+        foodItems = temp;
+      });
     }
   }
 
@@ -493,6 +492,7 @@ class _OrderNotificationState extends State<OrderNotification> {
   void initState() {
     // TODO: implement initState
     getOrderInfo();
+    getOrder();
     print(widget.customerID);
     super.initState();
   }
@@ -501,11 +501,11 @@ class _OrderNotificationState extends State<OrderNotification> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
-      height: widget.show ? 400 : 0,
+      height: show ? 400 : 0,
       decoration: BoxDecoration(
           color: Colors.amber,
           borderRadius: BorderRadius.all(Radius.circular(20))),
-      child: !widget.show
+      child: !show
           ? SizedBox(width: 0)
           : AnimatedContainer(
               duration: Duration(milliseconds: 100),
@@ -606,7 +606,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                             ),
                             SizedBox(width: 5),
                             Text(
-                              "Restraunt",
+                              "Restaurant",
                               style: TextStyle(
                                 fontSize: 20,
                               ),
