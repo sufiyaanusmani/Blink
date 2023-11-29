@@ -82,6 +82,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
           },
         ),
         Divider(color: Colors.grey.shade300, thickness: 1),
+        Container(
+          width: 4,
+          height: 80,
+          padding: EdgeInsets.all(10),
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Logout'),
+          ),
+        )
       ],
     );
   }
