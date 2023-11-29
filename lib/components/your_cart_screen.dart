@@ -59,8 +59,8 @@ class _YourCartScreenState extends State<YourCartScreen> {
                   item = itemList[index];
                   return Padding(
                     padding: (index == 0)
-                        ? const EdgeInsets.symmetric(vertical: 15.0)
-                        : const EdgeInsets.only(bottom: 15.0),
+                        ? const EdgeInsets.symmetric(vertical: 20.0)
+                        : const EdgeInsets.only(bottom: 20.0),
                     child: Slidable(
                       key: Key('$item'),
                       endActionPane: ActionPane(
@@ -82,17 +82,17 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         ],
                       ),
                       child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 15.0),
-                        padding: const EdgeInsets.all(10.0),
+                        margin: const EdgeInsets.symmetric(horizontal: 0.0),
+                        padding: const EdgeInsets.only(left: 10.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
                           color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                blurRadius: 1.0,
-                                spreadRadius: 1.0,
-                                color: Colors.grey[400]!),
-                          ],
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //       blurRadius: 1.0,
+                          //       spreadRadius: 1.0,
+                          //       color: Colors.grey[400]!),
+                          // ],
                         ),
 
                         // ListView row
@@ -102,11 +102,14 @@ class _YourCartScreenState extends State<YourCartScreen> {
                           children: [
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
-                              child: Image.asset(
-                                'images/kfc.jpg',
-                                width: 100.0,
-                                height: 100.0,
-                                fit: BoxFit.cover,
+                              child: Opacity(
+                                opacity: 0.95,
+                                child: Image.asset(
+                                  'images/kfc.jpg',
+                                  width: 120.0,
+                                  height: 120.0,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 10.0),
@@ -215,7 +218,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
             Row(
               children: [
                 const SizedBox(
-                  width: 15,
+                  width: 5,
                 ),
 
                 Expanded(
@@ -283,7 +286,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       ),
                     )),
                 const SizedBox(
-                  width: 10,
+                  width: 5,
                 ),
 
                 // Amount
@@ -344,19 +347,19 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       ),
                     )),
                 const SizedBox(
-                  width: 15,
+                  width: 5,
                 ),
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 5,
             ),
 
             // bottom Slider
             AbsorbPointer(
               absorbing: Cart.cart.length > 0 ? false : true,
               child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                margin: const EdgeInsets.symmetric(horizontal: 5.0),
                 //https://pub.dev/packages/slide_to_act_reborn
                 child: SlideAction(
                   innerColor: Color.fromARGB(255, 0, 0, 0),

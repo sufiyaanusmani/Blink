@@ -2,33 +2,42 @@ import 'package:flutter/material.dart';
 
 class TitleButton extends StatelessWidget {
   final String title;
+  final String subtitle;
   final VoidCallback onPressed;
-  TitleButton({required this.title, required this.onPressed});
+  TitleButton(
+      {required this.title, required this.subtitle, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(
-              color: Colors.black,
-              width: 2,
-            )),
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Row(
-            children: [
-              Text(
-                title,
-              ),
-              Icon(Icons.arrow_forward_ios),
-            ],
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          ),
+      onTap: onPressed,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 20, top: 5, bottom: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: const  TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  subtitle,
+                ),
+              ],
+            ),
+            const Icon(
+              Icons.arrow_forward_ios,
+              color: Colors.black38,
+            ),
+          ],
         ),
       ),
-      onTap: onPressed,
     );
   }
 }

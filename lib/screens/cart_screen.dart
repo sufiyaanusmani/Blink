@@ -41,7 +41,7 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                           Tab(
                             child: Text(
-                              'Saved meals',
+                              'Recent',
                               style: TextStyle(),
                             ),
                           ),
@@ -55,24 +55,6 @@ class _CartScreenState extends State<CartScreen> {
                       ),
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      print('Button pressed');
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.only(right: 15),
-                      padding: const EdgeInsets.all(10),
-                      child: Image.asset(
-                        'assets/icons/save.png',
-                        width: 25,
-                        height: 25,
-                      ),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  )
                 ],
               ),
               Expanded(
