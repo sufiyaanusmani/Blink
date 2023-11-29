@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/classes/order.dart';
+import 'package:food_delivery/classes/order_history.dart';
 import 'package:food_delivery/components/setting_switch.dart';
 import 'package:food_delivery/components/title_button.dart';
 import 'package:food_delivery/mysql.dart';
@@ -31,6 +33,7 @@ Feedback Form
 class _SettingsScreenState extends State<SettingsScreen> {
   bool light = true;
   late String name = '';
+  late List<OrderHistory> orders = [];
 
   void loadName() async {
     var db = Mysql();
@@ -48,8 +51,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
+  void loadOrderHistory() async {
+    List<OrderHistory> temp =
+        await OrderHistory.getOrderHistory(widget.customerID);
+    setState(() {
+      orders = temp;
+    });
+  }
+
   void loadAllInfo() async {
     loadName();
+    loadOrderHistory();
   }
 
   @override
