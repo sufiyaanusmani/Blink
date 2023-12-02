@@ -21,7 +21,7 @@ class OrderHistory {
     List<OrderHistory> orders = [];
     var db = Mysql();
     Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT O.order_id, DATE(O.placed_at) AS date, DATE_ADD(TIME(O.placed_at), INTERVAL 5 HOUR) AS time, O.status, O.price, R.name FROM Orders O INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) WHERE O.customer_id=$customerID;');
+        'SELECT O.order_id, DATE(O.placed_at) AS date, DATE_ADD(TIME(O.placed_at), INTERVAL 5 HOUR) AS time, O.status, O.price, R.name FROM Orders O INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) WHERE O.customer_id=$customerID AND O.status="completed";');
 
     for (var row in rows) {
       orders.add(OrderHistory(

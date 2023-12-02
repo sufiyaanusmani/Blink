@@ -87,20 +87,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
           switchValue: false,
         ),
         Divider(color: Colors.grey.shade300, thickness: 1),
-        SettingSwitch(
-          primaryTitle: 'Push Notifications',
-          secondaryTitle: 'Turn on Notifications',
-          switchValue: true,
-        ),
-        Divider(color: Colors.grey.shade300, thickness: 1),
-        TitleButton(
-          title: "Billing information",
-          subtitle: "Add or Remove billing information",
-          onPressed: () {
-            print('pressed');
-          },
-        ),
-        Divider(color: Colors.grey.shade300, thickness: 1),
         TitleButton(
           title: "Order information",
           subtitle: "View past orders",
