@@ -474,18 +474,18 @@ class _OrderNotificationState extends State<OrderNotification> {
     var db = Mysql();
     List<FoodItem> temp = [];
     Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT P.name, D.quantity, (D.quantity * P.price) AS price FROM Orders O INNER JOIN OrderDetail D ON (O.order_id = D.order_id) INNER JOIN Product P ON (D.product_id = P.product_id) WHERE O.customer_id = ${widget.customerID};');
-    if (rows.length >= 1) {
+        'SELECT P.name, D.quantity, (D.quantity * P.price) AS price FROM Orders O INNER JOIN OrderDetail D ON (O.order_id = D.order_id) INNER JOIN Product P ON (D.product_id = P.product_id) WHERE O.customer_id = ${widget.customerID} AND O.status <> "completed";');
+    if (rows.isNotEmpty) {
       for (var row in rows) {
         temp.add(FoodItem(
             name: row.assoc()['name']!,
             price: int.parse(row.assoc()['price']!),
             count: int.parse(row.assoc()['quantity']!)));
       }
-      setState(() {
-        foodItems = temp;
-      });
     }
+    setState(() {
+      foodItems = temp;
+    });
   }
 
   @override
@@ -493,7 +493,6 @@ class _OrderNotificationState extends State<OrderNotification> {
     // TODO: implement initState
     getOrderInfo();
     getOrder();
-    print(widget.customerID);
     super.initState();
   }
 

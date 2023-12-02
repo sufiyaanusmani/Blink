@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/classes/order.dart';
 import 'package:food_delivery/classes/order_history.dart';
 import 'package:food_delivery/components/setting_switch.dart';
 import 'package:food_delivery/components/title_button.dart';
