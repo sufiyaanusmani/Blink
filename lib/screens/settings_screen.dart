@@ -4,6 +4,7 @@ import 'package:food_delivery/components/setting_switch.dart';
 import 'package:food_delivery/components/title_button.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/screens/privacy_policy_screen.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:mysql_client/mysql_client.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -220,12 +221,19 @@ class OrdersPage extends StatefulWidget {
 
 class _OrdersPageState extends State<OrdersPage> {
   late List<OrderHistory> orderHistory = [];
+  bool _loading = false;
 
   void getOrderHistory() async {
+    setState(() {
+      _loading = true;
+    });
     List<OrderHistory> temp = [];
     temp = await OrderHistory.getOrderHistory(widget.customerID);
     setState(() {
       orderHistory = temp;
+    });
+    setState(() {
+      _loading = false;
     });
   }
 
@@ -238,6 +246,14 @@ class _OrdersPageState extends State<OrdersPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_loading) {
+      return Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+            child: LoadingAnimationWidget.fourRotatingDots(
+                color: Colors.orange, size: 100)),
+      );
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Orders Information'),
