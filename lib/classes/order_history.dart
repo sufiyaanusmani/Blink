@@ -28,7 +28,7 @@ class OrderHistory {
           orderID: int.parse(row.assoc()['order_id']!),
           date: row.assoc()['date']!,
           time: row.assoc()['time']!,
-          status: row.assoc()['statue']!,
+          status: row.assoc()['status']!,
           price: int.parse(row.assoc()['price']!),
           restaurantName: row.assoc()['name']!));
     }

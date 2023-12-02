@@ -108,7 +108,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             print('pressed');
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => OrdersPage()),
+              MaterialPageRoute(
+                  builder: (context) => OrdersPage(
+                        customerID: widget.customerID,
+                      )),
             );
           },
         ),
@@ -222,7 +225,32 @@ class Header extends StatelessWidget {
   }
 }
 
-class OrdersPage extends StatelessWidget {
+class OrdersPage extends StatefulWidget {
+  final int customerID;
+  OrdersPage({required this.customerID});
+
+  @override
+  State<OrdersPage> createState() => _OrdersPageState();
+}
+
+class _OrdersPageState extends State<OrdersPage> {
+  late List<OrderHistory> orderHistory = [];
+
+  void getOrderHistory() async {
+    List<OrderHistory> temp = [];
+    temp = await OrderHistory.getOrderHistory(widget.customerID);
+    setState(() {
+      orderHistory = temp;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getOrderHistory();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,48 +258,48 @@ class OrdersPage extends StatelessWidget {
         title: Text('Orders Information'),
         backgroundColor: Colors.black,
       ),
-      body: OrdersList(),
+      body: OrdersList(orderHistory: orderHistory),
     );
   }
 }
 
 class OrdersList extends StatelessWidget {
+  final List<OrderHistory> orderHistory;
+  OrdersList({required this.orderHistory});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView.builder(
-        itemCount: 15,
+        itemCount: orderHistory.length,
         physics: BouncingScrollPhysics(),
         itemBuilder: (context, index) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Divider(color: Colors.grey.shade300, thickness: 1),
-              Container(
-                padding: EdgeInsets.only(left: 10, right: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Order #$index',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.w500)),
-                    Text('24/7/2023'),
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(left: 10, right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Order #${orderHistory[index].orderID}',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.w500)),
+                        Text(
+                            '${orderHistory[index].date}  ${orderHistory[index].time}'),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 13, vertical: 5),
+                    child: Text(orderHistory[index].restaurantName),
+                  ),
+                ],
               ),
               SizedBox(height: 5),
-              ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 5,
-                itemBuilder: (context, itemIndex) {
-                  return Container(
-                    padding:
-                        EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
-                    child: Text('Item ${itemIndex + 1}'),
-                  );
-                },
-              ),
               SizedBox(height: 10),
               Container(
                 padding: EdgeInsets.all(10),
@@ -283,7 +311,7 @@ class OrdersList extends StatelessWidget {
                     Text('Total price: ',
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.w400)),
-                    Text('200rs',
+                    Text('Rs. ${orderHistory[index].price}',
                         style: TextStyle(
                             fontSize: 17, fontWeight: FontWeight.w400)),
                   ],

@@ -8,7 +8,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
-          AppBar(backgroundColor: Colors.orange, title: Text("Privacy Policy")),
+          AppBar(backgroundColor: Colors.black, title: Text("Privacy Policy")),
       backgroundColor: Colors.white,
       body: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
