@@ -4,6 +4,7 @@ import 'package:food_delivery/classes/order_history.dart';
 import 'package:food_delivery/components/setting_switch.dart';
 import 'package:food_delivery/components/title_button.dart';
 import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/screens/privacy_policy_screen.dart';
 import 'package:mysql_client/mysql_client.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -113,10 +114,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         Divider(color: Colors.grey.shade300, thickness: 1),
         TitleButton(
-          title: "Privacy",
+          title: "Privacy Policy",
           subtitle: "Terms of service and privacy policy",
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => PrivacyPolicyScreen()));
           },
         ),
         Divider(color: Colors.grey.shade300, thickness: 1),
