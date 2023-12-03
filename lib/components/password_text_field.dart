@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 
-class PasswordTextField extends StatelessWidget {
+class PasswordTextField extends StatefulWidget {
   final String hintText;
   final Function(String) onChange;
-  TextEditingController controller;
-  PasswordTextField(
-      {required this.hintText,
+  final TextEditingController controller;
+  const PasswordTextField(
+      {super.key,
+      required this.hintText,
       required this.onChange,
       required this.controller});
 
+  @override
+  State<PasswordTextField> createState() => _PasswordTextFieldState();
+}
+
+class _PasswordTextFieldState extends State<PasswordTextField> {
   @override
   Widget build(BuildContext context) {
     return Material(
@@ -24,14 +30,14 @@ class PasswordTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: TextField(
-          controller: controller,
+          controller: widget.controller,
           obscureText: true,
           decoration: InputDecoration(
-            hintText: this.hintText,
+            hintText: widget.hintText,
             border: InputBorder.none,
             labelText: 'Password',
           ),
-          onChanged: onChange,
+          onChanged: widget.onChange,
         ),
       ),
     );

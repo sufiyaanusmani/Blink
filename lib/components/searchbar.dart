@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../screens/search_results.dart';
-
 class SearchBarWidget extends StatefulWidget {
   final ValueChanged<String> onSubmitted;
   final Function(String text) onEntry;
   final VoidCallback onClick;
 
-  SearchBarWidget(
-      {required this.onSubmitted,
+  const SearchBarWidget(
+      {super.key,
+      required this.onSubmitted,
       required this.onEntry,
       required this.onClick});
 
@@ -38,7 +37,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       controller: controller,
       cursorColor: Colors.grey,
       enableInteractiveSelection: false,
-      style: TextStyle(fontSize: 20),
+      style: const TextStyle(fontSize: 20),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 10),
         hintText: 'Search...',

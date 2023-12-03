@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:food_delivery/classes/restaurant.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedDetailHeader extends StatelessWidget {
@@ -21,7 +20,7 @@ class AnimatedDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
-    final image = 'images/kfc.jpg';
+    const image = 'images/kfc.jpg';
 
     return Stack(
       fit: StackFit.expand,
@@ -39,13 +38,13 @@ class AnimatedDetailHeader extends StatelessWidget {
                     ),
                     child: Transform.scale(
                       scale: lerpDouble(1, 1.3, bottomPercent)!,
-                      child: PlaceImagesPageView(images: image),
+                      child: const PlaceImagesPageView(images: image),
                     ),
                   ),
                   Positioned(
                       top: topPadding,
                       left: -60 * (1 - bottomPercent),
-                      child: BackButton(
+                      child: const BackButton(
                         color: Colors.white,
                       )),
                   Positioned(
@@ -53,7 +52,7 @@ class AnimatedDetailHeader extends StatelessWidget {
                       right: -60 * (1 - bottomPercent),
                       child: IconButton(
                         onPressed: () {},
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.shopping_bag_outlined,
                           color: Colors.white,
                         ),
@@ -87,7 +86,7 @@ class AnimatedDetailHeader extends StatelessWidget {
                         opacity: topPercent,
                         child: Text(
                           restaurant.ownerName,
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 15,
                           ),
@@ -103,7 +102,7 @@ class AnimatedDetailHeader extends StatelessWidget {
         Positioned.fill(
           top: null,
           bottom: -140 * (1 - topPercent),
-          child: TranslateAnimation(
+          child: const TranslateAnimation(
             child: MenuInfoContainer(),
           ),
         ),
@@ -116,7 +115,7 @@ class AnimatedDetailHeader extends StatelessWidget {
           child: TranslateAnimation(
             child: Container(
               height: 20,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 255, 255, 255),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.elliptical(30, 10),
@@ -141,7 +140,7 @@ class MenuInfoContainer extends StatelessWidget {
     return Container(
         height: 70,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Color.fromARGB(255, 236, 236, 236),
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(30),
@@ -153,10 +152,10 @@ class MenuInfoContainer extends StatelessWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.star, color: Colors.grey),
+                const Icon(Icons.star, color: Colors.grey),
                 Container(
-                  margin: EdgeInsets.only(top: 3, left: 3),
-                  child: Text(
+                  margin: const EdgeInsets.only(top: 3, left: 3),
+                  child: const Text(
                     "4.3 ",
                     style: TextStyle(
                       color: Colors.blueGrey,
@@ -165,8 +164,8 @@ class MenuInfoContainer extends StatelessWidget {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.only(top: 3),
-                  child: Text(
+                  margin: const EdgeInsets.only(top: 3),
+                  child: const Text(
                     "(4k+)",
                     style: TextStyle(
                       color: Colors.blueGrey,
@@ -177,18 +176,16 @@ class MenuInfoContainer extends StatelessWidget {
               ],
             ),
             Container(
-              margin: EdgeInsets.only(top: 5),
-              child: Row(
+              margin: const EdgeInsets.only(top: 5),
+              child: const Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(Icons.access_time_rounded, color: Colors.grey, size: 17),
-                  Container(
-                    child: Text(
-                      " 40-50 min    100rs minimum",
-                      style: TextStyle(
-                        color: Colors.blueGrey,
-                        fontSize: 17,
-                      ),
+                  Text(
+                    " 40-50 min    100rs minimum",
+                    style: TextStyle(
+                      color: Colors.blueGrey,
+                      fontSize: 17,
                     ),
                   ),
                 ],
@@ -228,7 +225,7 @@ class PlaceImagesPageView extends StatefulWidget {
   });
 
   // final List<String> images;
-  final images;
+  final String images;
 
   @override
   State<PlaceImagesPageView> createState() => _PlaceImagesPageViewState();
@@ -246,12 +243,10 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
             itemCount: 5,
             onPageChanged: (value) {
               setState(() => currentIndex = value);
-              print("current page: ${value}");
             },
             physics: const BouncingScrollPhysics(),
             controller: PageController(viewportFraction: .9),
             itemBuilder: (context, index) {
-              const imageUrl = 'images/kfc.jpg';
               final isSelected = currentIndex == index;
               return AnimatedContainer(
                 duration: kThemeAnimationDuration,
@@ -259,11 +254,6 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
                   right: 10,
                   top: isSelected ? 5 : 20,
                   bottom: isSelected ? 5 : 20,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    print(index);
-                  },
                 ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
@@ -273,12 +263,15 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
                       blurRadius: 10,
                     )
                   ],
-                  image: DecorationImage(
+                  image: const DecorationImage(
                     image: AssetImage('images/kfc.jpg'),
                     fit: BoxFit.cover,
                     colorFilter:
                         ColorFilter.mode(Colors.black26, BlendMode.darken),
                   ),
+                ),
+                child: GestureDetector(
+                  onTap: () {},
                 ),
               );
             },

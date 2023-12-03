@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SavedMealsScreen extends StatefulWidget {
+  const SavedMealsScreen({super.key});
+
   @override
   _SavedMealsScreenState createState() => _SavedMealsScreenState();
 }
 
 class _SavedMealsScreenState extends State<SavedMealsScreen> {
-
   @override
   void initState() {
     super.initState();
@@ -14,11 +15,10 @@ class _SavedMealsScreenState extends State<SavedMealsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Center(
         child: Text('Hello, Saved Meals!'),
       ),
-      
     );
   }
 

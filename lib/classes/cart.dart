@@ -8,22 +8,19 @@ class Cart {
 
   static void addNewProduct(Product product) {
     bool exists = false;
-    if (cart.length == 0) {
+    if (cart.isEmpty) {
       cart.add(CartProduct(product: product));
-      restaurantID = product.restraunt_id;
-      print('added new');
+      restaurantID = product.restaurantID;
     } else {
       for (int i = 0; i < cart.length; i++) {
         if (cart[i].product.id == product.id) {
           cart[i].quantity++;
-          print('added another');
           exists = true;
           break;
         }
       }
       if (exists == false) {
         cart.add(CartProduct(product: product));
-        print('added new');
       }
     }
   }

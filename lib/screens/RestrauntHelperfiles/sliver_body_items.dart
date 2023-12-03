@@ -1,8 +1,6 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/mysql.dart';
-import 'package:food_delivery/screens/RestrauntHelperfiles/controller/sliver_scroll_controller.dart';
-import 'package:food_delivery/screens/RestrauntHelperfiles/model/product_category.dart';
 import 'package:food_delivery/classes/cart.dart';
 
 import '../../classes/product.dart';
@@ -62,7 +60,7 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
                   mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                 ).show(context);
               } else if (Cart.cart.length > 0) {
-                if (Cart.cart[0].product.restraunt_id == product.restraunt_id) {
+                if (Cart.cart[0].product.restaurantID == product.restaurantID) {
                   Cart.addNewProduct(product);
                   AnimatedSnackBar.material(
                     '${product.name} added to cart',
@@ -72,8 +70,8 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
                     mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                   ).show(context);
                 } else {
-                  if (Cart.cart[0].product.restraunt_id !=
-                      product.restraunt_id) {
+                  if (Cart.cart[0].product.restaurantID !=
+                      product.restaurantID) {
                     AnimatedSnackBar.material(
                       'Cannot add products from different restaurant',
                       borderRadius: BorderRadius.circular(10),

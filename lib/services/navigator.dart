@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/home_screen.dart';
-import 'package:food_delivery/screens/restaurant_screen.dart';
 import 'package:food_delivery/screens/settings_screen.dart';
 import 'package:food_delivery/screens/cart_screen.dart';
 import 'package:food_delivery/screens/search_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-import 'package:food_delivery/screens/login_screen.dart';
-import 'package:food_delivery/user.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
 
 class MainNavigator extends StatefulWidget {

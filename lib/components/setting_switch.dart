@@ -6,7 +6,8 @@ class SettingSwitch extends StatefulWidget {
   late bool switchValue;
 
   SettingSwitch(
-      {required this.primaryTitle,
+      {super.key,
+      required this.primaryTitle,
       required this.secondaryTitle,
       required this.switchValue});
 
@@ -18,7 +19,7 @@ class _SettingSwitchState extends State<SettingSwitch> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -27,7 +28,8 @@ class _SettingSwitchState extends State<SettingSwitch> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(widget.primaryTitle,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.w500)),
               Text(widget.secondaryTitle),
             ],
           ),

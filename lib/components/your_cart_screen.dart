@@ -11,6 +11,8 @@ import 'package:food_delivery/components/time_selector.dart';
 import 'package:food_delivery/classes/cart.dart';
 
 class YourCartScreen extends StatefulWidget {
+  const YourCartScreen({super.key});
+
   @override
   _YourCartScreenState createState() => _YourCartScreenState();
 }
@@ -29,7 +31,6 @@ class _YourCartScreenState extends State<YourCartScreen> {
     setState(() {
       totalPrice = Cart.getTotalPrice();
     });
-    print('${Cart.cart.length}');
     super.initState();
   }
 
@@ -53,7 +54,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
             // list view
             Expanded(
               child: ListView.builder(
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 itemCount: itemList.length,
                 itemBuilder: (context, index) {
                   item = itemList[index];
@@ -145,7 +146,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                       if (Cart.cart[index].quantity == 0) {
                                         Cart.cart.removeAt(index);
                                       }
-                                      if (Cart.cart.length == 0) {
+                                      if (Cart.cart.isEmpty) {
                                         Cart.cart = [];
                                         Cart.restaurantID = -1;
                                       }
@@ -156,27 +157,27 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                     alignment: Alignment.center,
                                     width: 20,
                                     height: 50,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.black,
+                                    ),
                                     child: const Text(
                                       '-',
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),
                                     ),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.black,
-                                    ),
                                   ),
                                 ),
                                 Container(
-                                  decoration: BoxDecoration(
+                                  decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.black,
                                   ),
-                                  padding: EdgeInsets.all(10),
+                                  padding: const EdgeInsets.all(10),
                                   child: Text(
                                     ' ${item.quantity} ',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: Colors.white, fontSize: 18),
                                   ),
                                 ),
@@ -191,15 +192,15 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                     alignment: Alignment.center,
                                     width: 20,
                                     height: 50,
-                                    child: Text(
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.black,
+                                    ),
+                                    child: const Text(
                                       '+',
                                       style: TextStyle(
                                         color: Colors.white,
                                       ),
-                                    ),
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.black,
                                     ),
                                   ),
                                 ),
@@ -234,9 +235,10 @@ class _YourCartScreenState extends State<YourCartScreen> {
                           Row(
                             children: [
                               Container(
-                                margin: EdgeInsets.only(top: 15, left: 15),
-                                padding: EdgeInsets.all(10),
-                                decoration: BoxDecoration(
+                                margin:
+                                    const EdgeInsets.only(top: 15, left: 15),
+                                padding: const EdgeInsets.all(10),
+                                decoration: const BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Color.fromARGB(136, 255, 255, 255),
                                 ),
@@ -249,9 +251,9 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               Expanded(
                                 child: Container(
                                   alignment: Alignment.topRight,
-                                  margin: EdgeInsets.only(right: 15),
-                                  padding: EdgeInsets.only(bottom: 5),
-                                  child: Text(
+                                  margin: const EdgeInsets.only(right: 15),
+                                  padding: const EdgeInsets.only(bottom: 5),
+                                  child: const Text(
                                     'Preorder',
                                     style: TextStyle(
                                       fontSize: 15,
@@ -261,24 +263,24 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 12),
+                          const SizedBox(height: 12),
                           TextButton(
                             onPressed: () {
                               _showTimeSelectionBottomSheet();
                             },
                             child: Container(
                               alignment: Alignment.center,
-                              margin: EdgeInsets.only(left: 4, right: 4),
+                              margin: const EdgeInsets.only(left: 4, right: 4),
                               height: 30,
-                              child: Text(
-                                HomePage.preOrderText,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                ),
-                              ),
                               decoration: BoxDecoration(
                                 color: Colors.black,
                                 borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                HomePage.preOrderText,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
@@ -301,8 +303,8 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       child: Row(
                         children: [
                           Container(
-                            padding: EdgeInsets.all(10),
-                            margin: EdgeInsets.only(bottom: 45, left: 15),
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.only(bottom: 45, left: 15),
                             decoration: const BoxDecoration(
                               shape: BoxShape.circle,
                               color: Color.fromARGB(136, 255, 255, 255),
@@ -315,7 +317,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                           ),
                           Expanded(
                             child: Container(
-                              margin: EdgeInsets.only(
+                              margin: const EdgeInsets.only(
                                   top: 20, bottom: 1, right: 15),
                               child: Column(
                                 children: [
@@ -328,12 +330,12 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 20),
+                                  const SizedBox(height: 20),
                                   Align(
                                     alignment: Alignment.bottomRight,
                                     child: Text(
                                       'Rs $totalPrice',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         color: Color.fromARGB(255, 0, 0, 0),
                                         fontSize: 30,
                                       ),
@@ -357,32 +359,30 @@ class _YourCartScreenState extends State<YourCartScreen> {
 
             // bottom Slider
             AbsorbPointer(
-              absorbing: Cart.cart.length > 0 ? false : true,
+              absorbing: Cart.cart.isNotEmpty ? false : true,
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 5.0),
                 //https://pub.dev/packages/slide_to_act_reborn
                 child: SlideAction(
-                  innerColor: Color.fromARGB(255, 0, 0, 0),
-                  outerColor: Color.fromARGB(255, 171, 90, 194),
+                  innerColor: const Color.fromARGB(255, 0, 0, 0),
+                  outerColor: const Color.fromARGB(255, 171, 90, 194),
                   elevation: 0,
-                  sliderButtonIcon: Container(
-                    child: Text(
-                      'GO',
-                      style: TextStyle(
-                        fontFamily: 'Gruppo',
-                        fontSize: 25,
-                        fontWeight: FontWeight.w900,
-                        color: Colors.white,
-                      ),
+                  sliderButtonIcon: const Text(
+                    'GO',
+                    style: TextStyle(
+                      fontFamily: 'Gruppo',
+                      fontSize: 25,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white,
                     ),
                   ),
                   sliderRotate: false,
                   onSubmit: () async {
-                    if (Cart.cart.length == 0) {
+                    if (Cart.cart.isEmpty) {
                       AnimatedSnackBar.material(
                         'Cart is empty',
                         borderRadius: BorderRadius.circular(10),
-                        duration: Duration(seconds: 4),
+                        duration: const Duration(seconds: 4),
                         type: AnimatedSnackBarType.error,
                         mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                       ).show(context);
@@ -392,7 +392,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         AnimatedSnackBar.material(
                           'You can only place one order at a time',
                           borderRadius: BorderRadius.circular(10),
-                          duration: Duration(seconds: 4),
+                          duration: const Duration(seconds: 4),
                           type: AnimatedSnackBarType.error,
                           mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                         ).show(context);
@@ -408,15 +408,11 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         }
                         Iterable<ResultSetRow> rows = await db.getResults(
                             'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
-                        print('line 371');
-                        print(orderID);
                         int price = 0;
                         String restaurantName = '';
                         String status = '';
-                        print(rows.length);
                         if (rows.length == 1) {
                           for (var row in rows) {
-                            print(orderID);
                             restaurantName = row.assoc()['name']!;
                             status = row.assoc()['status']!;
                             price = int.parse(row.assoc()['price']!);
@@ -426,7 +422,6 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               restaurantName: restaurantName,
                               status: status,
                               price: price);
-                          print(orderID);
                           for (CartProduct product in Cart.cart) {
                             db.addOrderDetail(
                                 orderID, product.product.id, product.quantity);
@@ -454,7 +449,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       }
                     }
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
@@ -495,19 +490,19 @@ class _YourCartScreenState extends State<YourCartScreen> {
   void _showTimeSelectionBottomSheet() {
     showModalBottomSheet(
         context: context,
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         builder: (BuildContext context) {
           return Row(
             children: [
               Container(
-                padding: EdgeInsets.only(left: 20, right: 30),
+                padding: const EdgeInsets.only(left: 20, right: 30),
                 width: MediaQuery.of(context).size.width * 0.5,
                 decoration: BoxDecoration(
                   // border: Border.all(color: Color.fromARGB(62, 0, 0, 0), width: 2),
                   borderRadius: BorderRadius.circular(20),
-                  color: Color.fromARGB(94, 84, 110, 255),
+                  color: const Color.fromARGB(94, 84, 110, 255),
                 ),
                 child: Align(
                   alignment: Alignment.centerLeft,
@@ -515,15 +510,15 @@ class _YourCartScreenState extends State<YourCartScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
+                      SizedBox(
                         width: double.infinity,
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Container(
                             width: 50,
                             height: 50,
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
+                            padding: const EdgeInsets.all(5),
+                            decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Color.fromARGB(12, 0, 0, 0)),
                             child: Image.asset(
@@ -537,7 +532,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Container(
+                      const SizedBox(
                         width: double.infinity,
                         child: Text(
                           "Select preorder time",
@@ -552,8 +547,8 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       ),
                       Container(
                         width: double.infinity,
-                        padding: EdgeInsets.only(right: 10),
-                        child: Text(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: const Text(
                           "Place your order in advance",
                           style: TextStyle(
                             fontSize: 15,
@@ -569,20 +564,20 @@ class _YourCartScreenState extends State<YourCartScreen> {
                           setState(() {
                             HomePage.preOrder = true;
                             HomePage.preOrderText =
-                                "${HomePage.preOrderHour < 10 ? '0' + HomePage.preOrderHour.toString() : HomePage.preOrderHour.toString()}:${HomePage.preOrderMinute < 10 ? '0' + HomePage.preOrderMinute.toString() : HomePage.preOrderMinute.toString()} ${HomePage.preOrderHour >= 12 || HomePage.preOrderHour <= 4 ? 'pm' : 'am'}";
+                                "${HomePage.preOrderHour < 10 ? '0${HomePage.preOrderHour}' : HomePage.preOrderHour.toString()}:${HomePage.preOrderMinute < 10 ? '0${HomePage.preOrderMinute}' : HomePage.preOrderMinute.toString()} ${HomePage.preOrderHour >= 12 || HomePage.preOrderHour <= 4 ? 'pm' : 'am'}";
                           });
                         },
-                        splashColor: Color.fromARGB(255, 0, 0, 0),
+                        splashColor: const Color.fromARGB(255, 0, 0, 0),
                         highlightColor: Colors.transparent,
                         child: Container(
                           width: double.infinity,
-                          padding: EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: Colors.black,
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                           ),
-                          child: Center(
+                          child: const Center(
                             child: Text(
                               'Proceed',
                               textAlign: TextAlign.center,
@@ -601,7 +596,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
               Container(
                 width: MediaQuery.of(context).size.width * 0.5,
                 alignment: Alignment.topRight,
-                child: HomePage(),
+                child: const HomePage(),
               ),
             ],
           );

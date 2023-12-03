@@ -1,17 +1,14 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/mysql.dart';
-// import 'package:google_fonts/google_fonts.dart';
-import 'package:food_delivery/screens/home_screen.dart';
 import 'package:food_delivery/screens/restaurant_screen.dart';
 import 'package:food_delivery/classes/restaurant.dart';
-// import 'package:mysql1/mysql1.dart';
 
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final int customerID;
 
-  RestaurantCard({required this.restaurant, required this.customerID});
+  const RestaurantCard(
+      {super.key, required this.restaurant, required this.customerID});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +16,7 @@ class RestaurantCard extends StatelessWidget {
       child: Container(
         height: 330,
         // padding: EdgeInsets.only(bottom: 0, right: 10, left: 10, top: 10),
-        margin: EdgeInsets.symmetric(
+        margin: const EdgeInsets.symmetric(
           vertical: 2,
           horizontal: 5,
         ),
@@ -31,32 +28,32 @@ class RestaurantCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               child: SizedBox.fromSize(
-                size: Size.fromRadius(100), // Image radius
+                size: const Size.fromRadius(100), // Image radius
                 child: Image.asset('images/kfc.jpg', fit: BoxFit.cover),
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         restaurant.name,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 25,
                           color: Colors.white,
                         ),
                       ),
-                      Row(
+                      const Row(
                         children: [
                           Icon(Icons.star_border_rounded,
                               color: Colors.blueGrey, size: 20),
@@ -68,15 +65,15 @@ class RestaurantCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         restaurant.ownerName,
-                        style: TextStyle(color: Colors.grey),
+                        style: const TextStyle(color: Colors.grey),
                       ),
-                      Row(
+                      const Row(
                         children: [
                           Icon(Icons.access_time,
                               color: Colors.blueGrey, size: 17),
@@ -88,16 +85,15 @@ class RestaurantCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                 ],
               ),
             ),
-            Divider(),
+            const Divider(),
           ],
         ),
       ),
       onTap: () {
-        print('pressed ${restaurant.name}');
         var db = Mysql();
         db.incrementViewCount(restaurant.restaurantID);
         Navigator.push(

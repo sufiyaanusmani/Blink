@@ -7,7 +7,7 @@ class HomePage extends StatefulWidget {
   static int preOrderMinute = 0;
   static String preOrderText = "08:00 am";
   static bool preOrder = false;
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -30,80 +30,77 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(0, 33, 33, 33),
-      body: Container(
-        // padding: EdgeInsets.all(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 5,
-            ),
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const SizedBox(
+            width: 5,
+          ),
 
-            // hours wheel
-            Container(
-              width: MediaQuery.of(context).size.width * 0.15,
-              child: ListWheelScrollView.useDelegate(
-                onSelectedItemChanged: (index) {
-                  setState(() {
-                    HomePage.preOrderHour = selectedHours[index];
-                  });
+          // hours wheel
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.15,
+            child: ListWheelScrollView.useDelegate(
+              onSelectedItemChanged: (index) {
+                setState(() {
+                  HomePage.preOrderHour = selectedHours[index];
+                });
+              },
+              controller: _controller,
+              itemExtent: 50,
+              perspective: 0.005,
+              diameterRatio: 1.2,
+              physics: const FixedExtentScrollPhysics(),
+              childDelegate: ListWheelChildBuilderDelegate(
+                childCount: 9,
+                builder: (context, index) {
+                  return MyHours(
+                    hours: selectedHours[index],
+                  );
                 },
-                controller: _controller,
-                itemExtent: 50,
-                perspective: 0.005,
-                diameterRatio: 1.2,
-                physics: FixedExtentScrollPhysics(),
-                childDelegate: ListWheelChildBuilderDelegate(
-                  childCount: 9,
-                  builder: (context, index) {
-                    return MyHours(
-                      hours: selectedHours[index],
-                    );
-                  },
-                ),
               ),
             ),
+          ),
 
-            Container(
-              alignment: Alignment.center,
-              padding: EdgeInsets.only(bottom: 5),
-              child: const Text(
-                ":",
-                style: TextStyle(
-                  fontSize: 40,
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                ),
+          Container(
+            alignment: Alignment.center,
+            padding: const EdgeInsets.only(bottom: 5),
+            child: const Text(
+              ":",
+              style: TextStyle(
+                fontSize: 40,
+                color: Color.fromARGB(255, 0, 0, 0),
               ),
             ),
-            // minutes wheel
-            Container(
-              width: MediaQuery.of(context).size.width * 0.15,
-              child: ListWheelScrollView.useDelegate(
-                onSelectedItemChanged: (index) {
-                  setState(() {
-                    HomePage.preOrderMinute = selectedMinutes[index];
-                  });
+          ),
+          // minutes wheel
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.15,
+            child: ListWheelScrollView.useDelegate(
+              onSelectedItemChanged: (index) {
+                setState(() {
+                  HomePage.preOrderMinute = selectedMinutes[index];
+                });
+              },
+              itemExtent: 50,
+              perspective: 0.005,
+              diameterRatio: 1.2,
+              physics: const FixedExtentScrollPhysics(),
+              childDelegate: ListWheelChildBuilderDelegate(
+                childCount: 6,
+                builder: (context, index) {
+                  return MyMinutes(
+                    mins: selectedMinutes[index],
+                  );
                 },
-                itemExtent: 50,
-                perspective: 0.005,
-                diameterRatio: 1.2,
-                physics: FixedExtentScrollPhysics(),
-                childDelegate: ListWheelChildBuilderDelegate(
-                  childCount: 6,
-                  builder: (context, index) {
-                    return MyMinutes(
-                      mins: selectedMinutes[index],
-                    );
-                  },
-                ),
               ),
             ),
+          ),
 
-            SizedBox(
-              width: 5,
-            ),
-          ],
-        ),
+          const SizedBox(
+            width: 5,
+          ),
+        ],
       ),
     );
   }

@@ -1,18 +1,11 @@
-import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/components/animated_detail_header.dart';
 import 'package:food_delivery/classes/product.dart';
-import 'package:food_delivery/classes/cart.dart';
-// import 'package:food_delivery/screens/RestrauntHelperFiles/model/product_category.dart';
 import 'package:food_delivery/classes/category.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/controller/sliver_scroll_controller.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/widgets.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'RestrauntHelperfiles/model/product_category.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class RestaurantScreen extends StatefulWidget {
   static const String id = 'restaurant_screen';
@@ -61,7 +54,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     setState(() {
       _loading = true;
     });
-    List<Category> temp = [];
     List<Product> items1 = await getProducts();
     setState(() {
       itemList = items1;

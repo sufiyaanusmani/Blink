@@ -4,8 +4,11 @@ class TitleButton extends StatelessWidget {
   final String title;
   final String subtitle;
   final VoidCallback onPressed;
-  TitleButton(
-      {required this.title, required this.subtitle, required this.onPressed});
+  const TitleButton(
+      {super.key,
+      required this.title,
+      required this.subtitle,
+      required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +24,7 @@ class TitleButton extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: const  TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
                   ),

@@ -5,18 +5,18 @@ import 'package:food_delivery/mysql.dart';
 class Product {
   int id;
   String name;
-  int restraunt_id;
-  int category_id;
-  String category_name;
+  int restaurantID;
+  int categoryID;
+  String categoryName;
   int price;
   bool liked;
 
   Product(
       {required this.id,
       required this.name,
-      required this.restraunt_id,
-      required this.category_id,
-      required this.category_name,
+      required this.restaurantID,
+      required this.categoryID,
+      required this.categoryName,
       required this.price,
       required this.liked});
 
@@ -31,9 +31,9 @@ class Product {
       Product product = Product(
           id: int.parse(row.assoc()['product_id']!),
           name: row.assoc()['name']!,
-          restraunt_id: int.parse(row.assoc()['restaurant_id']!),
-          category_id: int.parse(row.assoc()['category_id']!),
-          category_name: row.assoc()['category_name']!,
+          restaurantID: int.parse(row.assoc()['restaurant_id']!),
+          categoryID: int.parse(row.assoc()['category_id']!),
+          categoryName: row.assoc()['category_name']!,
           price: int.parse(row.assoc()['price']!),
           liked: false);
       products.add(product);
@@ -65,9 +65,9 @@ class Product {
       Product product = Product(
           id: int.parse(row.assoc()['product_id']!),
           name: row.assoc()['name']!,
-          restraunt_id: int.parse(row.assoc()['restaurant_id']!),
-          category_id: int.parse(row.assoc()['category_id']!),
-          category_name: row.assoc()['category_name']!,
+          restaurantID: int.parse(row.assoc()['restaurant_id']!),
+          categoryID: int.parse(row.assoc()['category_id']!),
+          categoryName: row.assoc()['category_name']!,
           price: int.parse(row.assoc()['price']!),
           liked: false);
       products.add(product);

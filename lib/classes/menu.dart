@@ -5,14 +5,14 @@ import 'package:food_delivery/classes/product.dart';
 
 class Menu {
   int rating;
-  String restraunt_name;
+  String restaurantName;
   String description;
   int time;
   List<Product> products;
 
   Menu(
       {required this.rating,
-      required this.restraunt_name,
+      required this.restaurantName,
       required this.description,
       required this.time,
       required this.products});

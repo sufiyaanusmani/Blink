@@ -6,8 +6,9 @@ class LargeButton extends StatefulWidget {
   final double verticalPadding;
   final VoidCallback onPressed;
 
-  LargeButton(
-      {required this.color,
+  const LargeButton(
+      {super.key,
+      required this.color,
       required this.buttonChild,
       required this.verticalPadding,
       required this.onPressed});

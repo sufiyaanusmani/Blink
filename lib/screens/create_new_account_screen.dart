@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:food_delivery/services/navigator.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:food_delivery/components/plain_text_field.dart';
 import 'package:food_delivery/components/password_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
 import 'package:food_delivery/mysql.dart';
-import 'package:food_delivery/user.dart';
-import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/classes/restaurant.dart';
-import 'package:food_delivery/arguments/home_screen_arguments.dart';
-import 'package:food_delivery/screens/home_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class CreateNewAccountScreen extends StatefulWidget {
   static const id = 'create_new_account_screen';

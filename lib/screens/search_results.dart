@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 import '../classes/cart.dart';
 import '../classes/product.dart';
-import '../components/searchbar.dart';
-import 'RestrauntHelperfiles/model/product_category.dart';
 
 class SearchResults extends StatefulWidget {
   static const String id = 'search_screen';
@@ -70,7 +68,7 @@ class SearchList extends StatelessWidget {
                 mobileSnackBarPosition: MobileSnackBarPosition.bottom,
               ).show(context);
             } else if (Cart.cart.length > 0) {
-              if (Cart.cart[0].product.restraunt_id == product.restraunt_id) {
+              if (Cart.cart[0].product.restaurantID == product.restaurantID) {
                 Cart.addNewProduct(product);
                 AnimatedSnackBar.material(
                   '${product.name} added to cart',
@@ -80,7 +78,7 @@ class SearchList extends StatelessWidget {
                   mobileSnackBarPosition: MobileSnackBarPosition.bottom,
                 ).show(context);
               } else {
-                if (Cart.cart[0].product.restraunt_id != product.restraunt_id) {
+                if (Cart.cart[0].product.restaurantID != product.restaurantID) {
                   AnimatedSnackBar.material(
                     'Cannot add products from different restaurant',
                     borderRadius: BorderRadius.circular(10),
@@ -117,7 +115,7 @@ class SearchList extends StatelessWidget {
                               ),
                               const SizedBox(height: 8),
                               Text(
-                                product.category_name,
+                                product.categoryName,
                                 maxLines: 4,
                                 style: const TextStyle(
                                   fontWeight: FontWeight.w300,

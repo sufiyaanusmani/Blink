@@ -12,7 +12,6 @@ import 'package:food_delivery/user.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
-import 'package:food_delivery/screens/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {

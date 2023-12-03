@@ -7,7 +7,7 @@ class MyTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.blue,
-      child: Center(child: Text('hello')),
+      child: const Center(child: Text('hello')),
     );
   }
 }

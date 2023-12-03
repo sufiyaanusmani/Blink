@@ -31,15 +31,20 @@ class SmallRestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        margin: EdgeInsets.all(2.0),
+        margin: const EdgeInsets.all(2.0),
         child: Container(
+          // padding: EdgeInsets.all(7.0),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade800,
+            borderRadius: const BorderRadius.all(Radius.circular(25)),
+          ),
           // padding: EdgeInsets.all(7.0),
           child: Column(
             textDirection: TextDirection.rtl,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20),
                     topRight: Radius.circular(20)),
                 child: Opacity(
@@ -52,22 +57,22 @@ class SmallRestaurantCard extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               Container(
-                margin: EdgeInsets.only(left: 10),
+                margin: const EdgeInsets.only(left: 10),
                 child: Column(
                   textDirection: TextDirection.rtl,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       itemName,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
                     Text(
                       restaurantName,
                       style: TextStyle(
@@ -80,60 +85,54 @@ class SmallRestaurantCard extends StatelessWidget {
               ),
             ],
           ),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade800,
-            borderRadius: BorderRadius.all(Radius.circular(25)),
-          ),
         ),
       ),
       onTap: () {
-        if (Cart.cart.length == 0) {
+        if (Cart.cart.isEmpty) {
           Cart.addNewProduct(Product(
               id: productID,
               name: itemName,
-              restraunt_id: restaurantID,
-              category_id: categoryID,
-              category_name: categoryName,
+              restaurantID: restaurantID,
+              categoryID: categoryID,
+              categoryName: categoryName,
               price: price,
               liked: liked));
           AnimatedSnackBar.material(
-            '${itemName} added to cart',
+            '$itemName added to cart',
             borderRadius: BorderRadius.circular(10),
-            duration: Duration(seconds: 4),
+            duration: const Duration(seconds: 4),
             type: AnimatedSnackBarType.success,
             mobileSnackBarPosition: MobileSnackBarPosition.bottom,
           ).show(context);
-        } else if (Cart.cart.length > 0) {
-          if (Cart.cart[0].product.restraunt_id == restaurantID) {
+        } else if (Cart.cart.isNotEmpty) {
+          if (Cart.cart[0].product.restaurantID == restaurantID) {
             Cart.addNewProduct(Product(
                 id: productID,
                 name: itemName,
-                restraunt_id: restaurantID,
-                category_id: categoryID,
-                category_name: categoryName,
+                restaurantID: restaurantID,
+                categoryID: categoryID,
+                categoryName: categoryName,
                 price: price,
                 liked: liked));
             AnimatedSnackBar.material(
-              '${itemName} added to cart',
+              '$itemName added to cart',
               borderRadius: BorderRadius.circular(10),
-              duration: Duration(seconds: 4),
+              duration: const Duration(seconds: 4),
               type: AnimatedSnackBarType.success,
               mobileSnackBarPosition: MobileSnackBarPosition.bottom,
             ).show(context);
           } else {
-            if (Cart.cart[0].product.restraunt_id != restaurantID) {
+            if (Cart.cart[0].product.restaurantID != restaurantID) {
               AnimatedSnackBar.material(
                 'Cannot add products from different restaurant',
                 borderRadius: BorderRadius.circular(10),
-                duration: Duration(seconds: 4),
+                duration: const Duration(seconds: 4),
                 type: AnimatedSnackBarType.error,
                 mobileSnackBarPosition: MobileSnackBarPosition.bottom,
               ).show(context);
             }
           }
         }
-
-        print('pressed $productID');
       },
     );
   }
