@@ -98,7 +98,13 @@ class _HomeScreenState extends State<HomeScreen> {
       cards.add(SmallRestaurantCard(
           imageID: 'kfc',
           itemName: product.productName,
-          itemDesc: product.restaurantName));
+          productID: product.productID,
+          restaurantName: product.restaurantName,
+          restaurantID: product.restaurantID,
+          liked: product.liked,
+          categoryID: product.categoryID,
+          categoryName: product.categoryName,
+          price: product.price));
     }
     setState(() {
       trendingProducts = cards;
