@@ -10,6 +10,8 @@ import 'package:food_delivery/user.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/cart.dart';
 
+import '../classes/trending_product.dart';
+
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
   int loginID = -1;
@@ -34,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var db = Mysql();
   String firstName = '';
   List<RestaurantCard> restaurantCards = [];
+  List<SmallRestaurantCard> trendingProducts = [];
 
   bool notificationWidget = false;
 
@@ -87,6 +90,21 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void getTrendingProducts() async {
+    List<TrendingProduct> temp = [];
+    List<SmallRestaurantCard> cards = [];
+    temp = await TrendingProduct.getTrendingProducts();
+    for (TrendingProduct product in temp) {
+      cards.add(SmallRestaurantCard(
+          imageID: 'kfc',
+          itemName: product.productName,
+          itemDesc: product.restaurantName));
+    }
+    setState(() {
+      trendingProducts = cards;
+    });
+  }
+
   // void getRestaurantsCards() {
   //   for (Restaurant r in widget.restaurants) {
   //     setState(() {
@@ -103,6 +121,9 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     if (restaurantCards.isEmpty) {
       getRestaurants();
+    }
+    if (trendingProducts.isEmpty) {
+      getTrendingProducts();
     }
     Cart.customerID = widget.user.id;
     // TODO: implement initState
@@ -325,23 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   top: 10.0,
                   bottom: 10,
                 ),
-                children: [
-                  SmallRestaurantCard(
-                    imageID: 'kfc',
-                    itemName: 'itemname',
-                    itemDesc: 'itemDisc',
-                  ),
-                  SmallRestaurantCard(
-                    imageID: 'mac',
-                    itemName: 'itemname',
-                    itemDesc: 'itemDisc',
-                  ),
-                  SmallRestaurantCard(
-                    imageID: 'pizzahut',
-                    itemName: 'itemname',
-                    itemDesc: 'itemDisc',
-                  ),
-                ],
+                children: trendingProducts,
               ),
             ),
             Divider(),
