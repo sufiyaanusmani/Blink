@@ -10,7 +10,10 @@ import 'package:food_delivery/user.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/cart.dart';
 
+import 'package:food_delivery/classes/UIColor.dart';
 import '../classes/trending_product.dart';
+
+late bool show = true;
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
@@ -51,6 +54,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void toggle() {
     setState(() {
       notificationWidget = !notificationWidget;
+    });
+  }
+
+  void toggleshow() {
+    setState(() {
+      show = !show;
     });
   }
 
@@ -141,9 +150,10 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     if (loading == true) {
       return Scaffold(
+        backgroundColor: ui.val(0),
         appBar: AppBar(
-          backgroundColor: Colors.grey.shade800,
-          shadowColor: Colors.grey.shade800,
+          backgroundColor: const Color.fromARGB(255, 20, 20, 20),
+          shadowColor: ui.val(0),
           automaticallyImplyLeading: false,
           title: Container(
             // padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -162,7 +172,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Icon(Icons.notifications),
                     iconSize: 25,
                     color: Colors.grey,
-                    onPressed: toggle,
+                    // onPressed: toggle,
+                    onPressed: toggleshow,
                     // onPressed: () {
                     //   print('pressed');
                     //   print('pressed');
@@ -192,7 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Trending',
                 style: TextStyle(
                   fontSize: 20,
-                  color: Colors.black,
+                  color: ui.val(4),
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -223,7 +234,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Discover',
                 style: TextStyle(
                   fontSize: 40,
-                  color: Colors.black,
+                  color: ui.val(4),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -286,9 +297,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        backgroundColor: ui.val(0),
         appBar: AppBar(
-          backgroundColor: Colors.grey.shade800,
-          shadowColor: Colors.grey.shade800,
+          backgroundColor: const Color.fromARGB(255, 20, 20, 20),
+          shadowColor: ui.val(0),
           automaticallyImplyLeading: false,
           title: Container(
             // padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -337,7 +349,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Trending',
                 style: TextStyle(
                   fontSize: 20,
-                  color: Colors.black,
+                  color: ui.val(4),
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -363,7 +375,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Discover',
                 style: TextStyle(
                   fontSize: 40,
-                  color: Colors.black,
+                  color: ui.val(4),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -396,7 +408,7 @@ class Resshimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.black38,
+      baseColor: const Color.fromARGB(96, 143, 143, 143),
       highlightColor: Colors.grey.shade600,
       period: const Duration(milliseconds: 600),
       child: Container(
@@ -419,7 +431,7 @@ class Foodshimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Shimmer.fromColors(
-      baseColor: Colors.black38,
+      baseColor: const Color.fromARGB(96, 143, 143, 143),
       highlightColor: Colors.grey.shade600,
       period: const Duration(milliseconds: 600),
       child: Container(
@@ -447,7 +459,7 @@ class OrderNotification extends StatefulWidget {
 
 class _OrderNotificationState extends State<OrderNotification> {
   late int orderID = 0;
-  late bool show = false;
+  // late bool show = false;
   late String status = 'Pending';
 
   late String restaurantName = '';
@@ -459,9 +471,6 @@ class _OrderNotificationState extends State<OrderNotification> {
     Iterable<ResultSetRow> rows = await db.getResults(
         'SELECT O.order_id, O.status, R.name, O.price, P.time FROM Orders O INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) LEFT JOIN Preschedule P ON (O.order_id = P.order_id) WHERE O.customer_id=${widget.customerID} AND O.status IN ("pending", "preparing");');
     if (rows.length == 1) {
-      setState(() {
-        show = true;
-      });
       for (var row in rows) {
         setState(() {
           orderID = int.parse(row.assoc()['order_id']!);
@@ -474,6 +483,9 @@ class _OrderNotificationState extends State<OrderNotification> {
           });
         });
       }
+      setState(() {
+        show = false;
+      });
     } else {
       setState(() {
         show = false;

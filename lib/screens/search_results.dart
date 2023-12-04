@@ -1,5 +1,6 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 import '../classes/cart.dart';
 import '../classes/product.dart';
@@ -35,6 +36,7 @@ class _SearchResultsState extends State<SearchResults> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: ui.val(0),
         body: Column(
           children: [
             Expanded(child: SearchList(listItem: widget.products)),
@@ -108,25 +110,28 @@ class SearchList extends StatelessWidget {
                             children: [
                               Text(
                                 product.name,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.w600,
+                                  color: ui.val(4),
                                 ),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 product.categoryName,
                                 maxLines: 4,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w300,
+                                  color: ui.val(4),
                                 ),
                               ),
                               const SizedBox(height: 8),
                               Text(
                                 "Rs. ${product.price}",
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 18,
+                                  color: ui.val(4),
                                 ),
                               ),
                               const SizedBox(height: 8),

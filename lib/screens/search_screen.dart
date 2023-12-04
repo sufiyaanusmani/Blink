@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/search_results.dart';
+import 'package:flutter/services.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 import '../classes/product.dart';
 import '../components/searchbar.dart';
@@ -52,14 +54,18 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     if (_loading) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ui.val(0),
         body: Center(
             child: LoadingAnimationWidget.fourRotatingDots(
-                color: Colors.orange, size: 100)),
+                color: ui.val(4), size: 50)),
       );
     }
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: ui.val(0),
+    ));
     return SafeArea(
       child: Scaffold(
+        backgroundColor: ui.val(0),
         body: Column(
           children: [
             Padding(
@@ -96,11 +102,12 @@ class _SearchScreenState extends State<SearchScreen> {
             Container(
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.all(16.0),
-              child: const Text(
+              child: Text(
                 'Results',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 20,
+                  color: ui.val(4),
                 ),
               ),
             ),
@@ -142,13 +149,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             children: [
                               Icon(
                                 Icons.search,
-                                color: Colors.grey,
+                                color: ui.val(4),
                                 size: 20,
                               ),
                               SizedBox(width: 7),
                               Text(searchItem.name,
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: ui.val(4),
                                     fontWeight: FontWeight.w500,
                                     fontSize: 17,
                                   )),
@@ -163,7 +170,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             },
                             child: Icon(
                               Icons.close_sharp,
-                              color: Colors.grey,
+                              color: ui.val(4),
                               // size: 17,
                             ),
                           ),

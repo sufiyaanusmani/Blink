@@ -3,6 +3,8 @@ import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/screens/restaurant_screen.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 
+import 'package:food_delivery/classes/UIColor.dart';
+
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final int customerID;
@@ -22,7 +24,7 @@ class RestaurantCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.grey.shade800,
+          color: ui.val(1),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

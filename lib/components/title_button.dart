@@ -12,10 +12,10 @@ class TitleButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: onPressed,
       child: Padding(
-        padding: const EdgeInsets.only(left: 10, right: 20, top: 5, bottom: 5),
+        padding: const EdgeInsets.only(left: 18, right: 18, top: 5, bottom: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -27,16 +27,20 @@ class TitleButton extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w500,
+                    color: Colors.white,
                   ),
                 ),
                 Text(
                   subtitle,
+                  style: const TextStyle(
+                    color: Colors.white38,
+                  ),
                 ),
               ],
             ),
             const Icon(
               Icons.arrow_forward_ios,
-              color: Colors.black38,
+              color: Color.fromARGB(131, 255, 255, 255),
             ),
           ],
         ),

@@ -6,6 +6,8 @@ import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/screens/privacy_policy_screen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:mysql_client/mysql_client.dart';
+import 'package:flutter/services.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 class SettingsScreen extends StatefulWidget {
   static const String id = 'settings_screen';
@@ -74,63 +76,83 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        Header(
-          name: name,
-        ),
-        const SizedBox(height: 30.0),
-        Divider(color: Colors.grey.shade300, thickness: 1),
-        SettingSwitch(
-          primaryTitle: 'Dark Mode',
-          secondaryTitle: 'Turn on dark mode',
-          switchValue: false,
-        ),
-        Divider(color: Colors.grey.shade300, thickness: 1),
-        TitleButton(
-          title: "Order information",
-          subtitle: "View past orders",
-          onPressed: () {
-            print('pressed');
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => OrdersPage(
-                        customerID: widget.customerID,
-                      )),
-            );
-          },
-        ),
-        Divider(color: Colors.grey.shade300, thickness: 1),
-        TitleButton(
-          title: "Privacy Policy",
-          subtitle: "Terms of service and privacy policy",
-          onPressed: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => PrivacyPolicyScreen()));
-          },
-        ),
-        Divider(color: Colors.grey.shade300, thickness: 1),
-        TitleButton(
-          title: "FAQs",
-          subtitle: "Answer to your frequently asked questions",
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        Divider(color: Colors.grey.shade300, thickness: 1),
-        Container(
-          width: 4,
-          height: 80,
-          padding: EdgeInsets.all(10),
-          child: ElevatedButton(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Color.fromARGB(255, 44, 44, 44),
+    ));
+    return Container(
+      decoration: BoxDecoration(
+        color: ui.val(0),
+      ),
+      child: ListView(
+        children: [
+          Header(
+            name: name,
+          ),
+          const SizedBox(height: 30.0),
+          Divider(color: Colors.transparent, thickness: 2),
+          SettingSwitch(
+            primaryTitle: 'Dark Mode',
+            secondaryTitle: 'Turn on dark mode',
+            switchValue: true,
+          ),
+          Divider(color: Colors.transparent, thickness: 2),
+          TitleButton(
+            title: "Order information",
+            subtitle: "View past orders",
+            onPressed: () {
+              print('pressed');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => OrdersPage(
+                          customerID: widget.customerID,
+                        )),
+              );
+            },
+          ),
+          Divider(color: Colors.transparent, thickness: 2),
+          TitleButton(
+            title: "Privacy Policy",
+            subtitle: "Terms of service and privacy policy",
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => PrivacyPolicyScreen()));
+            },
+          ),
+          Divider(color: Colors.transparent, thickness: 2),
+          TitleButton(
+            title: "FAQs",
+            subtitle: "Answer to your frequently asked questions",
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Logout'),
           ),
-        )
-      ],
+          Divider(color: Colors.transparent, thickness: 2),
+          SizedBox(
+            height: 50,
+          ),
+          Container(
+            width: 4,
+            height: 40,
+            padding: EdgeInsets.only(left: 18, right: 18),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                primary: ui.val(10),
+              ),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: Container(
+                  child: Text(
+                'Logout',
+                style: TextStyle(color: ui.val(0), fontWeight: FontWeight.bold),
+              )),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -147,15 +169,15 @@ class Header extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 210,
-          decoration: const BoxDecoration(
-            color: Colors.black,
+          decoration: BoxDecoration(
+            color: Color.fromARGB(255, 44, 44, 44),
           ),
         ),
         Container(
           width: MediaQuery.of(context).size.width,
           height: 200,
           decoration: BoxDecoration(
-            color: Colors.grey.shade900,
+            color: const Color.fromARGB(255, 38, 38, 38),
             borderRadius:
                 BorderRadius.vertical(top: Radius.elliptical(190, 100)),
           ),
@@ -164,7 +186,7 @@ class Header extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           height: 150,
           decoration: BoxDecoration(
-            color: Colors.grey.shade700,
+            color: const Color.fromARGB(255, 29, 29, 29),
             borderRadius:
                 BorderRadius.vertical(top: Radius.elliptical(210, 100)),
           ),
@@ -172,8 +194,8 @@ class Header extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width,
           height: 100,
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          decoration: BoxDecoration(
+            color: ui.val(0),
             borderRadius:
                 BorderRadius.vertical(top: Radius.elliptical(230, 100)),
           ),
@@ -204,6 +226,7 @@ class Header extends StatelessWidget {
           name,
           style: TextStyle(
             fontSize: 40.0,
+            color: Colors.white,
           ),
         ),
       ],
@@ -305,7 +328,7 @@ class OrdersList extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(10),
                 decoration:
-                    BoxDecoration(color: Colors.orangeAccent.withOpacity(0.5)),
+                    BoxDecoration(color: Color.fromARGB(255, 255, 101, 44)),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [

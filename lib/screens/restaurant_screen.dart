@@ -6,6 +6,7 @@ import 'package:food_delivery/classes/category.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/controller/sliver_scroll_controller.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/widgets.dart';
 import 'RestrauntHelperfiles/model/product_category.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 class RestaurantScreen extends StatefulWidget {
   static const String id = 'restaurant_screen';
