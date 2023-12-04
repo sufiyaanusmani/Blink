@@ -484,7 +484,7 @@ class _OrderNotificationState extends State<OrderNotification> {
         });
       }
       setState(() {
-        show = false;
+        show = true;
       });
     } else {
       setState(() {
@@ -521,11 +521,14 @@ class _OrderNotificationState extends State<OrderNotification> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: ui.val(0),
+    ));
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
       height: show ? 400 : 0,
       decoration: BoxDecoration(
-          color: Colors.amber,
+          color: ui.val(2),
           borderRadius: BorderRadius.all(Radius.circular(20))),
       child: !show
           ? SizedBox(width: 0)
@@ -546,11 +549,15 @@ class _OrderNotificationState extends State<OrderNotification> {
                           "Order",
                           style: TextStyle(
                             fontSize: 30,
+                            color: ui.val(4),
                           ),
                         ),
                         Text(
                           "#$orderID",
-                          style: TextStyle(fontSize: 20, color: Colors.black54),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: ui.val(4),
+                          ),
                         ),
                       ],
                     ),
@@ -571,6 +578,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                               "Status",
                               style: TextStyle(
                                 fontSize: 20,
+                                color: ui.val(4),
                               ),
                             ),
                           ],
@@ -579,6 +587,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                           status,
                           style: TextStyle(
                             fontSize: 20,
+                            color: ui.val(4),
                           ),
                         ),
                       ],
@@ -601,6 +610,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                               "Expected",
                               style: TextStyle(
                                 fontSize: 20,
+                                color: ui.val(4),
                               ),
                             ),
                           ],
@@ -609,6 +619,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                           time,
                           style: TextStyle(
                             fontSize: 20,
+                            color: ui.val(4),
                           ),
                         ),
                       ],
@@ -631,6 +642,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                               "Restaurant",
                               style: TextStyle(
                                 fontSize: 20,
+                                color: ui.val(4),
                               ),
                             ),
                           ],
@@ -639,6 +651,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                           restaurantName,
                           style: TextStyle(
                             fontSize: 20,
+                            color: ui.val(4),
                           ),
                         ),
                       ],
@@ -671,11 +684,17 @@ class _OrderNotificationState extends State<OrderNotification> {
                       children: [
                         Text(
                           'Total',
-                          style: TextStyle(fontSize: 20),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: ui.val(4),
+                          ),
                         ),
                         Text(
                           'Rs. $price',
-                          style: TextStyle(fontSize: 20, color: Colors.black54),
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: ui.val(4),
+                          ),
                         ),
                       ],
                     ),
@@ -709,30 +728,39 @@ class OrderStatusProductRow extends StatelessWidget {
             // color: Colors.white38,
             borderRadius: BorderRadius.all(Radius.circular(30)),
             border: Border.all(
-              color: Colors.black45,
+              color: ui.val(4).withOpacity(0.5),
               width: 1.0,
             ),
           ),
           child: Text(
             '${foodItem.count}× ',
-            style: TextStyle(fontSize: 20, color: Colors.black54),
+            style: TextStyle(
+              fontSize: 20,
+              color: ui.val(4).withOpacity(0.5),
+            ),
           ),
         ),
         SizedBox(width: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "${foodItem.name}",
-              style: TextStyle(
-                fontSize: 20,
+        Expanded(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "${foodItem.name}",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: ui.val(4),
+                ),
               ),
-            ),
-            Text(
-              "${foodItem.price} rs",
-              style: TextStyle(fontSize: 15, color: Colors.black54),
-            ),
-          ],
+              Text(
+                "${foodItem.price} rs",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: ui.val(4),
+                ),
+              ),
+            ],
+          ),
         ),
         SizedBox(width: 10),
       ],
