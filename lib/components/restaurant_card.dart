@@ -20,10 +20,10 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        height: 330,
+        height: 310,
         // padding: EdgeInsets.only(bottom: 0, right: 10, left: 10, top: 10),
         margin: const EdgeInsets.symmetric(
-          vertical: 2,
+          vertical: 10,
           horizontal: 5,
         ),
         decoration: BoxDecoration(

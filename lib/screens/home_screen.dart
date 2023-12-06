@@ -13,6 +13,8 @@ import 'package:food_delivery/classes/cart.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 import '../classes/trending_product.dart';
 
+import 'dart:math';
+
 late bool show = true;
 
 class HomeScreen extends StatefulWidget {
@@ -123,13 +125,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  List<String> imageNames = ['yellow', 'blue', 'green', 'bleen', 'purple'];
+
+  String getRandomImageName() {
+    Random random = Random();
+    int index = random.nextInt(imageNames.length);
+    return imageNames[index];
+  }
+
   void getTrendingProducts() async {
     List<TrendingProduct> temp = [];
     List<SmallRestaurantCard> cards = [];
     temp = await TrendingProduct.getTrendingProducts();
+
     for (TrendingProduct product in temp) {
+      String randomImageName = getRandomImageName();
       cards.add(SmallRestaurantCard(
-          imageID: 'kfc',
+          imageID: randomImageName,
           itemName: product.productName,
           productID: product.productID,
           restaurantName: product.restaurantName,
@@ -175,6 +187,10 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         backgroundColor: ui.val(0),
         appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            systemNavigationBarColor: ui.val(0),
+            statusBarColor: ui.val(0),
+          ),
           backgroundColor: const Color.fromARGB(255, 20, 20, 20),
           shadowColor: ui.val(0),
           automaticallyImplyLeading: false,

@@ -5,6 +5,7 @@ import 'package:food_delivery/classes/cart.dart';
 
 import '../../classes/product.dart';
 import 'package:food_delivery/classes/UIColor.dart';
+import 'dart:math';
 // class ProductCategory {
 //   ProductCategory({
 //     required this.category,
@@ -42,6 +43,20 @@ class SliverBodyItems extends StatefulWidget {
 }
 
 class _SliverBodyItemsState extends State<SliverBodyItems> {
+  List<String> imageNames = [
+    'yellow.jpg',
+    'blue.jpg',
+    'green.jpg',
+    'bleen.jpg',
+    'purple.jpg'
+  ];
+
+  String getRandomImageName() {
+    Random random = Random();
+    int index = random.nextInt(imageNames.length);
+    return imageNames[index];
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverList(
@@ -143,7 +158,7 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: AssetImage(
-                                      "images/kfc.jpg",
+                                      "images/${getRandomImageName()}",
                                     ),
                                   ),
                                 ),

@@ -12,6 +12,8 @@ import 'package:food_delivery/classes/cart.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 import 'package:food_delivery/services/email_send.dart';
 
+import 'dart:math';
+
 class YourCartScreen extends StatefulWidget {
   const YourCartScreen({super.key});
 
@@ -45,6 +47,20 @@ class _YourCartScreenState extends State<YourCartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> imageNames = [
+      'yellow.jpg',
+      'blue.jpg',
+      'green.jpg',
+      'bleen.jpg',
+      'purple.jpg'
+    ];
+
+    String getRandomImageName() {
+      Random random = Random();
+      int index = random.nextInt(imageNames.length);
+      return imageNames[index];
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: ui.val(0),
@@ -103,7 +119,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               child: Opacity(
                                 opacity: 0.8,
                                 child: Image.asset(
-                                  'images/kfc.jpg',
+                                  "images/${getRandomImageName()}",
                                   width: 120.0,
                                   height: 120.0,
                                   fit: BoxFit.cover,
