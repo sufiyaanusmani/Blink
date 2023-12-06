@@ -454,15 +454,17 @@ class _YourCartScreenState extends State<YourCartScreen> {
                           EmailSender email = EmailSender();
                           email.sendEmail(orderID);
 
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (_, animation, __) => FadeTransition(
-                                opacity: animation,
-                                child: OrderStatusScreen(order: order),
-                              ),
-                            ),
-                          );
+                          _showPopup(context, order);
+
+                          // Navigator.push(
+                          //   context,
+                          //   PageRouteBuilder(
+                          //     pageBuilder: (_, animation, __) => FadeTransition(
+                          //       opacity: animation,
+                          //       child: OrderStatusScreen(order: order),
+                          //     ),
+                          //   ),
+                          // );
                         }
                       }
                     }
@@ -502,6 +504,52 @@ class _YourCartScreenState extends State<YourCartScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showPopup(BuildContext context, Order order) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        String capitalizedString = order.status.substring(0, 1).toUpperCase() +
+            order.status.substring(1);
+        return AlertDialog(
+          backgroundColor: ui.val(2),
+          title: Text(
+            'Order Details',
+            style: TextStyle(color: ui.val(4), fontWeight: FontWeight.w600),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  'Order ID: ${order.orderID}',
+                  style:
+                      TextStyle(color: ui.val(4), fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  'Order status: ${capitalizedString}',
+                  style:
+                      TextStyle(color: ui.val(4), fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Close the popup
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Close',
+                style:
+                    TextStyle(color: ui.val(10), fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

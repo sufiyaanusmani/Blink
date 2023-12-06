@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 class PlainTextField extends StatefulWidget {
   final String hintText;
@@ -21,22 +22,30 @@ class _PlainTextFieldState extends State<PlainTextField> {
   Widget build(BuildContext context) {
     return Material(
       elevation: 5,
-      borderRadius: BorderRadius.circular(20),
+      color: ui.val(2),
+      borderRadius: BorderRadius.circular(15),
       child: Container(
         padding: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 10,
         ),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          color: ui.val(2),
+          borderRadius: BorderRadius.circular(15),
         ),
         child: TextField(
           controller: widget.controller,
+          style: TextStyle(
+            color: ui.val(4),
+          ),
           decoration: InputDecoration(
-              hintText: widget.hintText,
-              border: InputBorder.none,
-              labelText: widget.labelText),
+            hintText: widget.hintText,
+            border: InputBorder.none,
+            labelText: widget.labelText,
+            labelStyle: TextStyle(
+              color: ui.val(4).withOpacity(0.5),
+            ),
+          ),
           onChanged: widget.onChange,
         ),
       ),
