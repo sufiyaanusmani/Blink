@@ -143,7 +143,6 @@ class _HomeScreenState extends State<HomeScreen> {
     Cart.customerID = widget.user.id;
     // TODO: implement initState
     super.initState();
-    print(widget.user.firstName);
   }
 
   @override

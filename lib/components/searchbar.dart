@@ -45,6 +45,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 10),
         hintText: 'Search...',
+        hintStyle: TextStyle(color: Colors.grey),
         suffixIcon: GestureDetector(
           onTap: widget.onClick,
           //     () {
