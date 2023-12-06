@@ -53,7 +53,7 @@ class SmallRestaurantCard extends StatelessWidget {
                   opacity: 0.8,
                   child: SizedBox(
                     width: 140,
-                    height: 160,
+                    height: 150,
                     child:
                         Image.asset('images/$imageID.jpg', fit: BoxFit.cover),
                   ),
@@ -69,16 +69,22 @@ class SmallRestaurantCard extends StatelessWidget {
                     Text(
                       itemName,
                       style: const TextStyle(
-                        fontSize: 20,
+                        fontSize: 18,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
                     ),
-                    const SizedBox(height: 5),
                     Text(
                       restaurantName,
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 14,
+                        color: Colors.grey.shade500,
+                      ),
+                    ),
+                    Text(
+                      'Rs. $price',
+                      style: TextStyle(
+                        fontSize: 14+,
                         color: Colors.grey.shade500,
                       ),
                     ),
