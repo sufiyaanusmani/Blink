@@ -84,7 +84,7 @@ class SmallRestaurantCard extends StatelessWidget {
                     Text(
                       'Rs. $price',
                       style: TextStyle(
-                        fontSize: 14+,
+                        fontSize: 14,
                         color: Colors.grey.shade500,
                       ),
                     ),
