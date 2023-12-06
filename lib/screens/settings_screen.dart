@@ -271,10 +271,10 @@ class _OrdersPageState extends State<OrdersPage> {
   Widget build(BuildContext context) {
     if (_loading) {
       return Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: ui.val(0),
         body: Center(
             child: LoadingAnimationWidget.fourRotatingDots(
-                color: Colors.orange, size: 100)),
+                color: ui.val(4), size: 50)),
       );
     }
     return Scaffold(
@@ -293,6 +293,7 @@ class OrdersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ui.val(0),
       body: ListView.builder(
         itemCount: orderHistory.length,
         physics: BouncingScrollPhysics(),
@@ -300,7 +301,7 @@ class OrdersList extends StatelessWidget {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Divider(color: Colors.grey.shade300, thickness: 1),
+              Divider(color: Colors.transparent, thickness: 2),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -309,11 +310,17 @@ class OrdersList extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Order #${orderHistory[index].orderID}',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w500)),
                         Text(
-                            '${orderHistory[index].date}  ${orderHistory[index].time}'),
+                          'Order #${orderHistory[index].orderID}',
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w500,
+                              color: ui.val(4)),
+                        ),
+                        Text(
+                          '${orderHistory[index].date}  ${orderHistory[index].time}',
+                          style: TextStyle(color: ui.val(4)),
+                        ),
                       ],
                     ),
                   ),
@@ -327,8 +334,9 @@ class OrdersList extends StatelessWidget {
               SizedBox(height: 10),
               Container(
                 padding: EdgeInsets.all(10),
-                decoration:
-                    BoxDecoration(color: Color.fromARGB(255, 255, 101, 44)),
+                decoration: BoxDecoration(
+                    color: ui.val(10).withOpacity(0.8),
+                    borderRadius: BorderRadius.all(Radius.circular(10))),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
