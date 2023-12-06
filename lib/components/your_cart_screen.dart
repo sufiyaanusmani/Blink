@@ -10,6 +10,7 @@ import 'package:slide_to_act_reborn/slide_to_act_reborn.dart';
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:food_delivery/classes/cart.dart';
 import 'package:food_delivery/classes/UIColor.dart';
+import 'package:food_delivery/services/email_send.dart';
 
 class YourCartScreen extends StatefulWidget {
   const YourCartScreen({super.key});
@@ -434,6 +435,8 @@ class _YourCartScreenState extends State<YourCartScreen> {
                             HomePage.preOrder = false;
                             HomePage.preOrderText = "08:00 am";
                           });
+                          EmailSender email = EmailSender();
+                          email.sendEmail(orderID);
 
                           Navigator.push(
                             context,
