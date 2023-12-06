@@ -85,9 +85,33 @@ class _HomeScreenState extends State<HomeScreen> {
     List<Restaurant> r = await Restaurant.getRestaurants();
     List<RestaurantCard> tempRestaurantCards = [];
     for (Restaurant res in r) {
-      print('got a card');
-      tempRestaurantCards
-          .add(RestaurantCard(restaurant: res, customerID: widget.user.id));
+      String imageName = "kfc.jpg";
+      String resName = res.name;
+      resName = resName.toLowerCase();
+      if (resName.contains("burger")) {
+        imageName = "burger.jpg";
+      } else if (resName.contains("cafe")) {
+        imageName = "cafe.jpg";
+      } else if (resName.contains("dhaba")) {
+        imageName = "dhaba.jpg";
+      } else if (resName.contains("juice")) {
+        imageName = "juice.jpg";
+      } else if (resName.contains("limca")) {
+        imageName = "limca.jpg";
+      } else if (resName.contains("pathan")) {
+        imageName = "pathan.jpg";
+      } else if (resName.contains("pizza")) {
+        imageName = "pizza.jpg";
+      } else if (resName.contains("shawarma")) {
+        imageName = "shawarma.jpg";
+      } else {
+        imageName = "kfc.jpg";
+      }
+      tempRestaurantCards.add(RestaurantCard(
+        restaurant: res,
+        customerID: widget.user.id,
+        imageName: imageName,
+      ));
     }
     if (this.mounted) {
       setState(() {

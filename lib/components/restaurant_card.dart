@@ -8,9 +8,13 @@ import 'package:food_delivery/classes/UIColor.dart';
 class RestaurantCard extends StatelessWidget {
   final Restaurant restaurant;
   final int customerID;
+  final String imageName;
 
   const RestaurantCard(
-      {super.key, required this.restaurant, required this.customerID});
+      {super.key,
+      required this.restaurant,
+      required this.customerID,
+      required this.imageName});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,7 @@ class RestaurantCard extends StatelessWidget {
                   topLeft: Radius.circular(20), topRight: Radius.circular(20)),
               child: SizedBox.fromSize(
                 size: const Size.fromRadius(100), // Image radius
-                child: Image.asset('images/kfc.jpg', fit: BoxFit.cover),
+                child: Image.asset('images/$imageName', fit: BoxFit.cover),
               ),
             ),
             const SizedBox(height: 15),

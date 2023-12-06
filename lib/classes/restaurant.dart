@@ -6,6 +6,7 @@ class Restaurant {
   int restaurantID;
   String name;
   String ownerName;
+  String image = '';
 
   Restaurant(
       {required this.restaurantID,

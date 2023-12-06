@@ -21,7 +21,28 @@ class AnimatedDetailHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
-    const image = 'images/kfc.jpg';
+    String image = "kfc.jpg";
+    String resName = restaurant.name;
+    resName = resName.toLowerCase();
+    if (resName.contains("burger")) {
+      image = "burger.jpg";
+    } else if (resName.contains("cafe")) {
+      image = "cafe.jpg";
+    } else if (resName.contains("dhaba")) {
+      image = "dhaba.jpg";
+    } else if (resName.contains("juice")) {
+      image = "juice.jpg";
+    } else if (resName.contains("limca")) {
+      image = "limca.jpg";
+    } else if (resName.contains("pathan")) {
+      image = "pathan.jpg";
+    } else if (resName.contains("pizza")) {
+      image = "pizza.jpg";
+    } else if (resName.contains("shawarma")) {
+      image = "shawarma.jpg";
+    } else {
+      image = "kfc.jpg";
+    }
 
     return Stack(
       fit: StackFit.expand,
@@ -40,7 +61,7 @@ class AnimatedDetailHeader extends StatelessWidget {
                     ),
                     child: Transform.scale(
                       scale: lerpDouble(1, 1.3, bottomPercent)!,
-                      child: const PlaceImagesPageView(images: image),
+                      child: PlaceImagesPageView(images: "images/$image"),
                     ),
                   ),
                   Positioned(
@@ -265,8 +286,8 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
                       blurRadius: 10,
                     )
                   ],
-                  image: const DecorationImage(
-                    image: AssetImage('images/kfc.jpg'),
+                  image: DecorationImage(
+                    image: AssetImage('${widget.images}'),
                     fit: BoxFit.cover,
                     colorFilter:
                         ColorFilter.mode(Colors.black26, BlendMode.darken),
