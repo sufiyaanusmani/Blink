@@ -555,7 +555,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                           "#$orderID",
                           style: TextStyle(
                             fontSize: 20,
-                            color: ui.val(4),
+                            color: Colors.white,
                           ),
                         ),
                       ],
@@ -570,7 +570,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                           children: [
                             Icon(
                               Icons.local_fire_department_sharp,
-                              color: Colors.black54,
+                              color: Colors.red,
                             ),
                             SizedBox(width: 4),
                             Text(
@@ -602,7 +602,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                           children: [
                             Icon(
                               Icons.schedule,
-                              color: Colors.black54,
+                              color: Colors.blue,
                             ),
                             SizedBox(width: 5),
                             Text(
@@ -634,7 +634,7 @@ class _OrderNotificationState extends State<OrderNotification> {
                           children: [
                             Icon(
                               Icons.restaurant,
-                              color: Colors.black54,
+                              color: Colors.grey,
                             ),
                             SizedBox(width: 5),
                             Text(
