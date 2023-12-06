@@ -1,3 +1,4 @@
+import 'package:food_delivery/classes/UIColor.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/get_box_offset.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/controller/sliver_scroll_controller.dart';
@@ -44,7 +45,7 @@ class ListItemHeaderSliver extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                            color: Color.fromARGB(255, 109, 239, 131),
+                            color: ui.val(10),
                             borderRadius: BorderRadius.circular(16)),
                         child: Text(
                           bloc.listCategory[index].name,

@@ -22,6 +22,7 @@ class _HomePageState extends State<HomePage> {
 
     _controller = FixedExtentScrollController();
   }
+  
 
   final List<int> selectedHours = [08, 09, 10, 11, 12, 01, 02, 03, 04];
   final List<int> selectedMinutes = [00, 10, 20, 30, 40, 50];
@@ -69,7 +70,7 @@ class _HomePageState extends State<HomePage> {
               ":",
               style: TextStyle(
                 fontSize: 40,
-                color: Color.fromARGB(255, 0, 0, 0),
+                color: Colors.white70,
               ),
             ),
           ),

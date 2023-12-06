@@ -18,7 +18,7 @@ class FoodDelivery extends StatelessWidget {
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.blue.shade900,
           iconTheme: IconThemeData(
-            color: Colors.white,
+            color: Colors.black,
           ),
         ),
       ),

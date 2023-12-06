@@ -6,6 +6,8 @@ import 'package:food_delivery/screens/search_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
 
+import 'package:food_delivery/classes/UIColor.dart';
+
 class MainNavigator extends StatefulWidget {
   static const id = 'main-navigator';
   const MainNavigator({super.key});
@@ -22,15 +24,16 @@ class _MainNavigatorState extends State<MainNavigator> {
         ModalRoute.of(context)!.settings.arguments as HomeScreenArguments;
     return Scaffold(
       bottomNavigationBar: GNav(
-        rippleColor: Colors.grey[300]!,
-        hoverColor: Colors.grey[100]!,
+        backgroundColor: ui.val(0),
+        rippleColor: Colors.grey.withOpacity(0.3)!,
+        hoverColor: Colors.grey.withOpacity(0.13)!,
         gap: 8,
-        activeColor: Colors.black,
+        activeColor: Colors.white.withOpacity(0.8),
         iconSize: 24,
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 17),
         duration: Duration(milliseconds: 400),
-        tabBackgroundColor: Colors.grey[100]!,
-        color: Colors.black,
+        tabBackgroundColor: Colors.grey.withOpacity(0.05)!,
+        color: Colors.white.withOpacity(0.5),
         onTabChange: (int index) {
           setState(() {
             currentPageIndex = index;

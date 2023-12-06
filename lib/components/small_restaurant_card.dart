@@ -4,6 +4,8 @@ import 'package:food_delivery/classes/product.dart';
 
 import '../classes/cart.dart';
 
+import 'package:food_delivery/classes/UIColor.dart';
+
 class SmallRestaurantCard extends StatelessWidget {
   final String imageID;
   final String itemName;
@@ -35,7 +37,7 @@ class SmallRestaurantCard extends StatelessWidget {
         child: Container(
           // padding: EdgeInsets.all(7.0),
           decoration: BoxDecoration(
-            color: Colors.grey.shade800,
+            color: ui.val(1),
             borderRadius: const BorderRadius.all(Radius.circular(25)),
           ),
           // padding: EdgeInsets.all(7.0),

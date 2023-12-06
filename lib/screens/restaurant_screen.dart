@@ -6,6 +6,7 @@ import 'package:food_delivery/classes/category.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/controller/sliver_scroll_controller.dart';
 import 'package:food_delivery/screens/RestrauntHelperFiles/widgets.dart';
 import 'RestrauntHelperfiles/model/product_category.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 class RestaurantScreen extends StatefulWidget {
   static const String id = 'restaurant_screen';
@@ -176,6 +177,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
       );
     }
     return Scaffold(
+      backgroundColor: ui.val(0),
       body: Stack(
         children: [
           ValueListenableBuilder<double>(
@@ -247,6 +249,7 @@ class Shimmer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ui.val(1),
       body: Stack(
         children: [
           CustomScrollView(
@@ -313,7 +316,7 @@ class _HeaderSliver extends SliverPersistentHeaderDelegate {
           right: 0,
           child: Container(
             height: _maxHeaderExtent,
-            color: Colors.white,
+            color: ui.val(2),
             // decoration: BoxDecoration(
             //   borderRadius: BorderRadius.circular(20),
             //   color: Colors.amber,
@@ -359,7 +362,7 @@ class _HeaderSliverShimmer extends SliverPersistentHeaderDelegate {
           right: 0,
           child: Container(
             height: _maxHeaderExtent,
-            color: Colors.white,
+            color: ui.val(2),
             child: Column(
               children: [
                 Expanded(
@@ -375,7 +378,7 @@ class _HeaderSliverShimmer extends SliverPersistentHeaderDelegate {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
+                              color: ui.val(10),
                               borderRadius: BorderRadius.circular(16)),
                         ),
                         Container(
@@ -386,7 +389,7 @@ class _HeaderSliverShimmer extends SliverPersistentHeaderDelegate {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
+                              color: ui.val(10),
                               borderRadius: BorderRadius.circular(16)),
                         ),
                       ],
@@ -422,14 +425,16 @@ class MyHeaderTitleShimmer extends SliverPersistentHeaderDelegate {
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
+      color: ui.val(1),
       alignment: Alignment.centerLeft,
       child: Container(
-        margin: EdgeInsets.only(left: 5, right: 5, top: 5),
+        margin: EdgeInsets.only(left: 10, right: 5, top: 5),
         height: 30,
         width: 100,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.grey.shade200),
+          borderRadius: BorderRadius.circular(20),
+          color: ui.val(4),
+        ),
       ),
     );
   }
@@ -459,7 +464,7 @@ class SliverBodyItemsShimmer extends StatelessWidget {
               margin: EdgeInsets.all(10),
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
+                color: ui.val(4),
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(20),
                     topLeft: Radius.circular(20)),

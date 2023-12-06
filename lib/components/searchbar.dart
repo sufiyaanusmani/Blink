@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 class SearchBarWidget extends StatefulWidget {
   final ValueChanged<String> onSubmitted;
@@ -35,9 +36,12 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      cursorColor: Colors.grey,
+      cursorColor: ui.val(4),
       enableInteractiveSelection: false,
-      style: const TextStyle(fontSize: 20),
+      style: TextStyle(
+        fontSize: 20,
+        color: ui.val(4),
+      ),
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.only(left: 10),
         hintText: 'Search...',
@@ -52,15 +56,15 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
           child: const Icon(Icons.search, color: Colors.grey, size: 30),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(116, 0, 0, 0),
+          borderRadius: BorderRadius.circular(5.0),
+          borderSide: BorderSide(
+            color: ui.val(4),
           ),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-          borderSide: const BorderSide(
-            color: Color.fromARGB(116, 0, 0, 0),
+          borderRadius: BorderRadius.circular(5.0),
+          borderSide: BorderSide(
+            color: ui.val(4),
           ),
         ),
       ),

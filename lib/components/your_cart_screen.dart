@@ -9,6 +9,7 @@ import 'package:mysql_client/mysql_client.dart';
 import 'package:slide_to_act_reborn/slide_to_act_reborn.dart';
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:food_delivery/classes/cart.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 class YourCartScreen extends StatefulWidget {
   const YourCartScreen({super.key});
@@ -45,6 +46,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: ui.val(0),
         body: Column(
           children: [
             const SizedBox(
@@ -74,7 +76,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               });
                             },
                             borderRadius: BorderRadius.circular(20),
-                            backgroundColor: Colors.red,
+                            backgroundColor: Colors.red.withOpacity(0.4),
                             icon: Icons.delete,
                           ),
                           const SizedBox(
@@ -83,17 +85,11 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         ],
                       ),
                       child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 0.0),
-                        padding: const EdgeInsets.only(left: 10.0),
+                        margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                        padding: const EdgeInsets.only(left: 0.0),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10.0),
-                          color: Colors.white,
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //       blurRadius: 1.0,
-                          //       spreadRadius: 1.0,
-                          //       color: Colors.grey[400]!),
-                          // ],
+                          color: ui.val(1).withOpacity(0.9),
                         ),
 
                         // ListView row
@@ -104,7 +100,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10.0),
                               child: Opacity(
-                                opacity: 0.95,
+                                opacity: 0.8,
                                 child: Image.asset(
                                   'images/kfc.jpg',
                                   width: 120.0,
@@ -121,17 +117,18 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                 children: [
                                   Text(
                                     item.product.name,
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold,
+                                      color: ui.val(4),
                                     ),
                                   ),
                                   const SizedBox(height: 10.0),
                                   Text(
                                     '${item.product.price}',
-                                    style: const TextStyle(
+                                    style: TextStyle(
                                       fontSize: 14.0,
-                                      color: Colors.grey,
+                                      color: ui.val(4).withOpacity(0.6),
                                     ),
                                   ),
                                 ],
@@ -157,28 +154,28 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                     alignment: Alignment.center,
                                     width: 20,
                                     height: 50,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.black,
+                                      color: ui.val(2),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       '-',
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: ui.val(4),
                                       ),
                                     ),
                                   ),
                                 ),
                                 Container(
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.black,
+                                    color: ui.val(2),
                                   ),
                                   padding: const EdgeInsets.all(10),
                                   child: Text(
                                     ' ${item.quantity} ',
-                                    style: const TextStyle(
-                                        color: Colors.white, fontSize: 18),
+                                    style: TextStyle(
+                                        color: ui.val(4), fontSize: 18),
                                   ),
                                 ),
                                 TextButton(
@@ -192,14 +189,14 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                     alignment: Alignment.center,
                                     width: 20,
                                     height: 50,
-                                    decoration: const BoxDecoration(
+                                    decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: Colors.black,
+                                      color: ui.val(2),
                                     ),
-                                    child: const Text(
+                                    child: Text(
                                       '+',
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: ui.val(4),
                                       ),
                                     ),
                                   ),
@@ -227,7 +224,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                     child: Container(
                       height: 120,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 64, 140, 255),
+                        color: ui.val(10),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Column(
@@ -238,9 +235,9 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                 margin:
                                     const EdgeInsets.only(top: 15, left: 15),
                                 padding: const EdgeInsets.all(10),
-                                decoration: const BoxDecoration(
+                                decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Color.fromARGB(136, 255, 255, 255),
+                                  color: ui.val(4).withOpacity(0.4),
                                 ),
                                 child: Image.asset(
                                   'assets/icons/preorder.png',
@@ -273,13 +270,13 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               margin: const EdgeInsets.only(left: 4, right: 4),
                               height: 30,
                               decoration: BoxDecoration(
-                                color: Colors.black,
+                                color: ui.val(0),
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: Text(
                                 HomePage.preOrderText,
-                                style: const TextStyle(
-                                  color: Colors.white,
+                                style: TextStyle(
+                                  color: ui.val(4),
                                 ),
                               ),
                             ),
@@ -297,7 +294,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                     child: Container(
                       height: 120,
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(115, 158, 158, 158),
+                        color: ui.val(3),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
@@ -305,9 +302,9 @@ class _YourCartScreenState extends State<YourCartScreen> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             margin: const EdgeInsets.only(bottom: 45, left: 15),
-                            decoration: const BoxDecoration(
+                            decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: Color.fromARGB(136, 255, 255, 255),
+                              color: ui.val(4).withOpacity(0.2),
                             ),
                             child: Image.asset(
                               'assets/icons/layer.png',
@@ -321,12 +318,13 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                   top: 20, bottom: 1, right: 15),
                               child: Column(
                                 children: [
-                                  const Align(
+                                  Align(
                                     alignment: Alignment.topRight,
                                     child: Text(
                                       'amount',
                                       style: TextStyle(
                                         fontSize: 15,
+                                        color: ui.val(0),
                                       ),
                                     ),
                                   ),
@@ -335,9 +333,10 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                     alignment: Alignment.bottomRight,
                                     child: Text(
                                       'Rs $totalPrice',
-                                      style: const TextStyle(
-                                        color: Color.fromARGB(255, 0, 0, 0),
+                                      style: TextStyle(
+                                        color: ui.val(4),
                                         fontSize: 30,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
                                   ),
@@ -365,15 +364,15 @@ class _YourCartScreenState extends State<YourCartScreen> {
                 //https://pub.dev/packages/slide_to_act_reborn
                 child: SlideAction(
                   innerColor: const Color.fromARGB(255, 0, 0, 0),
-                  outerColor: const Color.fromARGB(255, 171, 90, 194),
+                  outerColor: ui.val(10),
                   elevation: 0,
-                  sliderButtonIcon: const Text(
+                  sliderButtonIcon: Text(
                     'GO',
                     style: TextStyle(
                       fontFamily: 'Gruppo',
                       fontSize: 25,
                       fontWeight: FontWeight.w900,
-                      color: Colors.white,
+                      color: ui.val(4),
                     ),
                   ),
                   sliderRotate: false,
@@ -449,7 +448,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       }
                     }
                   },
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
@@ -457,7 +456,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         style: TextStyle(
                           fontFamily: 'Gruppo',
                           fontSize: 55,
-                          color: Colors.white,
+                          color: ui.val(0),
                         ),
                       ),
                       Text(
@@ -465,7 +464,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         style: TextStyle(
                           fontFamily: 'Gruppo',
                           fontSize: 55,
-                          color: Color.fromARGB(171, 255, 255, 255),
+                          color: ui.val(0),
                         ),
                       ),
                       Text(
@@ -473,7 +472,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                         style: TextStyle(
                           fontFamily: 'Gruppo',
                           fontSize: 55,
-                          color: Color.fromARGB(111, 255, 255, 255),
+                          color: ui.val(0),
                         ),
                       ),
                     ],
@@ -489,6 +488,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
 
   void _showTimeSelectionBottomSheet() {
     showModalBottomSheet(
+        backgroundColor: ui.val(1),
         context: context,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
@@ -502,7 +502,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                 decoration: BoxDecoration(
                   // border: Border.all(color: Color.fromARGB(62, 0, 0, 0), width: 2),
                   borderRadius: BorderRadius.circular(20),
-                  color: const Color.fromARGB(94, 84, 110, 255),
+                  color: ui.val(10),
                 ),
                 child: Align(
                   alignment: Alignment.centerLeft,
@@ -573,8 +573,8 @@ class _YourCartScreenState extends State<YourCartScreen> {
                           width: double.infinity,
                           padding: const EdgeInsets.symmetric(
                               horizontal: 20, vertical: 10),
-                          decoration: const BoxDecoration(
-                            color: Colors.black,
+                          decoration: BoxDecoration(
+                            color: ui.val(0),
                             borderRadius: BorderRadius.all(Radius.circular(20)),
                           ),
                           child: const Center(

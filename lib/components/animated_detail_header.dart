@@ -1,3 +1,4 @@
+import 'package:food_delivery/classes/UIColor.dart';
 import 'dart:ui';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class AnimatedDetailHeader extends StatelessWidget {
         Hero(
           tag: restaurant,
           child: Material(
+            color: ui.val(0),
             child: ClipRect(
               child: Stack(
                 children: [
@@ -108,15 +110,15 @@ class AnimatedDetailHeader extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: Container(color: Colors.white, height: 10),
+          child: Container(color: ui.val(2), height: 10),
         ),
         Positioned.fill(
           top: null,
           child: TranslateAnimation(
             child: Container(
               height: 20,
-              decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 255, 255, 255),
+              decoration: BoxDecoration(
+                color: ui.val(2),
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.elliptical(30, 10),
                   topRight: Radius.elliptical(30, 10),
@@ -140,8 +142,8 @@ class MenuInfoContainer extends StatelessWidget {
     return Container(
         height: 70,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 236, 236, 236),
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 33, 33, 33),
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(30),
           ),
@@ -155,20 +157,20 @@ class MenuInfoContainer extends StatelessWidget {
                 const Icon(Icons.star, color: Colors.grey),
                 Container(
                   margin: const EdgeInsets.only(top: 3, left: 3),
-                  child: const Text(
+                  child: Text(
                     "4.3 ",
                     style: TextStyle(
-                      color: Colors.blueGrey,
+                      color: ui.val(4),
                       fontSize: 20,
                     ),
                   ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(top: 3),
-                  child: const Text(
+                  child: Text(
                     "(4k+)",
                     style: TextStyle(
-                      color: Colors.blueGrey,
+                      color: ui.val(4),
                       fontSize: 15,
                     ),
                   ),
@@ -177,14 +179,14 @@ class MenuInfoContainer extends StatelessWidget {
             ),
             Container(
               margin: const EdgeInsets.only(top: 5),
-              child: const Row(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Icon(Icons.access_time_rounded, color: Colors.grey, size: 17),
                   Text(
                     " 40-50 min    100rs minimum",
                     style: TextStyle(
-                      color: Colors.blueGrey,
+                      color: ui.val(4),
                       fontSize: 17,
                     ),
                   ),
@@ -285,7 +287,7 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
             final isSelected = currentIndex == index;
             return AnimatedContainer(
               duration: kThemeAnimationDuration,
-              color: isSelected ? Colors.black38 : Colors.black12,
+              color: isSelected ? Colors.white70 : Colors.white38,
               margin: const EdgeInsets.symmetric(horizontal: 3),
               height: 3,
               width: isSelected ? 20 : 10,

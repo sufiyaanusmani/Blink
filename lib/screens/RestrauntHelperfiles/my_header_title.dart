@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 const headerTitle = 80.0;
 typedef OnHeaderChange = void Function(bool visible);
@@ -15,17 +16,16 @@ class MyHeaderTitle extends SliverPersistentHeaderDelegate {
       onHeaderChange(true);
     } else {
       onHeaderChange(false);
-    }
+    } 
 
     return Container(
-      margin: EdgeInsets.only(left: 15),
+      color: ui.val(1),
+      padding: EdgeInsets.only(left: 15),
       alignment: Alignment.centerLeft,
       child: Text(
         title,
         style: const TextStyle(
-          fontSize: 30,
-          fontWeight: FontWeight.w500,
-        ),
+            fontSize: 30, fontWeight: FontWeight.w500, color: Colors.white),
       ),
     );
   }
