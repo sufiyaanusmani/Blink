@@ -90,7 +90,7 @@ class Mysql {
     await conn.connect();
     await conn.transactional((conn) async {
       await conn.execute(
-          "UPDATE Impressions SET views=views+1 WHERE restaurant_id=$restaurantID;");
+          "UPDATE Restaurant SET views=views+1 WHERE restaurant_id=$restaurantID;");
     });
     conn.close();
   }
