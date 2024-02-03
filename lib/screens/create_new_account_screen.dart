@@ -187,8 +187,13 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                         lastName: lastName,
                         email: email,
                         password: password);
-                    customer.registerUser(email, password, firstName, lastName);
-                    print(customer.uid);
+                    try {
+                      customer.registerUser(
+                          email, password, firstName, lastName);
+                    } catch (e) {
+                      print(e);
+                    }
+
                     // }
                   },
                   color: Colors.lightBlue,

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/home_screen.dart';
 import 'package:food_delivery/screens/settings_screen.dart';
@@ -7,6 +8,8 @@ import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
 
 import 'package:food_delivery/classes/UIColor.dart';
+
+import '../classes/customer.dart';
 
 class MainNavigator extends StatefulWidget {
   static const id = 'main-navigator';
@@ -18,6 +21,29 @@ class MainNavigator extends StatefulWidget {
 
 class _MainNavigatorState extends State<MainNavigator> {
   int currentPageIndex = 0;
+  User? loggedInUser;
+  final _auth = FirebaseAuth.instance;
+  late Customer customer;
+
+  void getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser!;
+      if (user != null) {
+        loggedInUser = user;
+        customer = Customer.fromUser(user);
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCurrentUser();
+  }
+
   @override
   Widget build(BuildContext context) {
     HomeScreenArguments homeScreenArguments =
@@ -67,7 +93,7 @@ class _MainNavigatorState extends State<MainNavigator> {
         // LoginScreen(),
         SearchScreen(),
         CartScreen(),
-        SettingsScreen(customerID: homeScreenArguments.user.id),
+        SettingsScreen(customer: customer),
       ][currentPageIndex],
     );
   }
