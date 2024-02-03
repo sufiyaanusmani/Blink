@@ -12,7 +12,12 @@
           "package_name": "com.example.food_delivery"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "317819475568-qv882hdm6l4hted933hjh247pk042kc3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDTu18SNNCFOzTuY-HeHJ34xk8LMy-riuw"
@@ -20,7 +25,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "317819475568-qv882hdm6l4hted933hjh247pk042kc3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
