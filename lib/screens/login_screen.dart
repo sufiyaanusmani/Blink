@@ -29,7 +29,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _user;
-  var username;
+  var email;
   List<Restaurant> restaurants = [];
   var password;
   bool loginValid = true;
@@ -78,15 +78,15 @@ class _LoginScreenState extends State<LoginScreen> {
   void getSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      username = prefs.getString('username')!;
+      email = prefs.getString('username')!;
       password = prefs.getString('password')!;
     });
   }
 
   Future<String> getUsername() async {
     SharedPreferences signPrefs = await SharedPreferences.getInstance();
-    username = signPrefs.get('username');
-    return username;
+    email = signPrefs.get('username');
+    return email;
   }
 
   Future<String> getPassword() async {
@@ -157,11 +157,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 50,
                       ),
                       PlainTextField(
-                        hintText: 'Enter Username',
+                        hintText: 'Enter Email',
                         onChange: (text) {
-                          username = text;
+                          email = text;
                         },
-                        labelText: 'Username',
+                        labelText: 'Email',
                         controller: _usernameTextController,
                       ),
                       SizedBox(
@@ -209,28 +209,42 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       LargeButton(
                         onPressed: () async {
-                          if (await _login(username, password)) {
-                            setState(() {
-                              loginFailedMessage = '';
-                            });
-                            final SharedPreferences prefs =
-                                await SharedPreferences.getInstance();
-                            await prefs.setString('username', username);
-                            await prefs.setString('password', password);
-                            getRestaurants();
-                            Navigator.pushNamed(context, MainNavigator.id,
-                                arguments: HomeScreenArguments(
-                                  user:
-                                      User1(id: loginID, firstName: firstName),
-                                  restaurants: restaurants,
-                                ));
-                          } else {
-                            setState(
-                              () {
-                                loginFailedMessage =
-                                    'Invalid username or password';
-                              },
-                            );
+                          // if (await _login(username, password)) {
+                          //   setState(() {
+                          //     loginFailedMessage = '';
+                          //   });
+                          //   final SharedPreferences prefs =
+                          //       await SharedPreferences.getInstance();
+                          //   await prefs.setString('username', username);
+                          //   await prefs.setString('password', password);
+                          //   getRestaurants();
+                          //   Navigator.pushNamed(context, MainNavigator.id,
+                          //       arguments: HomeScreenArguments(
+                          //         user:
+                          //             User1(id: loginID, firstName: firstName),
+                          //         restaurants: restaurants,
+                          //       ));
+                          // } else {
+                          //   setState(
+                          //     () {
+                          //       loginFailedMessage =
+                          //           'Invalid username or password';
+                          //     },
+                          //   );
+                          // }
+                          try {
+                            final user = await _auth.signInWithEmailAndPassword(
+                                email: email, password: password);
+                            if (user != null) {
+                              getRestaurants();
+                              Navigator.pushNamed(context, MainNavigator.id,
+                                  arguments: HomeScreenArguments(
+                                    user: User1(id: 1, firstName: "Sufiyaan"),
+                                    restaurants: restaurants,
+                                  ));
+                            }
+                          } catch (e) {
+                            print(e);
                           }
                         },
                         color: Colors.lightBlue,
@@ -317,7 +331,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text("${_user?.displayName}"),
+        Text("${_user?.uid}"),
         MaterialButton(
             child: Text("Sign Out"),
             onPressed: () {
