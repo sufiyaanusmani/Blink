@@ -3,7 +3,7 @@ import 'package:food_delivery/mysql.dart';
 import 'package:mysql_client/mysql_client.dart';
 
 class Restaurant {
-  int restaurantID;
+  String restaurantID;
   String name;
   String ownerName;
   String image = '';
@@ -22,7 +22,7 @@ class Restaurant {
     for (var row in rows) {
       // firstName = row.assoc()['first_name']!;
       Restaurant restaurant = Restaurant(
-          restaurantID: int.parse(row.assoc()['restaurant_id']!),
+          restaurantID: "1",
           name: row.assoc()['name']!,
           ownerName: row.assoc()['owner_name']!);
       restaurants.add(restaurant);

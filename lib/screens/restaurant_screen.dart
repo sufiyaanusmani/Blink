@@ -40,8 +40,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   late List<Category> categoryList = [];
 
   Future<List<Product>> getProducts() async {
-    List<Product> items =
-        await Product.getProducts(widget.restaurant.restaurantID);
+    List<Product> items = await Product.getProducts(1);
     setState(() {
       itemList = items;
     });
@@ -91,7 +90,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     // getProducts();
     getCategories();
     // bloc = SliverScrollController();
-
+    print(widget.restaurant.restaurantID);
     _controller =
         ScrollController(initialScrollOffset: widget.screenHeight * .3);
     _controller.addListener(_scrollListener);

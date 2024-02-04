@@ -148,13 +148,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundColor: Colors.lightBlueAccent,
                 );
               }
-              List<Widget> restaurants = [];
               return Column(
                 children: snapshot.data!.docs.map((DocumentSnapshot document) {
                   Map<String, dynamic> data =
                       document.data()! as Map<String, dynamic>;
                   Restaurant restaurant = Restaurant(
-                      restaurantID: 1,
+                      restaurantID: document.id,
                       name: data["name"],
                       ownerName: data["ownername"]);
                   return RestaurantCard(

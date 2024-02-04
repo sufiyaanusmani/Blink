@@ -57,13 +57,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   //   }
   // }
 
-  void loadOrderHistory() async {
-    List<OrderHistory> temp = await OrderHistory.getOrderHistory(1);
-    setState(() {
-      orders = temp;
-    });
-  }
-
   void loadAllInfo() async {
     // loadName();
     // loadOrderHistory();
