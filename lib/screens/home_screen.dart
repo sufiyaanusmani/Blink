@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:mysql_client/mysql_client.dart';
+import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
@@ -15,20 +17,159 @@ import 'package:food_delivery/classes/cart.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 import '../classes/customer.dart';
 import '../classes/trending_product.dart';
+import '../components/food_shimmer.dart';
+import '../components/reshimmer.dart';
 
 late bool show = true;
 final _firestore = FirebaseFirestore.instance;
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
-  int loginID = -1;
-  Customer customer;
-  List<Restaurant> restaurants;
+  final Customer customer;
+  final List<Restaurant> restaurants;
 
-  HomeScreen({super.key, required this.customer, required this.restaurants});
+  const HomeScreen(
+      {super.key, required this.customer, required this.restaurants});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool loading = true;
+
+  void toggleshow() {
+    setState(() {
+      show = !show;
+    });
+  }
+
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Are you sure?'),
+            content: new Text('Do you want to exit an App'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () =>
+                    Navigator.of(context).pop(false), //<-- SEE HERE
+                child: new Text('No'),
+              ),
+              TextButton(
+                onPressed: () {
+                  SystemNavigator.pop();
+                  // Navigator.of(context).pop(true);
+                }, // <-- SEE HERE
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 20, 20, 20),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 20, 20, 20),
+        shadowColor: ui.val(0),
+        automaticallyImplyLeading: false,
+        title: Container(
+          // padding: const EdgeInsets.symmetric(horizontal: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Blink',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 30,
+                ),
+              ),
+              Container(
+                child: IconButton(
+                  icon: Icon(Icons.notifications),
+                  iconSize: 25,
+                  color: Colors.grey,
+                  // onPressed: toggle,
+                  onPressed: () {
+                    print("Pressed: ${widget.customer.uid}");
+                  },
+                ),
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(110, 33, 33, 33),
+                  borderRadius: BorderRadius.all(Radius.circular(9)),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: ListView(
+        children: [
+          OrderNotification(customerID: widget.customer.uid),
+          const SizedBox(height: 35),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Trending',
+              style: TextStyle(
+                fontSize: 20,
+                color: ui.val(4),
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+          const Divider(),
+          const SizedBox(height: 20),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              'Discover',
+              style: TextStyle(
+                fontSize: 40,
+                color: ui.val(4),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const SizedBox(height: 15),
+          StreamBuilder<QuerySnapshot>(
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return Text("error");
+              }
+              if (snapshot.connectionState == ConnectionState.waiting ||
+                  !snapshot.hasData) {
+                return CircularProgressIndicator(
+                  backgroundColor: Colors.lightBlueAccent,
+                );
+              }
+              List<Widget> restaurants = [];
+              return Column(
+                children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                  Map<String, dynamic> data =
+                      document.data()! as Map<String, dynamic>;
+                  Restaurant restaurant = Restaurant(
+                      restaurantID: 1,
+                      name: data["name"],
+                      ownerName: data["ownername"]);
+                  return RestaurantCard(
+                      restaurant: restaurant,
+                      customerID: 1,
+                      imageName: "kfc.jpg");
+                }).toList(),
+              );
+            },
+            stream: _firestore.collection('restaurants').snapshots(),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class FoodItem {
@@ -39,485 +180,17 @@ class FoodItem {
   FoodItem({required this.name, required this.price, required this.count});
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  var db = Mysql();
-  String firstName = '';
-  List<RestaurantCard> restaurantCards = [];
-  List<SmallRestaurantCard> trendingProducts = [];
-
-  bool notificationWidget = false;
-
-  bool loading = true;
-
-  // void LoadingFinished() {
-  //   setState(() {
-  //     loading = !loading;
-  //   });
-  // }
-
-  void toggle() {
-    setState(() {
-      notificationWidget = !notificationWidget;
-    });
-  }
-
-  void toggleshow() {
-    setState(() {
-      show = !show;
-    });
-  }
-
-  // void _getStudent(int loginID) async {
-  //   // var conn = await db.getConnection();
-  //   // await conn.connect();
-  //   // var results = await conn
-  //   //     .execute('SELECT first_name FROM Customer WHERE id=$loginID;');
-  //   Iterable<ResultSetRow> rows = await db.getResults(
-  //       'SELECT customer_id, first_name FROM Customer WHERE id=$loginID;');
-  //   for (var row in rows) {
-  //     setState(() {
-  //       firstName = row.assoc()['first_name']!;
-  //       Cart.customerID = int.parse(row.assoc()['customer_id']!);
-  //     });
-  //   }
-  // }
-
-  void getRestaurants() async {
-    setState(() {
-      loading = true;
-    });
-    List<Restaurant> r = await Restaurant.getRestaurants();
-    List<RestaurantCard> tempRestaurantCards = [];
-    for (Restaurant res in r) {
-      String imageName = "kfc.jpg";
-      String resName = res.name;
-      resName = resName.toLowerCase();
-      if (resName.contains("burger")) {
-        imageName = "burger.jpg";
-      } else if (resName.contains("cafe")) {
-        imageName = "cafe.jpg";
-      } else if (resName.contains("dhaba")) {
-        imageName = "dhaba.jpg";
-      } else if (resName.contains("juice")) {
-        imageName = "juice.jpg";
-      } else if (resName.contains("limca")) {
-        imageName = "limca.jpg";
-      } else if (resName.contains("pathan")) {
-        imageName = "pathan.jpg";
-      } else if (resName.contains("pizza")) {
-        imageName = "pizza.jpg";
-      } else if (resName.contains("shawarma")) {
-        imageName = "shawarma.jpg";
-      } else {
-        imageName = "kfc.jpg";
-      }
-      tempRestaurantCards.add(RestaurantCard(
-        restaurant: res,
-        customerID: 1,
-        imageName: imageName,
-      ));
-    }
-    if (this.mounted) {
-      setState(() {
-        restaurantCards = tempRestaurantCards;
-      });
-    }
-    setState(() {
-      loading = false;
-    });
-  }
-
-  void getTrendingProducts() async {
-    List<TrendingProduct> temp = [];
-    List<SmallRestaurantCard> cards = [];
-    temp = await TrendingProduct.getTrendingProducts();
-    for (TrendingProduct product in temp) {
-      cards.add(SmallRestaurantCard(
-          imageID: 'kfc',
-          itemName: product.productName,
-          productID: product.productID,
-          restaurantName: product.restaurantName,
-          restaurantID: product.restaurantID,
-          liked: product.liked,
-          categoryID: product.categoryID,
-          categoryName: product.categoryName,
-          price: product.price));
-    }
-    setState(() {
-      trendingProducts = cards;
-    });
-  }
-
-  // void getRestaurantsCards() {
-  //   for (Restaurant r in widget.restaurants) {
-  //     setState(() {
-  //       restaurantCards.add(
-  //         RestaurantCard(
-  //           restaurant: r,
-  //         ),
-  //       );
-  //     });
-  //   }
-  // }
-
-  @override
-  void initState() {
-    if (restaurantCards.isEmpty) {
-      getRestaurants();
-    }
-    if (trendingProducts.isEmpty) {
-      getTrendingProducts();
-    }
-    Cart.customerID = 1;
-    // TODO: implement initState
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (loading == true) {
-      return Scaffold(
-        backgroundColor: ui.val(0),
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 20, 20, 20),
-          shadowColor: ui.val(0),
-          automaticallyImplyLeading: false,
-          title: Container(
-            // padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Blink',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
-                  ),
-                ),
-                Container(
-                  child: IconButton(
-                    icon: Icon(Icons.notifications),
-                    iconSize: 25,
-                    color: Colors.grey,
-                    // onPressed: toggle,
-                    onPressed: toggleshow,
-                    // onPressed: () {
-                    //   print('pressed');
-                    //   print('pressed');
-                    // },
-                  ),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(110, 33, 33, 33),
-                    borderRadius: BorderRadius.all(Radius.circular(9)),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        body: ListView(
-          scrollDirection: Axis.vertical,
-          // itemCount: 5,
-          padding: EdgeInsets.all(10.0),
-          children: [
-            // OrderNotification(show: notificationWidget, total: total),
-            SizedBox(height: 5),
-
-            SizedBox(height: 30),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                'Trending',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: ui.val(4),
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 250,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                physics: BouncingScrollPhysics(),
-                // itemCount: 5,
-                padding: EdgeInsets.only(
-                  top: 10.0,
-                  bottom: 10,
-                ),
-                children: [
-                  Foodshimmer(),
-                  Foodshimmer(),
-                  Foodshimmer(),
-                ],
-              ),
-            ),
-
-            Divider(),
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                'Discover',
-                style: TextStyle(
-                  fontSize: 40,
-                  color: ui.val(4),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            SizedBox(height: 15),
-
-            Column(
-              children: [
-                Resshimmer(),
-                Resshimmer(),
-                Resshimmer(),
-              ],
-            ),
-
-            // ListView.builder(
-            //   itemBuilder: (context, index) {
-            //     return RestaurantCard(restaurant: restaurants[index]);
-            //   },
-            //   itemCount: restaurants.length,
-            //   scrollDirection: Axis.vertical,
-            //   shrinkWrap: true,
-            // ),
-          ],
-        ),
-      );
-    }
-    // double total = foodItems.fold(0, (sum, item) => sum + item.price);
-
-    // User user = ModalRoute.of(context)!.settings.arguments as User;
-    // widget.loginID = user.id;
-    // if (widget.loginID != -1) {
-    //   _getStudent(widget.loginID);
-    // }
-    // getRestaurants();
-    Future<bool> _onWillPop() async {
-      return (await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: Text('Are you sure?'),
-              content: new Text('Do you want to exit an App'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () =>
-                      Navigator.of(context).pop(false), //<-- SEE HERE
-                  child: new Text('No'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    SystemNavigator.pop();
-                    // Navigator.of(context).pop(true);
-                  }, // <-- SEE HERE
-                  child: new Text('Yes'),
-                ),
-              ],
-            ),
-          )) ??
-          false;
-    }
-
-    return WillPopScope(
-        onWillPop: _onWillPop,
-        child: Scaffold(
-          backgroundColor: ui.val(0),
-          appBar: AppBar(
-            backgroundColor: const Color.fromARGB(255, 20, 20, 20),
-            shadowColor: ui.val(0),
-            automaticallyImplyLeading: false,
-            title: Container(
-              // padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Blink',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                    ),
-                  ),
-                  Container(
-                    child: IconButton(
-                      icon: Icon(Icons.notifications),
-                      iconSize: 25,
-                      color: Colors.grey,
-                      onPressed: toggle,
-                      // onPressed: () {
-                      //   print('pressed');
-                      //   print('pressed');
-                      // },
-                    ),
-                    decoration: BoxDecoration(
-                      color: Color.fromARGB(110, 33, 33, 33),
-                      borderRadius: BorderRadius.all(Radius.circular(9)),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          body: ListView(children: [
-            OrderNotification(customerID: 1),
-            SizedBox(height: 5),
-            SizedBox(height: 30),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                'Trending',
-                style: TextStyle(
-                  fontSize: 20,
-                  color: ui.val(4),
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 250,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                physics: BouncingScrollPhysics(),
-                // itemCount: 5,
-                padding: EdgeInsets.only(
-                  top: 10.0,
-                  bottom: 10,
-                ),
-                children: trendingProducts,
-              ),
-            ),
-            Divider(),
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                'Discover',
-                style: TextStyle(
-                  fontSize: 40,
-                  color: ui.val(4),
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-            SizedBox(height: 15),
-            Flexible(
-              child: StreamBuilder<QuerySnapshot>(
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Text("error");
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting ||
-                      !snapshot.hasData) {
-                    return CircularProgressIndicator(
-                      backgroundColor: Colors.lightBlueAccent,
-                    );
-                  }
-                  List<Widget> restaurants = [];
-                  return Expanded(
-                    child: ListView(
-                      shrinkWrap: true,
-                      reverse: true,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 20,
-                      ),
-                      children:
-                          snapshot.data!.docs.map((DocumentSnapshot document) {
-                        Map<String, dynamic> data =
-                            document.data()! as Map<String, dynamic>;
-                        Restaurant restaurant = Restaurant(
-                            restaurantID: 1,
-                            name: data["name"],
-                            ownerName: data["ownername"]);
-                        return RestaurantCard(
-                            restaurant: restaurant,
-                            customerID: 1,
-                            imageName: "kfc.jpg");
-                      }).toList(),
-                    ),
-                  );
-                },
-                stream: _firestore.collection('restaurants').snapshots(),
-              ),
-            ),
-          ]
-
-              // ListView.builder(
-              //   itemBuilder: (context, index) {
-              //     return RestaurantCard(restaurant: restaurants[index]);
-              //   },
-              //   itemCount: restaurants.length,
-              //   scrollDirection: Axis.vertical,
-              //   shrinkWrap: true,
-              // ),
-              // ],
-              ),
-          // ),
-        ));
-  }
-}
-
-class Resshimmer extends StatelessWidget {
-  const Resshimmer({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: const Color.fromARGB(96, 143, 143, 143),
-      highlightColor: Colors.grey.shade600,
-      period: const Duration(milliseconds: 600),
-      child: Container(
-        margin: EdgeInsets.only(left: 5, right: 5, top: 5),
-        height: 330,
-        width: double.infinity,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: Colors.grey.withOpacity(0.5)),
-      ),
-    );
-  }
-}
-
-class Foodshimmer extends StatelessWidget {
-  const Foodshimmer({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Shimmer.fromColors(
-      baseColor: const Color.fromARGB(96, 143, 143, 143),
-      highlightColor: Colors.grey.shade600,
-      period: const Duration(milliseconds: 600),
-      child: Container(
-        margin: EdgeInsets.only(
-          left: 4,
-        ),
-        height: 300,
-        width: 140,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
-            color: Colors.grey.withOpacity(0.5)),
-      ),
-    );
-  }
-}
-
 class OrderNotification extends StatefulWidget {
   OrderNotification({super.key, required this.customerID});
 
-  final int customerID;
+  final String customerID;
 
   @override
   State<OrderNotification> createState() => _OrderNotificationState();
 }
 
 class _OrderNotificationState extends State<OrderNotification> {
+  Stream<QuerySnapshot>? documentStream;
   late int orderID = 0;
   // late bool show = false;
   late String status = 'Pending';
@@ -574,197 +247,181 @@ class _OrderNotificationState extends State<OrderNotification> {
   @override
   void initState() {
     // TODO: implement initState
-    getOrderInfo();
-    getOrder();
     super.initState();
+    setState(() {
+      documentStream = FirebaseFirestore.instance
+          .collection("orders")
+          .where("customerid", isEqualTo: widget.customerID)
+          .where("status", whereIn: ["pending", "processing"]).snapshots();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    String restaurantName = "";
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: ui.val(0),
     ));
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
-      height: show ? 400 : 0,
-      decoration: BoxDecoration(
-          color: ui.val(2),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
-      child: !show
-          ? SizedBox(width: 0)
-          : AnimatedContainer(
-              duration: Duration(milliseconds: 100),
-              // padding: EdgeInsets.only(left: 10, right: 10, top: 5),
-
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10, top: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Order",
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: ui.val(4),
-                          ),
-                        ),
-                        Text(
-                          "#$orderID",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.local_fire_department_sharp,
-                              color: Colors.red,
-                            ),
-                            SizedBox(width: 4),
-                            Text(
-                              "Status",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: ui.val(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          status,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.schedule,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "Expected",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: ui.val(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          time,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.restaurant,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "Restaurant",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: ui.val(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          restaurantName,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: foodItems.length,
-                      itemBuilder: (context, index) {
-                        final foodItem = foodItems[index];
-                        return Container(
-                          margin: EdgeInsets.only(top: 2),
-                          // padding: EdgeInsets.all(5),
-                          child: Column(
-                            children: [
-                              if (index == 0) Divider(color: Colors.black87),
-                              OrderStatusProductRow(foodItem: foodItem),
-                              Divider(color: Colors.black87),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Total',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                        Text(
-                          'Rs. $price',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
+    return StreamBuilder<QuerySnapshot>(
+      stream: documentStream,
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+        if (!show) {
+          return AnimatedContainer(
+              duration: Duration(milliseconds: 150),
+              height: show ? 400 : 0,
+              decoration: BoxDecoration(
+                  color: ui.val(2),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+              child: SizedBox(width: 0));
+        } else {
+          return AnimatedContainer(
+            duration: Duration(milliseconds: 100),
+            height: 400,
+            decoration: BoxDecoration(
+              color: ui.val(2),
+              borderRadius: BorderRadius.all(
+                Radius.circular(20),
               ),
             ),
+            child: Column(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                Map<String, dynamic> data =
+                    document.data()! as Map<String, dynamic>;
+
+                return Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Order",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: ui.val(4),
+                            ),
+                          ),
+                          Text(
+                            "0",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.local_fire_department_sharp,
+                                color: Colors.red,
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "Status",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: ui.val(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            document["status"],
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.schedule,
+                                color: Colors.blue,
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "Expected",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: ui.val(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            time,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    Container(
+                      padding: const EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.restaurant,
+                                color: Colors.grey,
+                              ),
+                              const SizedBox(width: 5),
+                              Text(
+                                "Restaurant",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: ui.val(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            data["restaurant"]["name"],
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                  ],
+                );
+              }).toList(),
+            ),
+          );
+        }
+      },
     );
   }
 }
@@ -827,16 +484,3 @@ class OrderStatusProductRow extends StatelessWidget {
     );
   }
 }
-
-// Container(
-// width: 170,
-// margin: EdgeInsets.all(2),
-// decoration: BoxDecoration(
-// borderRadius: BorderRadius.circular(10.0),
-// color: Colors.grey.shade300,
-// ),
-// child: Image.asset(
-// 'images/kfc.jpg',
-// fit: BoxFit.fill,
-// ),
-// );

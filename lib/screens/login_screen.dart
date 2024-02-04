@@ -15,6 +15,8 @@ import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_button/sign_in_button.dart';
+
+import '../classes/customer.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -235,7 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       final user = await _auth.signInWithEmailAndPassword(
                           email: email, password: password);
                       if (user != null) {
-                        getRestaurants();
+                        // getRestaurants();
                         Navigator.pushNamed(context, MainNavigator.id,
                             arguments: HomeScreenArguments(
                               user: User1(id: 1, firstName: "Sufiyaan"),

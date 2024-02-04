@@ -66,7 +66,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   void loadAllInfo() async {
     // loadName();
-    loadOrderHistory();
+    // loadOrderHistory();
   }
 
   @override
