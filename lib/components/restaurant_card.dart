@@ -107,11 +107,7 @@ class RestaurantCard extends StatelessWidget {
           PageRouteBuilder(
             pageBuilder: (_, animation, __) => FadeTransition(
               opacity: animation,
-              child: RestaurantScreen(
-                screenHeight: MediaQuery.of(context).size.height.toDouble(),
-                restaurant: restaurant,
-                customerID: customerID,
-              ),
+              child: RestaurantScreen(restaurant: restaurant),
             ),
           ),
         );

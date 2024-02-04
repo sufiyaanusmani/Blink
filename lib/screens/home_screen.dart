@@ -12,11 +12,11 @@ import 'package:food_delivery/mysql.dart';
 import 'package:food_delivery/user1.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/classes/restaurant.dart';
-import 'package:food_delivery/classes/cart.dart';
+// import 'package:food_delivery/classes/cart.dart';
 
 import 'package:food_delivery/classes/UIColor.dart';
 import '../classes/customer.dart';
-import '../classes/trending_product.dart';
+// import '../classes/trending_product.dart';
 import '../components/food_shimmer.dart';
 import '../components/reshimmer.dart';
 
@@ -196,52 +196,6 @@ class _OrderNotificationState extends State<OrderNotification> {
 
   late String restaurantName = '';
   late String time = "None";
-  late List<FoodItem> foodItems = [];
-  late int price = 0;
-  void getOrderInfo() async {
-    var db = Mysql();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT O.order_id, O.status, R.name, O.price, P.time FROM Orders O INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) LEFT JOIN Preschedule P ON (O.order_id = P.order_id) WHERE O.customer_id=${widget.customerID} AND O.status IN ("pending", "preparing");');
-    if (rows.length == 1) {
-      for (var row in rows) {
-        setState(() {
-          orderID = int.parse(row.assoc()['order_id']!);
-          status = row.assoc()['status']!;
-          restaurantName = row.assoc()['name']!;
-          price = int.parse(row.assoc()['price']!);
-          var timeTemp = row.assoc()['time'] ?? 'None';
-          setState(() {
-            time = timeTemp;
-          });
-        });
-      }
-      setState(() {
-        show = true;
-      });
-    } else {
-      setState(() {
-        show = false;
-      });
-    }
-  }
-
-  void getOrder() async {
-    var db = Mysql();
-    List<FoodItem> temp = [];
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT P.name, D.quantity, (D.quantity * P.price) AS price FROM Orders O INNER JOIN OrderDetail D ON (O.order_id = D.order_id) INNER JOIN Product P ON (D.product_id = P.product_id) WHERE O.customer_id = ${widget.customerID} AND O.status <> "completed";');
-    if (rows.isNotEmpty) {
-      for (var row in rows) {
-        temp.add(FoodItem(
-            name: row.assoc()['name']!,
-            price: int.parse(row.assoc()['price']!),
-            count: int.parse(row.assoc()['quantity']!)));
-      }
-    }
-    setState(() {
-      foodItems = temp;
-    });
-  }
 
   @override
   void initState() {

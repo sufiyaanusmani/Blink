@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/home_screen.dart';
 import 'package:food_delivery/screens/settings_screen.dart';
-import 'package:food_delivery/screens/cart_screen.dart';
-import 'package:food_delivery/screens/search_screen.dart';
+// import 'package:food_delivery/screens/cart_screen.dart';
+// import 'package:food_delivery/screens/search_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
 
@@ -99,8 +99,8 @@ class _MainNavigatorState extends State<MainNavigator> {
           restaurants: homeScreenArguments.restaurants,
         ),
         // LoginScreen(),
-        SearchScreen(),
-        CartScreen(),
+        // SearchScreen(),
+        // CartScreen(),
         SettingsScreen(customer: customer),
       ][currentPageIndex],
     );
