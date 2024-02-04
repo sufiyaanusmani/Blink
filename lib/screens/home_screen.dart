@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:mysql_client/mysql_client.dart';
@@ -12,17 +13,19 @@ import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/cart.dart';
 
 import 'package:food_delivery/classes/UIColor.dart';
+import '../classes/customer.dart';
 import '../classes/trending_product.dart';
 
 late bool show = true;
+final _firestore = FirebaseFirestore.instance;
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
   int loginID = -1;
-  User1 user;
+  Customer customer;
   List<Restaurant> restaurants;
 
-  HomeScreen({super.key, required this.user, required this.restaurants});
+  HomeScreen({super.key, required this.customer, required this.restaurants});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -110,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       tempRestaurantCards.add(RestaurantCard(
         restaurant: res,
-        customerID: widget.user.id,
+        customerID: 1,
         imageName: imageName,
       ));
     }
@@ -165,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (trendingProducts.isEmpty) {
       getTrendingProducts();
     }
-    Cart.customerID = widget.user.id;
+    Cart.customerID = 1;
     // TODO: implement initState
     super.initState();
   }
@@ -319,53 +322,48 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        backgroundColor: ui.val(0),
-        appBar: AppBar(
-          backgroundColor: const Color.fromARGB(255, 20, 20, 20),
-          shadowColor: ui.val(0),
-          automaticallyImplyLeading: false,
-          title: Container(
-            // padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Blink',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 30,
+        onWillPop: _onWillPop,
+        child: Scaffold(
+          backgroundColor: ui.val(0),
+          appBar: AppBar(
+            backgroundColor: const Color.fromARGB(255, 20, 20, 20),
+            shadowColor: ui.val(0),
+            automaticallyImplyLeading: false,
+            title: Container(
+              // padding: const EdgeInsets.symmetric(horizontal: 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Blink',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                    ),
                   ),
-                ),
-                Container(
-                  child: IconButton(
-                    icon: Icon(Icons.notifications),
-                    iconSize: 25,
-                    color: Colors.grey,
-                    onPressed: toggle,
-                    // onPressed: () {
-                    //   print('pressed');
-                    //   print('pressed');
-                    // },
+                  Container(
+                    child: IconButton(
+                      icon: Icon(Icons.notifications),
+                      iconSize: 25,
+                      color: Colors.grey,
+                      onPressed: toggle,
+                      // onPressed: () {
+                      //   print('pressed');
+                      //   print('pressed');
+                      // },
+                    ),
+                    decoration: BoxDecoration(
+                      color: Color.fromARGB(110, 33, 33, 33),
+                      borderRadius: BorderRadius.all(Radius.circular(9)),
+                    ),
                   ),
-                  decoration: BoxDecoration(
-                    color: Color.fromARGB(110, 33, 33, 33),
-                    borderRadius: BorderRadius.all(Radius.circular(9)),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
-        body: ListView(
-          scrollDirection: Axis.vertical,
-          // itemCount: 5,
-          padding: EdgeInsets.all(10.0),
-          children: [
-            OrderNotification(customerID: widget.user.id),
+          body: ListView(children: [
+            OrderNotification(customerID: 1),
             SizedBox(height: 5),
-
             SizedBox(height: 30),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -405,22 +403,60 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             SizedBox(height: 15),
+            Flexible(
+              child: StreamBuilder<QuerySnapshot>(
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("error");
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      !snapshot.hasData) {
+                    return CircularProgressIndicator(
+                      backgroundColor: Colors.lightBlueAccent,
+                    );
+                  }
+                  List<Widget> restaurants = [];
+                  return Expanded(
+                    child: ListView(
+                      shrinkWrap: true,
+                      reverse: true,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 20,
+                      ),
+                      children:
+                          snapshot.data!.docs.map((DocumentSnapshot document) {
+                        Map<String, dynamic> data =
+                            document.data()! as Map<String, dynamic>;
+                        Restaurant restaurant = Restaurant(
+                            restaurantID: 1,
+                            name: data["name"],
+                            ownerName: data["ownername"]);
+                        return RestaurantCard(
+                            restaurant: restaurant,
+                            customerID: 1,
+                            imageName: "kfc.jpg");
+                      }).toList(),
+                    ),
+                  );
+                },
+                stream: _firestore.collection('restaurants').snapshots(),
+              ),
+            ),
+          ]
 
-            Column(
-              children: restaurantCards,
-            )
-            // ListView.builder(
-            //   itemBuilder: (context, index) {
-            //     return RestaurantCard(restaurant: restaurants[index]);
-            //   },
-            //   itemCount: restaurants.length,
-            //   scrollDirection: Axis.vertical,
-            //   shrinkWrap: true,
-            // ),
-          ],
-        ),
-      ),
-    );
+              // ListView.builder(
+              //   itemBuilder: (context, index) {
+              //     return RestaurantCard(restaurant: restaurants[index]);
+              //   },
+              //   itemCount: restaurants.length,
+              //   scrollDirection: Axis.vertical,
+              //   shrinkWrap: true,
+              // ),
+              // ],
+              ),
+          // ),
+        ));
   }
 }
 
