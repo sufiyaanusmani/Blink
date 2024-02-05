@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/classes/order_history.dart';
 import 'package:food_delivery/components/setting_switch.dart';
@@ -10,12 +9,10 @@ import 'package:mysql_client/mysql_client.dart';
 import 'package:flutter/services.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 
-import '../classes/customer.dart';
-
 class SettingsScreen extends StatefulWidget {
   static const String id = 'settings_screen';
-  final Customer customer;
-  const SettingsScreen({super.key, required this.customer});
+  final int customerID;
+  const SettingsScreen({super.key, required this.customerID});
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -41,25 +38,33 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late String name = '';
   late List<OrderHistory> orders = [];
 
-  // void loadName() async {
-  //   var db = Mysql();
-  //   String tempFirstName, tempLastName;
-  //   Iterable<ResultSetRow> rows = await db.getResults(
-  //       'SELECT first_name, last_name FROM Customer WHERE customer_id=${widget.customerID}');
-  //   if (rows.length == 1) {
-  //     for (var row in rows) {
-  //       tempFirstName = row.assoc()['first_name']!;
-  //       tempLastName = row.assoc()['last_name']!;
-  //       setState(() {
-  //         name = '$tempFirstName $tempLastName';
-  //       });
-  //     }
-  //   }
-  // }
+  void loadName() async {
+    var db = Mysql();
+    String tempFirstName, tempLastName;
+    Iterable<ResultSetRow> rows = await db.getResults(
+        'SELECT first_name, last_name FROM Customer WHERE customer_id=${widget.customerID}');
+    if (rows.length == 1) {
+      for (var row in rows) {
+        tempFirstName = row.assoc()['first_name']!;
+        tempLastName = row.assoc()['last_name']!;
+        setState(() {
+          name = '$tempFirstName $tempLastName';
+        });
+      }
+    }
+  }
+
+  void loadOrderHistory() async {
+    List<OrderHistory> temp =
+        await OrderHistory.getOrderHistory(widget.customerID);
+    setState(() {
+      orders = temp;
+    });
+  }
 
   void loadAllInfo() async {
-    // loadName();
-    // loadOrderHistory();
+    loadName();
+    loadOrderHistory();
   }
 
   @override
@@ -81,7 +86,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: ListView(
         children: [
           Header(
-            name: "${widget.customer.firstName} ${widget.customer.lastName}",
+            name: name,
           ),
           const SizedBox(height: 30.0),
           Divider(color: Colors.transparent, thickness: 2),
@@ -100,7 +105,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => OrdersPage(
-                          customerID: 1,
+                          customerID: widget.customerID,
                         )),
               );
             },

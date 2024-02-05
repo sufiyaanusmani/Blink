@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Customer {
   String uid = "";
-  late String firstName;
-  late String lastName;
-  late String email;
-  late String password;
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String password;
   final _firestore = FirebaseFirestore.instance;
 
   Customer(
@@ -15,21 +15,6 @@ class Customer {
       required this.email,
       required this.password,
       this.uid = ""});
-
-  Customer.fromUser(User user) {
-    _firestore
-        .collection("customers")
-        .doc(user.uid)
-        .get()
-        .then((DocumentSnapshot doc) {
-      final data = doc.data() as Map<String, dynamic>;
-      uid = user.uid;
-      firstName = data["firstname"];
-      lastName = data["lastname"];
-      email = user.email!;
-      password = "";
-    });
-  }
 
   Future<void> _createUser(
       String uid, String firstName, String lastName) async {

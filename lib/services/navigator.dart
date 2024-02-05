@@ -1,19 +1,12 @@
-import 'dart:io';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/home_screen.dart';
 import 'package:food_delivery/screens/settings_screen.dart';
-// import 'package:food_delivery/screens/cart_screen.dart';
-// import 'package:food_delivery/screens/search_screen.dart';
+import 'package:food_delivery/screens/cart_screen.dart';
+import 'package:food_delivery/screens/search_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
 
 import 'package:food_delivery/classes/UIColor.dart';
-
-import '../classes/customer.dart';
-
-late User loggedInUser;
 
 class MainNavigator extends StatefulWidget {
   static const id = 'main-navigator';
@@ -25,33 +18,6 @@ class MainNavigator extends StatefulWidget {
 
 class _MainNavigatorState extends State<MainNavigator> {
   int currentPageIndex = 0;
-
-  final _auth = FirebaseAuth.instance;
-  late Customer customer = Customer(
-      firstName: "firstName",
-      lastName: "lastName",
-      email: "email",
-      password: "password");
-
-  void getCurrentUser() async {
-    try {
-      final user = await _auth.currentUser!;
-      setState(() {
-        customer = Customer.fromUser(user);
-        loggedInUser = user;
-      });
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getCurrentUser();
-  }
-
   @override
   Widget build(BuildContext context) {
     HomeScreenArguments homeScreenArguments =
@@ -95,13 +61,13 @@ class _MainNavigatorState extends State<MainNavigator> {
       ),
       body: <Widget>[
         HomeScreen(
-          customer: customer,
+          user: homeScreenArguments.user,
           restaurants: homeScreenArguments.restaurants,
         ),
         // LoginScreen(),
-        // SearchScreen(),
-        // CartScreen(),
-        SettingsScreen(customer: customer),
+        SearchScreen(),
+        CartScreen(),
+        SettingsScreen(customerID: homeScreenArguments.user.id),
       ][currentPageIndex],
     );
   }

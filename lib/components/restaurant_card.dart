@@ -101,13 +101,17 @@ class RestaurantCard extends StatelessWidget {
       ),
       onTap: () {
         var db = Mysql();
-        // db.incrementViewCount(restaurant.restaurantID);
+        db.incrementViewCount(restaurant.restaurantID);
         Navigator.push(
           context,
           PageRouteBuilder(
             pageBuilder: (_, animation, __) => FadeTransition(
               opacity: animation,
-              child: RestaurantScreen(restaurant: restaurant),
+              child: RestaurantScreen(
+                screenHeight: MediaQuery.of(context).size.height.toDouble(),
+                restaurant: restaurant,
+                customerID: customerID,
+              ),
             ),
           ),
         );
