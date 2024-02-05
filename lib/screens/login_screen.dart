@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
         .getResults('SELECT restaurant_id, name, owner_name FROM Restaurant;');
     for (var row in rows) {
       restaurants.add(Restaurant(
-          restaurantID: int.parse(row.assoc()['restaurant_id']!),
+          restaurantID: "1",
           name: row.assoc()['name']!,
           ownerName: row.assoc()['owner_name']!));
     }

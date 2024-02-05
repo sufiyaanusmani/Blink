@@ -40,8 +40,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   late List<Category> categoryList = [];
 
   Future<List<Product>> getProducts() async {
-    List<Product> items =
-        await Product.getProducts(widget.restaurant.restaurantID);
+    List<Product> items = await Product.getProducts(1);
     setState(() {
       itemList = items;
     });
