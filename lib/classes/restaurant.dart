@@ -1,7 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:food_delivery/mysql.dart';
-
-import 'package:mysql_client/mysql_client.dart';
 
 class Restaurant {
   String restaurantID;
