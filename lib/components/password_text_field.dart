@@ -19,7 +19,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: ui.val(2).withOpacity(0.6),
+      color: ui.val(2),
       elevation: 5,
       borderRadius: BorderRadius.circular(15),
       child: Container(
@@ -28,10 +28,12 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           vertical: 10,
         ),
         decoration: BoxDecoration(
-          color: ui.val(2).withOpacity(0.6),
+          color: ui.val(1).withOpacity(0.6),
           borderRadius: BorderRadius.circular(15),
         ),
         child: TextField(
+          cursorColor: ui.val(4).withOpacity(0.7),
+          enableInteractiveSelection: false,
           controller: widget.controller,
           obscureText: true,
           style: TextStyle(
@@ -41,6 +43,9 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
             hintText: widget.hintText,
             border: InputBorder.none,
             labelText: 'Password',
+            hintStyle: TextStyle(
+              color: ui.val(4).withOpacity(0.3),
+            ),
             labelStyle: TextStyle(
               color: ui.val(4).withOpacity(0.5),
             ),

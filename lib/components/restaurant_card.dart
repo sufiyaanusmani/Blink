@@ -95,7 +95,7 @@ class RestaurantCard extends StatelessWidget {
                 ],
               ),
             ),
-            const Divider(),
+            // const Divider(),
           ],
         ),
       ),

@@ -406,7 +406,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: trendingProducts,
               ),
             ),
-            Divider(),
+            Divider(
+              color: ui.val(1),
+            ),
             SizedBox(height: 20),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),

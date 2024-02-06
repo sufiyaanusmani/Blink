@@ -6,6 +6,8 @@ import 'package:food_delivery/components/password_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
 import 'package:food_delivery/mysql.dart';
+import 'package:flutter/services.dart';
+import '../classes/UiColor.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 
 import '../classes/customer.dart';
@@ -66,9 +68,13 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: ui.val(0),
+      statusBarColor: ui.val(0),
+    ));
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xfff1eff6),
+      backgroundColor: ui.val(0),
       body: SafeArea(
         child: Form(
           child: Container(
@@ -88,6 +94,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
+                          color: ui.val(4),
                         ),
                       ),
                     ),
@@ -96,7 +103,8 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 SizedBox(
                   height: 40,
                 ),
-                PlainTextField(
+                PlainTextField2(
+                  background: ui.val(3).withOpacity(0.1),
                   hintText: 'First Name',
                   onChange: (text) {
                     firstName = text;
@@ -107,7 +115,8 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 SizedBox(
                   height: 15,
                 ),
-                PlainTextField(
+                PlainTextField2(
+                  background: ui.val(2).withOpacity(0.1),
                   hintText: 'Last Name',
                   onChange: (text) {
                     lastName = text;
@@ -118,7 +127,8 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 SizedBox(
                   height: 15,
                 ),
-                PlainTextField(
+                PlainTextField2(
+                  background: ui.val(0).withOpacity(0.1),
                   hintText: 'Email',
                   onChange: (text) {
                     email = text;
@@ -191,7 +201,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                     print(customer.uid);
                     // }
                   },
-                  color: Colors.lightBlue,
+                  color: ui.val(10),
                   verticalPadding: 15,
                   buttonChild: Text(
                     'Register',
@@ -200,7 +210,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                       textStyle: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
-                        color: Colors.white,
+                        color: ui.val(1),
                       ),
                     ),
                   ),

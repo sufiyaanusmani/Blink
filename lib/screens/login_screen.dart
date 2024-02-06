@@ -19,7 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 
 import 'package:sign_in_button/sign_in_button.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
@@ -123,92 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
     ));
     return Scaffold(
       resizeToAvoidBottomInset: false,
-<<<<<<< HEAD
       backgroundColor: ui.val(0),
-      body: SafeArea(
-        child: Form(
-          child: Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AnimatedTextKit(
-                  animatedTexts: [
-                    TypewriterAnimatedText(
-                      'Hello Again!',
-                      textAlign: TextAlign.center,
-                      textStyle: GoogleFonts.lato(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40,
-                          color: ui.val(4),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Welcome back, you\'ve been missed',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontSize: 20,
-                      color: ui.val(4),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                PlainTextField(
-                  hintText: 'Enter Username',
-                  onChange: (text) {
-                    username = text;
-                  },
-                  labelText: 'Username',
-                  controller: _usernameTextController,
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                PasswordTextField(
-                  hintText: 'Enter Password',
-                  onChange: (text) {
-                    password = text;
-                  },
-                  controller: _passwordTextController,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  loginFailedMessage,
-                  textAlign: TextAlign.start,
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: Colors.red,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  child: Text(
-                    'Forgot Password',
-                    textAlign: TextAlign.end,
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
-                        color: ui.val(4).withOpacity(0.3),
-=======
-      backgroundColor: Color(0xfff1eff6),
       body: _user == null
           ? SafeArea(
               child: Form(
@@ -229,6 +144,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               textStyle: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 40,
+                                color: ui.val(4),
                               ),
                             ),
                           ),
@@ -243,12 +159,12 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: GoogleFonts.lato(
                           textStyle: TextStyle(
                             fontSize: 20,
+                            color: ui.val(4),
                           ),
                         ),
                       ),
                       SizedBox(
                         height: 50,
->>>>>>> e654d4f6957b8f00d4bebe755b46e653839419b6
                       ),
                       PlainTextField(
                         hintText: 'Enter Email',
@@ -282,21 +198,51 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        child: Text(
-                          'Forgot Password',
-                          textAlign: TextAlign.end,
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
+                      Padding(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              child: Text(
+                                'Create new Account',
+                                textAlign: TextAlign.end,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: ui.val(4).withOpacity(0.5),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateNewAccountScreen()));
+                              },
                             ),
-                          ),
+                            GestureDetector(
+                              child: Text(
+                                'Forgot Password',
+                                textAlign: TextAlign.end,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: ui.val(4).withOpacity(0.3),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: buildBottomSheet);
+                              },
+                            ),
+                          ],
                         ),
-                        onTap: () {
-                          showModalBottomSheet(
-                              context: context, builder: buildBottomSheet);
-                        },
                       ),
                       SizedBox(
                         height: 20,
@@ -341,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             print(e);
                           }
                         },
-                        color: Colors.lightBlue,
+                        color: ui.val(10),
                         verticalPadding: 15,
                         buttonChild: Text(
                           'Sign In',
@@ -350,7 +296,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             textStyle: TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
-                              color: Colors.white,
+                              color: ui.val(1),
                             ),
                           ),
                         ),
@@ -358,134 +304,77 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(
                         height: 20,
                       ),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Divider(),
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Text(
-                            "or",
-                          ),
-                          SizedBox(
-                            width: 15,
-                          ),
-                          Expanded(
-                            child: Divider(),
-                          ),
-                        ],
+                      // Row(
+                      //   children: [
+                      //     Expanded(
+                      //       child: Divider(),
+                      //     ),
+                      //     SizedBox(
+                      //       width: 15,
+                      //     ),
+                      //     Text(
+                      //       "or",
+                      //     ),
+                      //     SizedBox(
+                      //       width: 15,
+                      //     ),
+                      //     // Expanded(
+                      //     // child: Divider(),
+                      //     // ),
+                      //   ],
+                      // ),
+                      SizedBox(
+                        height: 20,
                       ),
+                      // LargeButton(
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) =>
+                      //                 CreateNewAccountScreen()));
+                      //   },
+                      //   color: ui.val(1).withOpacity(0.3),
+                      //   verticalPadding: 10,
+                      //   buttonChild: Text(
+                      //     'Create a new account',
+                      //     style: GoogleFonts.lato(
+                      //       textStyle: TextStyle(
+                      //         fontWeight: FontWeight.bold,
+                      //         fontSize: 20,
+                      //         color: ui.val(4).withOpacity(0.5),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(
                         height: 20,
                       ),
                       LargeButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateNewAccountScreen()));
-                        },
-<<<<<<< HEAD
-                      );
-                    }
-                  },
-                  color: ui.val(10),
-                  verticalPadding: 15,
-                  buttonChild: Text(
-                    'Sign In',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: ui.val(1),
-=======
-                        color: Colors.white,
+                        color: ui.val(1).withOpacity(0.3),
                         verticalPadding: 10,
-                        buttonChild: Text(
-                          'Create a new account',
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Colors.black,
-                            ),
-                          ),
+                        buttonChild: Image.asset(
+                          'images/google.png',
+                          height: 40,
+                          color: ui.val(4).withOpacity(0.5),
                         ),
->>>>>>> e654d4f6957b8f00d4bebe755b46e653839419b6
+                        onPressed: () {
+                          _handleGoogleSignIn();
+                        },
                       ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      LargeButton(
-                          color: Colors.white,
-                          buttonChild: Text("Sign in with Google"),
-                          verticalPadding: 10,
-                          onPressed: () {
-                            _handleGoogleSignIn();
-                          })
+                      // LargeButton(
+                      //     color: Colors.white,
+                      //     buttonChild: Text("Sign in with Google"),
+                      //     verticalPadding: 10,
+                      //     onPressed: () {
+                      //       _handleGoogleSignIn();
+                      //     })
                     ],
                   ),
                 ),
-<<<<<<< HEAD
-                SizedBox(
-                  height: 20,
-                ),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Text(
-                      "or",
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    Expanded(
-                      child: Divider(),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                LargeButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CreateNewAccountScreen()));
-                  },
-                  color: ui.val(2).withOpacity(0.3),
-                  verticalPadding: 10,
-                  buttonChild: Text(
-                    'Create a new account',
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: ui.val(4).withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-=======
               ),
             )
           : h(),
->>>>>>> e654d4f6957b8f00d4bebe755b46e653839419b6
     );
   }
 
