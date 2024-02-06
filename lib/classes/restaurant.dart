@@ -1,9 +1,7 @@
-import 'package:food_delivery/mysql.dart';
-
-import 'package:mysql_client/mysql_client.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Restaurant {
-  int restaurantID;
+  String restaurantID;
   String name;
   String ownerName;
   String image = '';
@@ -14,20 +12,22 @@ class Restaurant {
       required this.ownerName});
 
   static Future<List<Restaurant>> getRestaurants() async {
-    var db = Mysql();
     List<Restaurant> restaurants = [];
-    Iterable<ResultSetRow> rows = await db
-        .getResults('SELECT restaurant_id, name, owner_name FROM Restaurant;');
-
-    for (var row in rows) {
-      // firstName = row.assoc()['first_name']!;
-      Restaurant restaurant = Restaurant(
-          restaurantID: int.parse(row.assoc()['restaurant_id']!),
-          name: row.assoc()['name']!,
-          ownerName: row.assoc()['owner_name']!);
-      restaurants.add(restaurant);
+    try {
+      Query<Map<String, dynamic>> restaurantsQuery =
+          FirebaseFirestore.instance.collection('restaurants');
+      QuerySnapshot restaurantsSnapshot = await restaurantsQuery.get();
+      for (QueryDocumentSnapshot restaurant in restaurantsSnapshot.docs) {
+        Map<String, dynamic> restaurantData =
+            restaurant.data() as Map<String, dynamic>;
+        restaurants.add(Restaurant(
+            restaurantID: restaurant.id,
+            name: restaurantData['name'],
+            ownerName: restaurantData['ownername']));
+      }
+    } catch (e) {
+      print(e);
     }
-
     return restaurants;
   }
 }

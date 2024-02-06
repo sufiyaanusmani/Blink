@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "317819475568",
+    "project_id": "blink-a34ae",
+    "storage_bucket": "blink-a34ae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:317819475568:android:c6b56d25db7e939fbb86b5",
+        "android_client_info": {
+          "package_name": "com.example.food_delivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "317819475568-qv882hdm6l4hted933hjh247pk042kc3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDTu18SNNCFOzTuY-HeHJ34xk8LMy-riuw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "317819475568-qv882hdm6l4hted933hjh247pk042kc3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

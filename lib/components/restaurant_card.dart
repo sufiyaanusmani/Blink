@@ -101,7 +101,7 @@ class RestaurantCard extends StatelessWidget {
       ),
       onTap: () {
         var db = Mysql();
-        db.incrementViewCount(restaurant.restaurantID);
+        db.incrementViewCount(1);
         Navigator.push(
           context,
           PageRouteBuilder(

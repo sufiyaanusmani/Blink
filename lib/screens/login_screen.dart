@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/create_new_account_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,13 +9,17 @@ import 'package:food_delivery/components/password_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
 import 'package:food_delivery/mysql.dart';
-import 'package:food_delivery/user.dart';
+import 'package:food_delivery/user1.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:flutter/services.dart';
 import 'package:food_delivery/classes/UIColor.dart';
+
+import 'package:sign_in_button/sign_in_button.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   static const id = 'login_screen';
@@ -26,7 +31,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  var username;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? _user;
+  var email;
   List<Restaurant> restaurants = [];
   var password;
   bool loginValid = true;
@@ -64,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
         .getResults('SELECT restaurant_id, name, owner_name FROM Restaurant;');
     for (var row in rows) {
       restaurants.add(Restaurant(
-          restaurantID: int.parse(row.assoc()['restaurant_id']!),
+          restaurantID: "1",
           name: row.assoc()['name']!,
           ownerName: row.assoc()['owner_name']!));
     }
@@ -75,15 +82,15 @@ class _LoginScreenState extends State<LoginScreen> {
   void getSharedPreferences() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      username = prefs.getString('username')!;
+      email = prefs.getString('username')!;
       password = prefs.getString('password')!;
     });
   }
 
   Future<String> getUsername() async {
     SharedPreferences signPrefs = await SharedPreferences.getInstance();
-    username = signPrefs.get('username');
-    return username;
+    email = signPrefs.get('username');
+    return email;
   }
 
   Future<String> getPassword() async {
@@ -96,6 +103,11 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _auth.authStateChanges().listen((event) {
+      setState(() {
+        _user = event;
+      });
+    });
     // getSharedPreferences();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       _usernameTextController.text = await getUsername();
@@ -111,6 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
     ));
     return Scaffold(
       resizeToAvoidBottomInset: false,
+<<<<<<< HEAD
       backgroundColor: ui.val(0),
       body: SafeArea(
         child: Form(
@@ -194,38 +207,188 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
                         color: ui.val(4).withOpacity(0.3),
-                      ),
-                    ),
+=======
+      backgroundColor: Color(0xfff1eff6),
+      body: _user == null
+          ? SafeArea(
+              child: Form(
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 30,
                   ),
-                  onTap: () {
-                    showModalBottomSheet(
-                        context: context, builder: buildBottomSheet);
-                  },
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                LargeButton(
-                  onPressed: () async {
-                    if (await _login(username, password)) {
-                      setState(() {
-                        loginFailedMessage = '';
-                      });
-                      final SharedPreferences prefs =
-                          await SharedPreferences.getInstance();
-                      await prefs.setString('username', username);
-                      await prefs.setString('password', password);
-                      getRestaurants();
-                      Navigator.pushNamed(context, MainNavigator.id,
-                          arguments: HomeScreenArguments(
-                            user: User(id: loginID, firstName: firstName),
-                            restaurants: restaurants,
-                          ));
-                    } else {
-                      setState(
-                        () {
-                          loginFailedMessage = 'Invalid username or password';
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimatedTextKit(
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            'Hello Again!',
+                            textAlign: TextAlign.center,
+                            textStyle: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 40,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Welcome back, you\'ve been missed',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 50,
+>>>>>>> e654d4f6957b8f00d4bebe755b46e653839419b6
+                      ),
+                      PlainTextField(
+                        hintText: 'Enter Email',
+                        onChange: (text) {
+                          email = text;
                         },
+                        labelText: 'Email',
+                        controller: _usernameTextController,
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      PasswordTextField(
+                        hintText: 'Enter Password',
+                        onChange: (text) {
+                          password = text;
+                        },
+                        controller: _passwordTextController,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        loginFailedMessage,
+                        textAlign: TextAlign.start,
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                            color: Colors.red,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        child: Text(
+                          'Forgot Password',
+                          textAlign: TextAlign.end,
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context, builder: buildBottomSheet);
+                        },
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      LargeButton(
+                        onPressed: () async {
+                          // if (await _login(username, password)) {
+                          //   setState(() {
+                          //     loginFailedMessage = '';
+                          //   });
+                          //   final SharedPreferences prefs =
+                          //       await SharedPreferences.getInstance();
+                          //   await prefs.setString('username', username);
+                          //   await prefs.setString('password', password);
+                          //   getRestaurants();
+                          //   Navigator.pushNamed(context, MainNavigator.id,
+                          //       arguments: HomeScreenArguments(
+                          //         user:
+                          //             User1(id: loginID, firstName: firstName),
+                          //         restaurants: restaurants,
+                          //       ));
+                          // } else {
+                          //   setState(
+                          //     () {
+                          //       loginFailedMessage =
+                          //           'Invalid username or password';
+                          //     },
+                          //   );
+                          // }
+                          try {
+                            final user = await _auth.signInWithEmailAndPassword(
+                                email: email, password: password);
+                            if (user != null) {
+                              getRestaurants();
+                              Navigator.pushNamed(context, MainNavigator.id,
+                                  arguments: HomeScreenArguments(
+                                    user: User1(id: 1, firstName: "Sufiyaan"),
+                                    restaurants: restaurants,
+                                  ));
+                            }
+                          } catch (e) {
+                            print(e);
+                          }
+                        },
+                        color: Colors.lightBlue,
+                        verticalPadding: 15,
+                        buttonChild: Text(
+                          'Sign In',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Divider(),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Text(
+                            "or",
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Expanded(
+                            child: Divider(),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      LargeButton(
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateNewAccountScreen()));
+                        },
+<<<<<<< HEAD
                       );
                     }
                   },
@@ -239,10 +402,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: ui.val(1),
+=======
+                        color: Colors.white,
+                        verticalPadding: 10,
+                        buttonChild: Text(
+                          'Create a new account',
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+>>>>>>> e654d4f6957b8f00d4bebe755b46e653839419b6
                       ),
-                    ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      LargeButton(
+                          color: Colors.white,
+                          buttonChild: Text("Sign in with Google"),
+                          verticalPadding: 10,
+                          onPressed: () {
+                            _handleGoogleSignIn();
+                          })
+                    ],
                   ),
                 ),
+<<<<<<< HEAD
                 SizedBox(
                   height: 20,
                 ),
@@ -293,6 +481,35 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         ),
       ),
+=======
+              ),
+            )
+          : h(),
+>>>>>>> e654d4f6957b8f00d4bebe755b46e653839419b6
     );
+  }
+
+  Widget h() {
+    return Center(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text("${_user?.uid}"),
+        MaterialButton(
+            child: Text("Sign Out"),
+            onPressed: () {
+              _auth.signOut();
+            })
+      ],
+    ));
+  }
+
+  void _handleGoogleSignIn() {
+    try {
+      GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
+      _auth.signInWithProvider(_googleAuthProvider);
+    } catch (error) {
+      print(error);
+    }
   }
 }
