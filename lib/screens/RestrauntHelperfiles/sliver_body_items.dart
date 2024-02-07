@@ -227,8 +227,7 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
                                           product.liked = false;
                                         });
                                         db.dislikeProduct(
-                                            widget.customerID.toString(),
-                                            product.id);
+                                            product);
                                       }
                                     },
                                     child: product.liked == true

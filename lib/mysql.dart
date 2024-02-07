@@ -169,6 +169,7 @@ class Mysql {
         'Category Name': product.categoryName,
         'Price': product.price,
         'Product ID': product.id,
+        'Prod Name ': product.name,
         'Restaurant ID': product.restaurantID
       };
       likedProducts.add(likedProduct);
@@ -182,13 +183,32 @@ class Mysql {
     }
   }
 
-  void dislikeProduct(String customerID, String productID) async {
-    var conn = await getConnection();
-    await conn.connect();
-    var stmt = await conn
-        .prepare('DELETE FROM Favourites WHERE customer_id=? AND product_id=?');
-    await stmt.execute([customerID, productID]);
-    await stmt.deallocate();
-    conn.close();
+  Future<void> dislikeProduct(Product product) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    try {
+      // Step 1: Retrieve the document reference for the customer
+      DocumentReference customerDocRef =
+          FirebaseFirestore.instance.collection('customers').doc(user!.uid);
+
+      // Step 2: Get the existing array of liked products, if any
+      DocumentSnapshot customerSnapshot = await customerDocRef.get();
+      Map<String, dynamic>? data = customerSnapshot.data()
+          as Map<String, dynamic>?; // Explicit cast to handle potential null
+      List<dynamic> likedProducts =
+          data?['Liked Products'] ?? []; // Null check and fallback value
+
+      // Step 3: Remove the specified product from the array
+      likedProducts.removeWhere((likedProduct) =>
+          likedProduct['Product ID'] == product.id &&
+          likedProduct['Restaurant ID'] == product.restaurantID);
+
+      // Step 4: Update the document with the updated liked products array
+      await customerDocRef.update({'Liked Products': likedProducts});
+
+      print('Disliked product removed successfully.');
+    } catch (error) {
+      print('Error removing disliked product: $error');
+    }
   }
 }
