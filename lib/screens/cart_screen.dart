@@ -32,6 +32,7 @@ class _CartScreenState extends State<CartScreen> {
                 children: [
                   Expanded(
                     child: Container(
+                      // width: double.infinity,
                       margin: EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
@@ -52,13 +53,16 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                           ),
                         ],
-                        splashBorderRadius: BorderRadius.circular(30),
+                        // splashBorderRadius: BorderRadius.circular(30),
+                        dividerColor: Colors.transparent,
                         labelColor: ui.val(4),
                         unselectedLabelColor: Color.fromARGB(255, 0, 0, 0),
                         isScrollable: false,
+                        indicatorSize: TabBarIndicatorSize.tab,
                         indicator: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: ui.val(1)),
+                          borderRadius: BorderRadius.circular(30),
+                          color: ui.val(1),
+                        ),
                       ),
                     ),
                   ),

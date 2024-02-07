@@ -275,6 +275,7 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
                 duration: kThemeAnimationDuration,
                 margin: EdgeInsets.only(
                   right: 10,
+                  left: 10,
                   top: isSelected ? 5 : 20,
                   bottom: isSelected ? 5 : 20,
                 ),

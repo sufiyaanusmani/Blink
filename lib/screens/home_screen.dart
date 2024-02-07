@@ -379,9 +379,8 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: EdgeInsets.all(10.0),
           children: [
             OrderNotification(customerID: widget.user.id),
-            SizedBox(height: 5),
 
-            SizedBox(height: 30),
+            SizedBox(height: 35),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(

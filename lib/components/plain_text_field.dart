@@ -34,12 +34,17 @@ class _PlainTextFieldState extends State<PlainTextField> {
           borderRadius: BorderRadius.circular(15),
         ),
         child: TextField(
+          enableInteractiveSelection: false,
+          cursorColor: ui.val(4).withOpacity(0.7),
           controller: widget.controller,
           style: TextStyle(
             color: ui.val(4),
           ),
           decoration: InputDecoration(
             hintText: widget.hintText,
+            hintStyle: TextStyle(
+              color: ui.val(4).withOpacity(0.3),
+            ),
             border: InputBorder.none,
             labelText: widget.labelText,
             labelStyle: TextStyle(
