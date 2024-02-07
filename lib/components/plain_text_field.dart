@@ -11,7 +11,7 @@ class PlainTextField extends StatefulWidget {
       required this.hintText,
       required this.onChange,
       required this.controller,
-      required this.labelText});
+      required this.labelText, String? errorText});
 
   @override
   State<PlainTextField> createState() => _PlainTextFieldState();
