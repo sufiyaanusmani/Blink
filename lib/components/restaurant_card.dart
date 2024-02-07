@@ -6,14 +6,16 @@ import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 
 class RestaurantCard extends StatelessWidget {
-  final Restaurant restaurant;
+  final List<Restaurant> restaurants;
+  final int resIndex;
   final int customerID;
   final String imageName;
 
   const RestaurantCard(
       {super.key,
-      required this.restaurant,
+      required this.restaurants,
       required this.customerID,
+      required this.resIndex,
       required this.imageName});
 
   @override
@@ -55,7 +57,7 @@ class RestaurantCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          restaurant.name,
+                          restaurants[resIndex].name,
                           style: const TextStyle(
                             fontWeight: FontWeight.w500,
                             fontSize: 25,
@@ -65,7 +67,7 @@ class RestaurantCard extends StatelessWidget {
                         Text(
                           maxLines: 3,
                           overflow: TextOverflow.ellipsis,
-                          restaurant.description,
+                          restaurants[resIndex].description,
                           style: const TextStyle(color: Colors.grey),
                         ),
                       ],
@@ -83,7 +85,7 @@ class RestaurantCard extends StatelessWidget {
                             Icon(Icons.star_border_rounded,
                                 color: Colors.blueGrey, size: 20),
                             Text(
-                              "${restaurant.rating} (${restaurant.totalRatings})",
+                              "${restaurants[resIndex].rating} (${restaurants[resIndex].totalRatings})",
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 20),
                             ),
@@ -95,7 +97,7 @@ class RestaurantCard extends StatelessWidget {
                             Icon(Icons.access_time,
                                 color: Colors.blueGrey, size: 17),
                             Text(
-                              ' ${restaurant.estimatedTime}',
+                              ' ${restaurants[resIndex].estimatedTime}',
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 20),
                             ),
@@ -115,8 +117,8 @@ class RestaurantCard extends StatelessWidget {
       ),
       onTap: () {
         var db = Mysql();
-        print(restaurant.restaurantID);
-        db.incrementViewCount(restaurant.restaurantID);
+        print(restaurants[resIndex].restaurantID);
+        db.incrementViewCount(restaurants[resIndex].restaurantID);
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -124,7 +126,8 @@ class RestaurantCard extends StatelessWidget {
               opacity: animation,
               child: RestaurantScreen(
                 screenHeight: MediaQuery.of(context).size.height.toDouble(),
-                restaurant: restaurant,
+                restaurants: restaurants,
+                resIndex: resIndex,
                 customerID: customerID,
               ),
             ),

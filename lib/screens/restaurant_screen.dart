@@ -14,12 +14,14 @@ class RestaurantScreen extends StatefulWidget {
   const RestaurantScreen(
       {Key? key,
       required this.screenHeight,
-      required this.restaurant,
+      required this.resIndex,
+      required this.restaurants,
       required this.customerID})
       : super(key: key);
 
   final double screenHeight;
-  final Restaurant restaurant;
+  final List<Restaurant> restaurants;
+  final int resIndex;
   final int customerID;
 
   @override
@@ -41,7 +43,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
 
   Future<List<Product>> getProducts() async {
     List<Product> items = await Product.getProducts(
-      widget.restaurant,
+      widget.restaurants[widget.resIndex],
     );
     setState(() {
       itemList = items;
@@ -116,7 +118,8 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     if (_loading) {
       return Shimmer(
         controller: _controller,
-        restaurant: widget.restaurant,
+        restaurants: widget.restaurants,
+        resIndex: widget.resIndex,
       );
     }
     return Scaffold(
@@ -143,7 +146,8 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                                 topPercent:
                                     ((1 - percent) / .7).clamp(0.0, 1.0),
                                 bottomPercent: bottomPercent,
-                                restaurant: widget.restaurant,
+                                restaurants: widget.restaurants,
+                                resIndex: widget.resIndex,
                               );
                             })),
                     SliverPersistentHeader(
@@ -183,14 +187,16 @@ class Shimmer extends StatelessWidget {
     super.key,
     // required this.bloc,
     required ScrollController controller,
+    required this.resIndex,
     // required this.widget,
-    required this.restaurant,
+    required this.restaurants,
   }) : _controller = controller;
 
   // final SliverScrollController bloc;
   final ScrollController _controller;
   // final RestaurantScreen widget;
-  final Restaurant restaurant;
+  final List<Restaurant> restaurants;
+  final int resIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +218,8 @@ class Shimmer extends StatelessWidget {
                         return AnimatedDetailHeader(
                           topPercent: ((1 - percent) / .7).clamp(0.0, 1.0),
                           bottomPercent: bottomPercent,
-                          restaurant: restaurant,
+                          restaurants: restaurants,
+                          resIndex: resIndex,
                         );
                       })),
               SliverPersistentHeader(

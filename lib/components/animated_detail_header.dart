@@ -3,52 +3,80 @@ import 'dart:ui';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:flutter/material.dart';
 
+String getImg(String resName) {
+  String image = "kfc.jpg";
+  resName = resName.toLowerCase();
+  if (resName.contains("burger")) {
+    image = "burger.jpg";
+  } else if (resName.contains("cafe")) {
+    image = "cafe.jpg";
+  } else if (resName.contains("dhaba")) {
+    image = "dhaba.jpg";
+  } else if (resName.contains("juice")) {
+    image = "juice.jpg";
+  } else if (resName.contains("limca")) {
+    image = "limca.jpg";
+  } else if (resName.contains("pathan")) {
+    image = "pathan.jpg";
+  } else if (resName.contains("pizza")) {
+    image = "pizza.jpg";
+  } else if (resName.contains("shawarma")) {
+    image = "shawarma.jpg";
+  } else {
+    image = "kfc.jpg";
+  }
+  print("image: $image");
+  return image;
+}
+
 class AnimatedDetailHeader extends StatelessWidget {
-  const AnimatedDetailHeader(
-      {Key? key,
-      required this.topPercent,
-      required this.bottomPercent,
-      required this.restaurant
-      // required this.menu,
-      })
-      : super(key: key);
+  const AnimatedDetailHeader({
+    Key? key,
+    required this.topPercent,
+    required this.bottomPercent,
+    required this.restaurants,
+    required this.resIndex,
+    // required this.menu,
+  }) : super(key: key);
 
   // final restraunt menu;
   final double topPercent;
   final double bottomPercent;
-  final Restaurant restaurant;
+  final List<Restaurant> restaurants;
+  final int resIndex;
 
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
     String image = "kfc.jpg";
-    String resName = restaurant.name;
-    resName = resName.toLowerCase();
-    if (resName.contains("burger")) {
-      image = "burger.jpg";
-    } else if (resName.contains("cafe")) {
-      image = "cafe.jpg";
-    } else if (resName.contains("dhaba")) {
-      image = "dhaba.jpg";
-    } else if (resName.contains("juice")) {
-      image = "juice.jpg";
-    } else if (resName.contains("limca")) {
-      image = "limca.jpg";
-    } else if (resName.contains("pathan")) {
-      image = "pathan.jpg";
-    } else if (resName.contains("pizza")) {
-      image = "pizza.jpg";
-    } else if (resName.contains("shawarma")) {
-      image = "shawarma.jpg";
-    } else {
-      image = "kfc.jpg";
-    }
+    String resName = restaurants[resIndex].name;
+    // resName = resName.toLowerCase();
+    // if (resName.contains("burger")) {
+    //   image = "burger.jpg";
+    // } else if (resName.contains("cafe")) {
+    //   image = "cafe.jpg";
+    // } else if (resName.contains("dhaba")) {
+    //   image = "dhaba.jpg";
+    // } else if (resName.contains("juice")) {
+    //   image = "juice.jpg";
+    // } else if (resName.contains("limca")) {
+    //   image = "limca.jpg";
+    // } else if (resName.contains("pathan")) {
+    //   image = "pathan.jpg";
+    // } else if (resName.contains("pizza")) {
+    //   image = "pizza.jpg";
+    // } else if (resName.contains("shawarma")) {
+    //   image = "shawarma.jpg";
+    // } else {
+    //   image = "kfc.jpg";
+    // }
+    image = getImg(resName);
 
     return Stack(
       fit: StackFit.expand,
       children: [
         Hero(
-          tag: restaurant,
+          tag: restaurants[resIndex],
           child: Material(
             color: ui.val(0),
             child: ClipRect(
@@ -61,7 +89,11 @@ class AnimatedDetailHeader extends StatelessWidget {
                     ),
                     child: Transform.scale(
                       scale: lerpDouble(1, 1.3, bottomPercent)!,
-                      child: PlaceImagesPageView(images: "images/$image"),
+                      child: PlaceImagesPageView(
+                        images: "images/$image",
+                        restaurants: restaurants,
+                        resIndex: resIndex,
+                      ),
                     ),
                   ),
                   Positioned(
@@ -90,7 +122,7 @@ class AnimatedDetailHeader extends StatelessWidget {
                         duration: kThemeAnimationDuration,
                         opacity: bottomPercent < 1 ? 0 : 1,
                         child: Text(
-                          restaurant.name,
+                          restaurants[resIndex].name,
                           style: TextStyle(
                             color: Colors.white,
                             shadows: [
@@ -117,7 +149,7 @@ class AnimatedDetailHeader extends StatelessWidget {
                         child: Container(
                           width: MediaQuery.of(context).size.width - 25,
                           child: Text(
-                            restaurant.description,
+                            restaurants[resIndex].description,
                             style: TextStyle(
                               shadows: [
                                 Shadow(
@@ -144,7 +176,7 @@ class AnimatedDetailHeader extends StatelessWidget {
           bottom: -140 * (1 - topPercent),
           child: TranslateAnimation(
             child: MenuInfoContainer(
-              restaurant: restaurant,
+              restaurant: restaurants[resIndex],
             ),
           ),
         ),
@@ -267,17 +299,30 @@ class PlaceImagesPageView extends StatefulWidget {
   const PlaceImagesPageView({
     super.key,
     required this.images,
+    required this.restaurants,
+    required this.resIndex,
   });
 
   // final List<String> images;
   final String images;
+  final List<Restaurant> restaurants;
+  final int resIndex;
 
   @override
   State<PlaceImagesPageView> createState() => _PlaceImagesPageViewState();
 }
 
 class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
-  int currentIndex = 0;
+  late int currentIndex;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    currentIndex = widget.resIndex;
+    _pageController =
+        PageController(initialPage: currentIndex, viewportFraction: .9);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -285,12 +330,12 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
       children: [
         Expanded(
           child: PageView.builder(
-            itemCount: 5,
+            itemCount: widget.restaurants.length,
             onPageChanged: (value) {
               setState(() => currentIndex = value);
             },
             physics: const BouncingScrollPhysics(),
-            controller: PageController(viewportFraction: .9),
+            controller: _pageController,
             itemBuilder: (context, index) {
               final isSelected = currentIndex == index;
               return AnimatedContainer(
@@ -310,7 +355,8 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
                     )
                   ],
                   image: DecorationImage(
-                    image: AssetImage('${widget.images}'),
+                    image: AssetImage(
+                        "images/${getImg(widget.restaurants[currentIndex].name)}"),
                     fit: BoxFit.cover,
                     colorFilter:
                         ColorFilter.mode(Colors.black26, BlendMode.darken),
@@ -326,7 +372,7 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
         const SizedBox(height: 10),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(5, // <-- ITEM COUNT
+          children: List.generate(widget.restaurants.length, // <-- ITEM COUNT
               (index) {
             final isSelected = currentIndex == index;
             return AnimatedContainer(

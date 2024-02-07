@@ -86,7 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     List<Restaurant> r = await Restaurant.getRestaurants();
     List<RestaurantCard> tempRestaurantCards = [];
-    for (Restaurant res in r) {
+    for (int index = 0; index < r.length; index++) {
+      Restaurant res = r[index];
       String imageName = "kfc.jpg";
       String resName = res.name;
       resName = resName.toLowerCase();
@@ -109,8 +110,10 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         imageName = "kfc.jpg";
       }
+      print(r);
       tempRestaurantCards.add(RestaurantCard(
-        restaurant: res,
+        restaurants: r,
+        resIndex: index,
         customerID: widget.user.id,
         imageName: imageName,
       ));
