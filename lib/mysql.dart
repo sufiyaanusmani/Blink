@@ -1,5 +1,6 @@
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:mysql_client/mysql_client.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Mysql {
   static String host = 'bqquhv7hiskomx4izkti-mysql.services.clever-cloud.com';
@@ -85,14 +86,19 @@ class Mysql {
     conn.close();
   }
 
-  void incrementViewCount(String restaurantID) async {
-    var conn = await getConnection();
-    await conn.connect();
-    await conn.transactional((conn) async {
-      await conn.execute(
-          "UPDATE Restaurant SET views=views+1 WHERE restaurant_id=$restaurantID;");
-    });
-    conn.close();
+  void incrementViewCount(String restaurantID) {
+    try {
+      // Reference to the specific restaurant document using the provided ID
+      DocumentReference restaurantDocumentRef = FirebaseFirestore.instance
+          .collection('restaurants')
+          .doc(restaurantID);
+      // Increment the "views" field by 1
+      restaurantDocumentRef.update({
+        'views': FieldValue.increment(1),
+      });      
+    } catch (error) {
+      print('Error incrementing view count: $error');      
+    }
   }
 
   Future<bool> alreadyOrdered(int customerID) async {
