@@ -1,6 +1,8 @@
+import 'package:food_delivery/classes/product.dart';
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Mysql {
   static String host = 'bqquhv7hiskomx4izkti-mysql.services.clever-cloud.com';
@@ -95,9 +97,9 @@ class Mysql {
       // Increment the "views" field by 1
       restaurantDocumentRef.update({
         'views': FieldValue.increment(1),
-      });      
+      });
     } catch (error) {
-      print('Error incrementing view count: $error');      
+      print('Error incrementing view count: $error');
     }
   }
 
@@ -142,14 +144,42 @@ class Mysql {
     return customerID;
   }
 
-  void likeProduct(String customerID, String productID) async {
-    var conn = await getConnection();
-    await conn.connect();
-    var stmt = await conn.prepare(
-        'INSERT INTO Favourites (customer_id, product_id) VALUES (?, ?)');
-    await stmt.execute([customerID, productID]);
-    await stmt.deallocate();
-    conn.close();
+  void likeProduct(Product product) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    // print('User is signed in with email: ${user!.email}');
+
+    print("aaa: ${user!.uid}");
+    try {
+      // Step 1: Retrieve the document reference for the customer
+      DocumentReference customerDocRef =
+          FirebaseFirestore.instance.collection('customers').doc(user!.uid);
+
+      // Step 2: Get the existing array of liked products, if any
+      DocumentSnapshot customerSnapshot = await customerDocRef.get();
+      // Step 2: Get the existing array of liked products, if any
+      Map<String, dynamic>? data = customerSnapshot.data()
+          as Map<String, dynamic>?; // Explicit cast to handle potential null
+      List<dynamic> likedProducts =
+          data?['Liked Products'] ?? []; // Null check and fallback value
+
+      // Step 3: Append the new liked product to the array
+      Map<String, dynamic> likedProduct = {
+        'Category Name': product.categoryName,
+        'Price': product.price,
+        'Product ID': product.id,
+        'Restaurant ID': product.restaurantID
+      };
+      likedProducts.add(likedProduct);
+
+      // Step 4: Update the document with the updated liked products array
+      await customerDocRef.update({'Liked Products': likedProducts});
+
+      print('Liked product added successfully.');
+    } catch (error) {
+      print('Error adding liked product: $error');
+    }
   }
 
   void dislikeProduct(String customerID, String productID) async {

@@ -42,7 +42,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   Future<List<Product>> getProducts() async {
     List<Product> items = await Product.getProducts(
       widget.restaurant.restaurantID,
-      "NySCB2RkjLUFzz109SwWwjOvRLt2",     // sufiyaan pass here actual customer ID please
     );
     setState(() {
       itemList = items;
@@ -109,6 +108,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     super.dispose();
   }
 
+  // a global key is assigned to our parent scaffold to allow snackbars to be displayed within its context
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   Widget build(BuildContext context) {
     if (_loading) {
@@ -118,6 +120,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
       );
     }
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: ui.val(0),
       body: Stack(
         children: [
@@ -161,8 +164,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
                       SliverBodyItems(
                         listItem: bloc.listCategory[i].products,
                         customerID: widget.customerID,
+                        scaffold: scaffoldKey.currentContext!,
+                        // scaffoldkey: scaffoldKey,
                         // listItem: dummyProducts,
-                      )
+                      ),
                     ],
                   ],
                 );

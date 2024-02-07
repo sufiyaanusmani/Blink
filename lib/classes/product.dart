@@ -2,6 +2,7 @@ import 'package:food_delivery/classes/cart.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Product {
   String id;
@@ -19,8 +20,7 @@ class Product {
       required this.price,
       required this.liked});
 
-  static Future<List<Product>> getProducts(
-      String restaurantID, String CustomerID) async {
+  static Future<List<Product>> getProducts(String restaurantID) async {
     List<Product> products = [];
 
     try {
@@ -41,27 +41,40 @@ class Product {
           price: foodItemData['Price'],
           liked: false,
         ));
-        print("asi: ${foodItemData}");
       }
+
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
       // Fetch customer document
       DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
           .collection('customers')
-          .doc(CustomerID)
+          .doc(user!.uid)
           .get();
-
       // Check if customer document exists
       if (customerSnapshot.exists) {
         // Get liked products array
         List<dynamic> likedProducts = customerSnapshot['Liked Products'];
+
+        // print("cust: $likedProducts");
         // Iterate through products and mark liked if found in likedProducts
         for (Product product in products) {
-          if (likedProducts.contains(product.id)) {
-            product.liked = true;
+          // Iterate through likedProducts to check if the product is liked
+          for (Map<String, dynamic> likedProduct in likedProducts) {
+            // Extract the product ID from the liked product map
+            dynamic likedProductId = likedProduct['Product ID'];
+
+            // Check if the product ID matches the current product's ID
+            if (likedProductId.toString() == product.id) {
+              // Ensure likedProductId is converted to string
+              product.liked = true;
+              // print("Liked: ${product}");
+              break; // Exit the inner loop since the product is already marked as liked
+            }
           }
         }
       }
     } catch (error) {
-      print('Error fetching products: $error');      
+      print('Error fetching products from getProducts(): $error');
     }
 
     return products;
