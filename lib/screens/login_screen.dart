@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/create_new_account_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -20,6 +19,7 @@ import '../services/navigator.dart';
 
 class PasswordTextField extends StatefulWidget {
   final String hintText;
+  final bool error;
   final Function(String) onChange;
   final TextEditingController? controller;
   final String? errorText; // Add errorText parameter
@@ -27,6 +27,7 @@ class PasswordTextField extends StatefulWidget {
   PasswordTextField({
     required this.hintText,
     required this.onChange,
+    required this.error,
     this.controller,
     this.errorText, // Initialize errorText parameter
   });
@@ -40,25 +41,51 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      obscureText: _obscureText,
-      style: TextStyle(color: Colors.white), // Set text color to white
-      onChanged: widget.onChange,
-      controller: widget.controller,
-      decoration: InputDecoration(
-        hintText: widget.hintText,
-        hintStyle: TextStyle(color: Colors.white.withOpacity(0.5)), // Hint text color
-        errorText: widget.errorText, // Set error text
-        suffixIcon: IconButton(
-          icon: Icon(
-            _obscureText ? Icons.visibility : Icons.visibility_off,
-            color: Colors.grey,
+    return Material(
+      elevation: 5,
+      color: ui.val(2),
+      borderRadius: BorderRadius.circular(15),
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 20,
+          vertical: 10,
+        ),
+        decoration: BoxDecoration(
+          color: ui.val(2),
+          borderRadius: BorderRadius.circular(15),
+          border: Border.all(
+              width: 0.5,
+              color: widget.error == true ? Colors.red : Colors.transparent),
+        ),
+        child: TextField(
+          obscureText: _obscureText,
+          onChanged: widget.onChange,
+          controller: widget.controller,
+          style: TextStyle(
+            color: ui.val(4),
           ),
-          onPressed: () {
-            setState(() {
-              _obscureText = !_obscureText;
-            });
-          },
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            labelText: "Password",
+            labelStyle: TextStyle(
+              color: ui.val(4).withOpacity(0.5),
+            ),
+            hintText: widget.hintText,
+            hintStyle:
+                TextStyle(color: ui.val(4).withOpacity(0.5)), // Hint text color
+            errorText: widget.errorText, // Set error text
+            suffixIcon: IconButton(
+              icon: Icon(
+                _obscureText ? Icons.visibility : Icons.visibility_off,
+                color: ui.val(3),
+              ),
+              onPressed: () {
+                setState(() {
+                  _obscureText = !_obscureText;
+                });
+              },
+            ),
+          ),
         ),
       ),
     );
@@ -133,13 +160,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<String> getUsername() async {
     SharedPreferences signPrefs = await SharedPreferences.getInstance();
-    email = signPrefs.getString('username') ?? ''; // Provide a default value if null
+    email = signPrefs.getString('username') ??
+        ''; // Provide a default value if null
     return email;
   }
 
   Future<String> getPassword() async {
     SharedPreferences signPrefs = await SharedPreferences.getInstance();
-    password = signPrefs.getString('password') ?? ''; // Provide a default value if null
+    password = signPrefs.getString('password') ??
+        ''; // Provide a default value if null
     return password;
   }
 
@@ -168,195 +197,222 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: ui.val(0),
       body: _user == null
           ? SafeArea(
-        child: Form(
-          child: Container(
-            margin: EdgeInsets.symmetric(
-              horizontal: 30,
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AnimatedTextKit(
-                  animatedTexts: [
-                    TypewriterAnimatedText(
-                      'Hello Again!',
-                      textAlign: TextAlign.center,
-                      textStyle: GoogleFonts.lato(
-                        textStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 40,
-                          color: ui.val(4),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                Text(
-                  'Welcome back, you\'ve been missed',
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.lato(
-                    textStyle: TextStyle(
-                      fontSize: 20,
-                      color: ui.val(4),
-                    ),
+              child: Form(
+                child: Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: 30,
                   ),
-                ),
-                SizedBox(
-                  height: 50,
-                ),
-                PlainTextField(
-                  hintText: 'Enter Email',
-                  onChange: (text) {
-                    email = text;
-                  },
-                  labelText: 'Email',
-                  controller: _usernameTextController,
-                  errorText: loginFailedMessage.isNotEmpty ? loginFailedMessage : null, // Pass error message
-                ),
-                SizedBox(
-                  height: 25,
-                ),
-                PasswordTextField(
-                  hintText: 'Enter Password',
-                  onChange: (text) {
-                    password = text;
-                  },
-                  controller: _passwordTextController,
-                  errorText: loginFailedMessage.isNotEmpty ? loginFailedMessage : null, // Pass error message
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 5, right: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      GestureDetector(
-                        child: Text(
-                          'Create new Account',
-                          textAlign: TextAlign.end,
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: ui.val(4).withOpacity(0.5),
+                      AnimatedTextKit(
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            'Hello Again!',
+                            textAlign: TextAlign.center,
+                            textStyle: GoogleFonts.lato(
+                              textStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 40,
+                                color: ui.val(4),
+                              ),
                             ),
                           ),
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      CreateNewAccountScreen()));
-                        },
+                        ],
                       ),
-                      GestureDetector(
-                        child: Text(
-                          'Forgot Password',
-                          textAlign: TextAlign.end,
-                          style: GoogleFonts.lato(
-                            textStyle: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15,
-                              color: ui.val(4).withOpacity(0.3),
-                            ),
+                      SizedBox(
+                        height: 15,
+                      ),
+                      Text(
+                        'Welcome back, you\'ve been missed',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.lato(
+                          textStyle: TextStyle(
+                            fontSize: 20,
+                            color: ui.val(4),
                           ),
                         ),
-                        onTap: () {
-                          showModalBottomSheet(
-                              context: context,
-                              builder: buildBottomSheet);
+                      ),
+                      SizedBox(
+                        height: 50,
+                      ),
+                      PlainTextField(
+                        hintText: 'Enter Email',
+                        onChange: (text) {
+                          email = text;
                         },
+                        labelText: 'Email',
+                        controller: _usernameTextController,
+                        errorText: loginFailedMessage.isNotEmpty
+                            ? loginFailedMessage
+                            : null, // Pass error message
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      PasswordTextField(
+                        error: loginFailedMessage.isNotEmpty ? true : false,
+                        hintText: 'Enter Password',
+                        onChange: (text) {
+                          password = text;
+                        },
+                        controller: _passwordTextController,
+                        errorText: null,
+                      ),
+                      SizedBox(
+                        height: 20,
+                        child: Padding(
+                          padding: EdgeInsets.only(left: 5),
+                          child: Text(
+                            loginFailedMessage.isNotEmpty
+                                ? loginFailedMessage
+                                : "",
+                            style:
+                                TextStyle(color: Colors.red.withOpacity(0.7)),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            GestureDetector(
+                              child: Text(
+                                'Create new Account',
+                                textAlign: TextAlign.end,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: ui.val(4).withOpacity(0.5),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            CreateNewAccountScreen()));
+                              },
+                            ),
+                            GestureDetector(
+                              child: Text(
+                                'Forgot Password',
+                                textAlign: TextAlign.end,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: ui.val(4).withOpacity(0.3),
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: buildBottomSheet);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      LargeButton(
+                        onPressed: () async {
+                          setState(() {
+                            _isLoadingSignIn = true;
+                          });
+                          try {
+                            final user = await _auth.signInWithEmailAndPassword(
+                                email: email, password: password);
+                            if (user != null) {
+                              getRestaurants();
+                              Navigator.pushNamed(context, MainNavigator.id,
+                                  arguments: HomeScreenArguments(
+                                    user: User1(id: 1, firstName: "Sufiyaan"),
+                                    restaurants: restaurants,
+                                  ));
+                            }
+                          } catch (e) {
+                            print(e);
+                            setState(() {
+                              loginFailedMessage =
+                                  'Email or password incorrect'; // Set error message
+                            });
+                          } finally {
+                            setState(() {
+                              _isLoadingSignIn = false;
+                            });
+                          }
+                        },
+                        color: ui.val(10),
+                        verticalPadding: 15,
+                        buttonChild: _isLoadingSignIn
+                            ? SizedBox(
+                                height: 23,
+                                width: 23,
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Colors.white),
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : Text(
+                                'Sign In',
+                                textAlign: TextAlign.center,
+                                style: GoogleFonts.lato(
+                                  textStyle: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20,
+                                    color: ui.val(1),
+                                  ),
+                                ),
+                              ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      LargeButton(
+                        color: ui.val(1).withOpacity(0.3),
+                        verticalPadding: 10,
+                        onPressed: () {
+                          setState(() {
+                            _isLoadingGoogle = true;
+                          });
+                          _handleGoogleSignIn();
+                        },
+                        buttonChild: _isLoadingGoogle
+                            ? SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: CircularProgressIndicator(
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                        Colors.white),
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              )
+                            : Image.asset(
+                                'images/google.png',
+                                height: 40,
+                                color: ui.val(4).withOpacity(0.5),
+                              ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
-                LargeButton(
-                  onPressed: () async {
-                    setState(() {
-                      _isLoadingSignIn = true;
-                    });
-                    try {
-                      final user = await _auth.signInWithEmailAndPassword(
-                          email: email, password: password);
-                      if (user != null) {
-                        getRestaurants();
-                        Navigator.pushNamed(context, MainNavigator.id,
-                            arguments: HomeScreenArguments(
-                              user: User1(id: 1, firstName: "Sufiyaan"),
-                              restaurants: restaurants,
-                            ));
-                      }
-                    } catch (e) {
-                      print(e);
-                      setState(() {
-                        loginFailedMessage = 'Email or password incorrect'; // Set error message
-                      });
-                    } finally {
-                      setState(() {
-                        _isLoadingSignIn = false;
-                      });
-                    }
-                  },
-                  color: ui.val(10),
-                  verticalPadding: 15,
-                  buttonChild: _isLoadingSignIn
-                      ? CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(Colors.white),
-                  )
-                      : Text(
-                    'Sign In',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.lato(
-                      textStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: ui.val(1),
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                LargeButton(
-                  color: ui.val(1).withOpacity(0.3),
-                  verticalPadding: 10,
-                  onPressed: () {
-                    setState(() {
-                      _isLoadingGoogle = true;
-                    });
-                    _handleGoogleSignIn();
-                  },
-                  buttonChild: _isLoadingGoogle
-                      ? CircularProgressIndicator(
-                    valueColor:
-                    AlwaysStoppedAnimation<Color>(Colors.white),
-                  )
-                      : Image.asset(
-                    'images/google.png',
-                    height: 40,
-                    color: ui.val(4).withOpacity(0.5),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      )
+              ),
+            )
           : h(),
     );
   }
@@ -364,16 +420,16 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget h() {
     return Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("${_user?.uid}"),
-            MaterialButton(
-                child: Text("Sign Out"),
-                onPressed: () {
-                  _auth.signOut();
-                })
-          ],
-        ));
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text("${_user?.uid}"),
+        MaterialButton(
+            child: Text("Sign Out"),
+            onPressed: () {
+              _auth.signOut();
+            })
+      ],
+    ));
   }
 
   void _handleGoogleSignIn() {
