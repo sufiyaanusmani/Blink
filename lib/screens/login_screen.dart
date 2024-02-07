@@ -51,7 +51,7 @@ class _PasswordTextFieldState extends State<PasswordTextField> {
           vertical: 10,
         ),
         decoration: BoxDecoration(
-          color: ui.val(2),
+          color: ui.val(1).withOpacity(0.5),
           borderRadius: BorderRadius.circular(15),
           border: Border.all(
               width: 0.5,
