@@ -89,7 +89,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   void initState() {
     // getProducts();
     getCategories();
-    // bloc = SliverScrollController();
 
     _controller =
         ScrollController(initialScrollOffset: widget.screenHeight * .3);
@@ -104,68 +103,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   @override
   void dispose() {
     _controller.dispose();
-
-    // bloc.init();
-
     super.dispose();
   }
 
-  List<Product2> dummyProducts = [
-    Product2(
-      name: "Product 1",
-      description: "Description for Product 1",
-      price: "19.99",
-      image: 'images/mac.jpg',
-    ),
-    Product2(
-      name: "Product 2",
-      description: "Description for Product 2",
-      price: "29.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 3",
-      description: "Description for Product 3",
-      price: "15.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 1",
-      description: "Description for Product 1",
-      price: "19.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 2",
-      description: "Description for Product 2",
-      price: "29.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 3",
-      description: "Description for Product 3",
-      price: "15.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 1",
-      description: "Description for Product 1",
-      price: "19.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 2",
-      description: "Description for Product 2",
-      price: "29.99",
-      image: "images/mac.jpg",
-    ),
-    Product2(
-      name: "Product 3",
-      description: "Description for Product 3",
-      price: "15.99",
-      image: "images/mac.jpg",
-    ),
-  ];
 
   @override
   Widget build(BuildContext context) {

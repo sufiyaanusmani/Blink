@@ -85,7 +85,7 @@ class Mysql {
     conn.close();
   }
 
-  void incrementViewCount(int restaurantID) async {
+  void incrementViewCount(String restaurantID) async {
     var conn = await getConnection();
     await conn.connect();
     await conn.transactional((conn) async {

@@ -44,54 +44,68 @@ class RestaurantCard extends StatelessWidget {
             const SizedBox(height: 15),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        restaurant.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 25,
-                          color: Colors.white,
+                  // const SizedBox(height: 10),
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          restaurant.name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 25,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      const Row(
-                        children: [
-                          Icon(Icons.star_border_rounded,
-                              color: Colors.blueGrey, size: 20),
-                          Text(
-                            '4.3 (5.6k)',
-                            style: TextStyle(color: Colors.grey, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ],
+                        Text(
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          restaurant.description,
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        restaurant.ownerName,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                      const Row(
-                        children: [
-                          Icon(Icons.access_time,
-                              color: Colors.blueGrey, size: 17),
-                          Text(
-                            ' 60 min',
-                            style: TextStyle(color: Colors.grey, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ],
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.star_border_rounded,
+                                color: Colors.blueGrey, size: 20),
+                            Text(
+                              "${restaurant.rating} (${restaurant.totalRatings})",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 20),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.access_time,
+                                color: Colors.blueGrey, size: 17),
+                            Text(
+                              ' ${restaurant.estimatedTime}',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                  // const SizedBox(height: 10),
+                  // const SizedBox(height: 10),
                 ],
               ),
             ),
@@ -101,7 +115,8 @@ class RestaurantCard extends StatelessWidget {
       ),
       onTap: () {
         var db = Mysql();
-        db.incrementViewCount(1);
+        print(restaurant.restaurantID);
+        db.incrementViewCount(restaurant.restaurantID);
         Navigator.push(
           context,
           PageRouteBuilder(

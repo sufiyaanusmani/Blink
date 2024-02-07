@@ -144,7 +144,11 @@ class _LoginScreenState extends State<LoginScreen> {
       restaurants.add(Restaurant(
           restaurantID: "1",
           name: row.assoc()['name']!,
-          ownerName: row.assoc()['owner_name']!));
+          ownerName: row.assoc()['owner_name']!,
+          rating: "5",
+          totalRatings: "69",
+          description: "hello",
+          estimatedTime: "420 mins"));
     }
   }
 

@@ -18,7 +18,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: ui.val(0),
+      statusBarColor: Color.fromARGB(255, 15, 15, 15), // 0
     ));
     return SafeArea(
       child: DefaultTabController(

@@ -265,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            Divider(),
+            Divider(color: ui.val(1)),
             SizedBox(height: 20),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -566,185 +566,185 @@ class _OrderNotificationState extends State<OrderNotification> {
     ));
     return AnimatedContainer(
       duration: Duration(milliseconds: 150),
-      height: show ? 400 : 0,
-      decoration: BoxDecoration(
-          color: ui.val(2),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
-      child: !show
-          ? SizedBox(width: 0)
-          : AnimatedContainer(
-              duration: Duration(milliseconds: 100),
-              // padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+      // height: show ? 400 : 0,
+      // decoration: BoxDecoration(
+      //     color: ui.val(2),
+      //     borderRadius: BorderRadius.all(Radius.circular(20))),
+      // child: !show
+      //     ? SizedBox(width: 0)
+      //     : AnimatedContainer(
+      //         duration: Duration(milliseconds: 100),
+      //         // padding: EdgeInsets.only(left: 10, right: 10, top: 5),
 
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10, top: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Order",
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: ui.val(4),
-                          ),
-                        ),
-                        Text(
-                          "#$orderID",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.local_fire_department_sharp,
-                              color: Colors.red,
-                            ),
-                            SizedBox(width: 4),
-                            Text(
-                              "Status",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: ui.val(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          status,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.schedule,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "Expected",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: ui.val(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          time,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.restaurant,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "Restaurant",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: ui.val(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          restaurantName,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: foodItems.length,
-                      itemBuilder: (context, index) {
-                        final foodItem = foodItems[index];
-                        return Container(
-                          margin: EdgeInsets.only(top: 2),
-                          // padding: EdgeInsets.all(5),
-                          child: Column(
-                            children: [
-                              if (index == 0) Divider(color: Colors.black87),
-                              OrderStatusProductRow(foodItem: foodItem),
-                              Divider(color: Colors.black87),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Total',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                        Text(
-                          'Rs. $price',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
-            ),
+      //         child: Column(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: [
+      //             SizedBox(height: 10),
+      //             Container(
+      //               padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+      //               child: Row(
+      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                 children: [
+      //                   Text(
+      //                     "Order",
+      //                     style: TextStyle(
+      //                       fontSize: 30,
+      //                       color: ui.val(4),
+      //                     ),
+      //                   ),
+      //                   Text(
+      //                     "#$orderID",
+      //                     style: TextStyle(
+      //                       fontSize: 20,
+      //                       color: Colors.white,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             Container(
+      //               padding: EdgeInsets.only(left: 10, right: 10),
+      //               child: Row(
+      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                 children: [
+      //                   Row(
+      //                     children: [
+      //                       Icon(
+      //                         Icons.local_fire_department_sharp,
+      //                         color: Colors.red,
+      //                       ),
+      //                       SizedBox(width: 4),
+      //                       Text(
+      //                         "Status",
+      //                         style: TextStyle(
+      //                           fontSize: 20,
+      //                           color: ui.val(4),
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                   Text(
+      //                     status,
+      //                     style: TextStyle(
+      //                       fontSize: 20,
+      //                       color: ui.val(4),
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             SizedBox(height: 3),
+      //             Container(
+      //               padding: EdgeInsets.only(left: 10, right: 10),
+      //               child: Row(
+      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                 children: [
+      //                   Row(
+      //                     children: [
+      //                       Icon(
+      //                         Icons.schedule,
+      //                         color: Colors.blue,
+      //                       ),
+      //                       SizedBox(width: 5),
+      //                       Text(
+      //                         "Expected",
+      //                         style: TextStyle(
+      //                           fontSize: 20,
+      //                           color: ui.val(4),
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                   Text(
+      //                     time,
+      //                     style: TextStyle(
+      //                       fontSize: 20,
+      //                       color: ui.val(4),
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             SizedBox(height: 3),
+      //             Container(
+      //               padding: EdgeInsets.only(left: 10, right: 10),
+      //               child: Row(
+      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                 children: [
+      //                   Row(
+      //                     children: [
+      //                       Icon(
+      //                         Icons.restaurant,
+      //                         color: Colors.grey,
+      //                       ),
+      //                       SizedBox(width: 5),
+      //                       Text(
+      //                         "Restaurant",
+      //                         style: TextStyle(
+      //                           fontSize: 20,
+      //                           color: ui.val(4),
+      //                         ),
+      //                       ),
+      //                     ],
+      //                   ),
+      //                   Text(
+      //                     restaurantName,
+      //                     style: TextStyle(
+      //                       fontSize: 20,
+      //                       color: ui.val(4),
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             SizedBox(height: 10),
+      //             Expanded(
+      //               child: ListView.builder(
+      //                 itemCount: foodItems.length,
+      //                 itemBuilder: (context, index) {
+      //                   final foodItem = foodItems[index];
+      //                   return Container(
+      //                     margin: EdgeInsets.only(top: 2),
+      //                     // padding: EdgeInsets.all(5),
+      //                     child: Column(
+      //                       children: [
+      //                         if (index == 0) Divider(color: Colors.black87),
+      //                         OrderStatusProductRow(foodItem: foodItem),
+      //                         Divider(color: Colors.black87),
+      //                       ],
+      //                     ),
+      //                   );
+      //                 },
+      //               ),
+      //             ),
+      //             Container(
+      //               padding: EdgeInsets.only(left: 10, right: 10),
+      //               child: Row(
+      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //                 children: [
+      //                   Text(
+      //                     'Total',
+      //                     style: TextStyle(
+      //                       fontSize: 20,
+      //                       color: ui.val(4),
+      //                     ),
+      //                   ),
+      //                   Text(
+      //                     'Rs. $price',
+      //                     style: TextStyle(
+      //                       fontSize: 20,
+      //                       color: ui.val(4),
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             SizedBox(
+      //               height: 20,
+      //             ),
+      //           ],
+      //         ),
+      //       ),
     );
   }
 }
