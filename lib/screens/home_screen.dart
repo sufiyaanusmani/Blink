@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
       cards.add(SmallRestaurantCard(
           imageID: randomImageName,
           itemName: product.productName,
-          productID: product.productID,
+          productID: product.productID.toString(),
           restaurantName: product.restaurantName,
           restaurantID: product.restaurantID,
           liked: product.liked,

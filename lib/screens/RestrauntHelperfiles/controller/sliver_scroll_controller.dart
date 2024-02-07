@@ -39,13 +39,13 @@ class SliverScrollController {
     for (Product item in items1) {
       bool found = false;
       for (int i = 0; i < temp.length; i++) {
-        if (item.categoryID == temp[i].id) {
+        if (item.categoryName == temp[i].name) {
           temp[i].products.add(item);
           found = true;
         }
       }
       if (found == false) {
-        temp.add(Category(id: item.categoryID, name: item.categoryName));
+        temp.add(Category(name: item.categoryName));
         temp[temp.length - 1].products.add(item);
       }
 

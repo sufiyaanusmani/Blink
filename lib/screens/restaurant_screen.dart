@@ -40,7 +40,10 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
   late List<Category> categoryList = [];
 
   Future<List<Product>> getProducts() async {
-    List<Product> items = await Product.getProducts(1);
+    List<Product> items = await Product.getProducts(
+      widget.restaurant.restaurantID,
+      "NySCB2RkjLUFzz109SwWwjOvRLt2",     // sufiyaan pass here actual customer ID please
+    );
     setState(() {
       itemList = items;
     });
@@ -105,7 +108,6 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     _controller.dispose();
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {

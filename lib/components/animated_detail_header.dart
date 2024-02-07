@@ -93,6 +93,13 @@ class AnimatedDetailHeader extends StatelessWidget {
                           restaurant.name,
                           style: TextStyle(
                             color: Colors.white,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black,
+                                blurRadius: 5,
+                                offset: Offset(1, 1),
+                              ),
+                            ],
                             fontSize: lerpDouble(30, 40, 2 * topPercent),
                             fontWeight: FontWeight.bold,
                             fontFamily: 'britanic',
@@ -107,11 +114,21 @@ class AnimatedDetailHeader extends StatelessWidget {
                       opacity: bottomPercent < 1 ? 0 : 1,
                       child: Opacity(
                         opacity: topPercent,
-                        child: Text(
-                          restaurant.ownerName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width - 25,
+                          child: Text(
+                            restaurant.description,
+                            style: TextStyle(
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black,
+                                  blurRadius: 20,
+                                  offset: Offset(1, 1),
+                                ),
+                              ],
+                              color: Colors.white,
+                              fontSize: 15,
+                            ),
                           ),
                         ),
                       ),
@@ -125,8 +142,10 @@ class AnimatedDetailHeader extends StatelessWidget {
         Positioned.fill(
           top: null,
           bottom: -140 * (1 - topPercent),
-          child: const TranslateAnimation(
-            child: MenuInfoContainer(),
+          child: TranslateAnimation(
+            child: MenuInfoContainer(
+              restaurant: restaurant,
+            ),
           ),
         ),
         Align(
@@ -154,8 +173,11 @@ class AnimatedDetailHeader extends StatelessWidget {
 }
 
 class MenuInfoContainer extends StatelessWidget {
+  final Restaurant restaurant;
+
   const MenuInfoContainer({
     super.key,
+    required this.restaurant,
   });
 
   @override
@@ -179,7 +201,7 @@ class MenuInfoContainer extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.only(top: 3, left: 3),
                   child: Text(
-                    "4.3 ",
+                    " ${restaurant.rating} ",
                     style: TextStyle(
                       color: ui.val(4),
                       fontSize: 20,
@@ -189,7 +211,7 @@ class MenuInfoContainer extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.only(top: 3),
                   child: Text(
-                    "(4k+)",
+                    "(${restaurant.totalRatings})",
                     style: TextStyle(
                       color: ui.val(4),
                       fontSize: 15,
@@ -205,7 +227,7 @@ class MenuInfoContainer extends StatelessWidget {
                 children: [
                   Icon(Icons.access_time_rounded, color: Colors.grey, size: 17),
                   Text(
-                    " 40-50 min    100rs minimum",
+                    " ${restaurant.estimatedTime}    100rs minimum",
                     style: TextStyle(
                       color: ui.val(4),
                       fontSize: 17,

@@ -162,7 +162,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                       }
                                       if (Cart.cart.isEmpty) {
                                         Cart.cart = [];
-                                        Cart.restaurantID = -1;
+                                        Cart.restaurantID = "-1";
                                       }
                                       totalPrice = Cart.getTotalPrice();
                                     });
@@ -415,11 +415,11 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       } else {
                         int orderID = 0;
                         if (HomePage.preOrder == false) {
-                          orderID = await db.placeOrder(
-                              Cart.customerID, Cart.restaurantID, totalPrice);
+                          // orderID = await db.placeOrder(
+                          //     Cart.customerID, Cart.restaurantID, totalPrice);
                         } else {
-                          orderID = await db.placePreOrder(
-                              Cart.customerID, Cart.restaurantID, totalPrice);
+                          // orderID = await db.placePreOrder(
+                          //     Cart.customerID, Cart.restaurantID, totalPrice);
                           HomePage.preOrder = false;
                         }
                         Iterable<ResultSetRow> rows = await db.getResults(

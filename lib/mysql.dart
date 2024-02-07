@@ -76,7 +76,7 @@ class Mysql {
     return orderID;
   }
 
-  void addOrderDetail(int orderID, int productID, int quantity) async {
+  void addOrderDetail(int orderID, String productID, int quantity) async {
     var conn = await getConnection();
     await conn.connect();
     var stmt = await conn.prepare(
@@ -142,7 +142,7 @@ class Mysql {
     return customerID;
   }
 
-  void likeProduct(int customerID, int productID) async {
+  void likeProduct(String customerID, String productID) async {
     var conn = await getConnection();
     await conn.connect();
     var stmt = await conn.prepare(
@@ -152,7 +152,7 @@ class Mysql {
     conn.close();
   }
 
-  void dislikeProduct(int customerID, int productID) async {
+  void dislikeProduct(String customerID, String productID) async {
     var conn = await getConnection();
     await conn.connect();
     var stmt = await conn

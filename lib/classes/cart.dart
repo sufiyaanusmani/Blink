@@ -3,7 +3,7 @@ import 'package:food_delivery/classes/product.dart';
 
 class Cart {
   static List<CartProduct> cart = [];
-  static int restaurantID = -1;
+  static String restaurantID = "-1";
   static int customerID = -1;
 
   static void addNewProduct(Product product) {
