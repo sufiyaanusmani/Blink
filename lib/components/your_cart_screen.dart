@@ -375,7 +375,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
 
             // bottom Slider
             AbsorbPointer(
-              absorbing: Cart.cart.isNotEmpty ? false : true,
+              absorbing: (Cart.cart.isNotEmpty) ? false : true,
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 5.0),
                 //https://pub.dev/packages/slide_to_act_reborn
@@ -404,68 +404,97 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       ).show(context);
                     } else {
                       var db = Mysql();
-                      if (await db.alreadyOrdered(Cart.customerID)) {
-                        AnimatedSnackBar.material(
-                          'You can only place one order at a time',
-                          borderRadius: BorderRadius.circular(10),
-                          duration: const Duration(seconds: 4),
-                          type: AnimatedSnackBarType.error,
-                          mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-                        ).show(context);
+                      if (await db.alreadyOrdered()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red.shade400,
+                            duration: Duration(seconds: 2),
+                            content: Text("Order Already in Queue!",
+                                style: TextStyle(color: Colors.white)),
+                            action: SnackBarAction(
+                              label: 'Close',
+                              textColor: Colors.white,
+                              onPressed: () {
+                                // Code to execute.
+                              },
+                            ),
+                          ),
+                        );
                       } else {
-                        int orderID = 0;
+                        String orderID = "";
                         if (HomePage.preOrder == false) {
-                          // orderID = await db.placeOrder(
-                          //     Cart.customerID, Cart.restaurantID, totalPrice);
-                        } else {
-                          // orderID = await db.placePreOrder(
-                          //     Cart.customerID, Cart.restaurantID, totalPrice);
+                          orderID = await db.placeOrder(
+                              itemList,
+                              Cart.restaurantID,
+                              Cart.restaurantName,
+                              totalPrice);
+                        }
+                        /*Pre-order */
+                        // else {
+                        //   orderID = await db.placePreOrder(
+                        //       Cart.customerID, Cart.restaurantID, totalPrice);
+                        //   HomePage.preOrder = false;
+                        // }
+
+                        // Iterable<ResultSetRow> rows = await db.getResults(
+                        //     'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
+                        // int price = 0;
+                        // String restaurantName = '';
+                        // String status = '';
+                        // if (rows.length == 1) {
+                        // for (var row in rows) {
+                        //   restaurantName = row.assoc()['name']!;
+                        //   status = row.assoc()['status']!;
+                        //   price = int.parse(row.assoc()['price']!);
+                        // }
+                        // Order order = Order(
+                        //     orderID: orderID,
+                        //     restaurantName: restaurantName,
+                        //     status: status,
+                        //     price: price);
+                        // for (CartProduct product in Cart.cart) {
+                        //   db.addOrderDetail(
+                        //       orderID, product.product.id, product.quantity);
+                        // }
+                        setState(() {
+                          Cart.cart = [];
+                          itemList = [];
+                          totalPrice = 0;
+                          HomePage.preOrderHour = 8;
+                          HomePage.preOrderMinute = 0;
                           HomePage.preOrder = false;
-                        }
-                        Iterable<ResultSetRow> rows = await db.getResults(
-                            'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
-                        int price = 0;
-                        String restaurantName = '';
-                        String status = '';
-                        if (rows.length == 1) {
-                          for (var row in rows) {
-                            restaurantName = row.assoc()['name']!;
-                            status = row.assoc()['status']!;
-                            price = int.parse(row.assoc()['price']!);
-                          }
-                          Order order = Order(
-                              orderID: orderID,
-                              restaurantName: restaurantName,
-                              status: status,
-                              price: price);
-                          for (CartProduct product in Cart.cart) {
-                            db.addOrderDetail(
-                                orderID, product.product.id, product.quantity);
-                          }
-                          setState(() {
-                            Cart.cart = [];
-                            itemList = [];
-                            totalPrice = 0;
-                            HomePage.preOrderHour = 8;
-                            HomePage.preOrderMinute = 0;
-                            HomePage.preOrder = false;
-                            HomePage.preOrderText = "08:00 am";
-                          });
-                          EmailSender email = EmailSender();
-                          email.sendEmail(orderID);
+                          HomePage.preOrderText = "08:00 am";
+                        });
+                        // EmailSender email = EmailSender();
+                        // email.sendEmail(orderID);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.blue.shade800,
+                            duration: Duration(seconds: 2),
+                            content: Text("Order placed ${orderID}",
+                                style: TextStyle(color: Colors.white)),
+                            action: SnackBarAction(
+                              label: 'Close',
+                              textColor: Colors.white,
+                              onPressed: () {
+                                // Code to execute.
+                              },
+                            ),
+                          ),
+                        );
 
-                          _showPopup(context, order);
+                        // _showPopup(context, order);
 
-                          // Navigator.push(
-                          //   context,
-                          //   PageRouteBuilder(
-                          //     pageBuilder: (_, animation, __) => FadeTransition(
-                          //       opacity: animation,
-                          //       child: OrderStatusScreen(order: order),
-                          //     ),
-                          //   ),
-                          // );
-                        }
+                        // Navigator.push(
+                        //   context,
+                        //   PageRouteBuilder(
+                        //     pageBuilder: (_, animation, __) => FadeTransition(
+                        //       opacity: animation,
+                        //       child: OrderStatusScreen(order: order),
+                        //     ),
+                        //   ),
+                        // );
+                        // }
                       }
                     }
                   },

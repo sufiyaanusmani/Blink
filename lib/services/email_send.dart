@@ -7,7 +7,7 @@ class EmailSender {
   final String email = "suffiyaanusmani@gmail.com";
   final String password = "ksfuybxbaqqzgqxd";
 
-  void sendEmail(int orderID) async {
+  void sendEmail(String orderID) async {
     var db = Mysql();
     Iterable<ResultSetRow> rows = await db.getResults(
         ' select O.order_id, O.price, C.first_name, C.last_name, R.name, C.email from Orders O INNER JOIN Customer C ON (O.customer_id=C.customer_id) INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) WHERE O.order_id=$orderID;');
@@ -29,7 +29,7 @@ class EmailSender {
     }
   }
 
-  void sendMail(int orderID, String firstName, String lastName, int price,
+  void sendMail(String orderID, String firstName, String lastName, int price,
       String restaurantName, String recipientEmail) async {
     final smtpServer = gmail(email, password);
     final message = Message()

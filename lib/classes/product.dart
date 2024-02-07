@@ -1,4 +1,5 @@
 import 'package:food_delivery/classes/cart.dart';
+import 'package:food_delivery/classes/restaurant.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,6 +9,7 @@ class Product {
   String id;
   String name;
   String restaurantID;
+  String restaurantName;
   String categoryName;
   int price;
   bool liked;
@@ -18,15 +20,16 @@ class Product {
       required this.restaurantID,
       required this.categoryName,
       required this.price,
+       required this.restaurantName,
       required this.liked});
 
-  static Future<List<Product>> getProducts(String restaurantID) async {
+  static Future<List<Product>> getProducts(Restaurant restaurant) async {
     List<Product> products = [];
 
     try {
       QuerySnapshot foodItemsSnapshot = await FirebaseFirestore.instance
           .collection('restaurants')
-          .doc(restaurantID)
+          .doc(restaurant.restaurantID)
           .collection('foodItems')
           .get();
 
@@ -36,7 +39,8 @@ class Product {
         products.add(Product(
           id: foodItem.id,
           name: foodItemData['Prod Name'],
-          restaurantID: restaurantID,
+          restaurantID: restaurant.restaurantID,
+          restaurantName: restaurant.name,
           categoryName: foodItemData['Category Name'],
           price: foodItemData['Price'],
           liked: false,
@@ -86,17 +90,17 @@ class Product {
     Iterable<ResultSetRow> rows = await db.getResults(
         'SELECT P.product_id, P.name, P.restaurant_id, P.category_id, P.price, C.name AS category_name FROM Product P INNER JOIN Category C ON P.category_id = C.category_id;');
 
-    for (var row in rows) {
-      // firstName = row.assoc()['first_name']!;
-      Product product = Product(
-          id: (row.assoc()['product_id']!),
-          name: row.assoc()['name']!,
-          restaurantID: (row.assoc()['restaurant_id']!),
-          categoryName: row.assoc()['category_name']!,
-          price: int.parse(row.assoc()['price']!),
-          liked: false);
-      products.add(product);
-    }
+    // for (var row in rows) {
+    //   // firstName = row.assoc()['first_name']!;
+    //   Product product = Product(
+    //       id: (row.assoc()['product_id']!),
+    //       name: row.assoc()['name']!,
+    //       restaurantID: (row.assoc()['restaurant_id']!),
+    //       categoryName: row.assoc()['category_name']!,
+    //       price: int.parse(row.assoc()['price']!),
+    //       liked: false);
+    //   products.add(product);
+    // }
 
     rows = await db.getResults(
         'SELECT product_id FROM Favourites WHERE customer_id=${Cart.customerID}');

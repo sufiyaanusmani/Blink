@@ -19,7 +19,7 @@ void snackbar(String content, BuildContext context, bool error) {
     SnackBar(
       backgroundColor:
           error == true ? Colors.red.shade400 : Colors.blue.shade800,
-      duration: Duration(seconds: 2),
+      duration: Duration(seconds: 1),
       content: Text(content, style: TextStyle(color: Colors.white)),
       action: SnackBarAction(
         label: 'Close',
@@ -90,6 +90,7 @@ class _SavedMealsScreenState extends State<SavedMealsScreen> {
             id: productData['Product ID'],
             name: productData['Prod Name'],
             restaurantID: productData['Restaurant ID'],
+            restaurantName: "Ali Ali Bakery",
             categoryName: productData['Category Name'],
             price: productData['Price'],
             liked: true,
@@ -116,7 +117,7 @@ class _SavedMealsScreenState extends State<SavedMealsScreen> {
         color: Colors.white60,
         strokeWidth: 2,
       ));
-    else
+    else {
       return Scaffold(
         backgroundColor: ui.val(0),
         body: ListView.builder(
@@ -174,7 +175,7 @@ class _SavedMealsScreenState extends State<SavedMealsScreen> {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      "this is a description",
+                                      product.restaurantName,
                                       maxLines: 4,
                                       style: TextStyle(
                                         fontWeight: FontWeight.w300,
@@ -274,6 +275,7 @@ class _SavedMealsScreenState extends State<SavedMealsScreen> {
           },
         ),
       );
+    }
   }
 
   @override

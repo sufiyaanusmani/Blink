@@ -48,7 +48,7 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                           Tab(
                             child: Text(
-                              'Recent',
+                              'Liked',
                               style: TextStyle(),
                             ),
                           ),

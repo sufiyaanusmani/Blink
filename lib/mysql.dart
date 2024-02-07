@@ -1,3 +1,4 @@
+import 'package:food_delivery/classes/cart_product.dart';
 import 'package:food_delivery/classes/product.dart';
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:mysql_client/mysql_client.dart';
@@ -32,51 +33,76 @@ class Mysql {
     return results.rows;
   }
 
-  Future<int> placeOrder(int customerID, int restaurantID, int price) async {
-    var conn = await getConnection();
-    await conn.connect();
-    await conn.transactional((conn) async {
-      await conn.execute(
-          "INSERT INTO Orders (customer_id, restaurant_id, price) VALUES ($customerID, $restaurantID, $price);");
-    });
+  Future<String> placeOrder(List<CartProduct> foodItems, String restaurantID,
+      String restaurantName, int price) async {
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
 
-    // var stmt = await conn.prepare(
-    //     'START TRANSACTION;COMMIT;');
-    // await stmt.execute([customerID, restaurantID, price]);
-    // await stmt.deallocate();
-    conn.close();
-    var db = Mysql();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=$customerID ORDER BY placed_at DESC LIMIT 1;');
-    int orderID = 0;
-    if (rows.length == 1) {
-      for (var row in rows) {
-        orderID = int.parse(row.assoc()['order_id']!);
-      }
+    try {
+      // Reference to the orders collection
+      CollectionReference orders =
+          FirebaseFirestore.instance.collection('orders');
+
+      // Convert the list of CartProduct objects into a list of maps
+      List<Map<String, dynamic>> foodItemsData = foodItems.map((cartProduct) {
+        return {
+          cartProduct.product.name: {
+            'Price': cartProduct.product.price,
+            'Quantity': cartProduct.quantity,
+          }
+        };
+      }).toList();
+
+      // Create a new document in the orders collection and get its reference
+      DocumentReference newOrderRef = await orders.add({
+        'customerid': uid!,
+        'Food items': foodItemsData,
+        'preorder': {
+          'ispreorder': false,
+          'time': DateTime.now(),
+        },
+        'placedat': DateTime.now(),
+        'price': price,
+        'restaurant': {
+          'name': restaurantName,
+          'restaurantid': restaurantID,
+        },
+        'status': 'pending',
+      });
+
+      print('Order added successfully');
+      DocumentReference customerDocRef =
+          FirebaseFirestore.instance.collection('customers').doc(uid);
+      await customerDocRef.update({'Placed Order': true});
+
+      // Return the ID of the newly added order document
+      return newOrderRef.id;
+    } catch (error) {
+      print('Error adding order: $error');
+      // Handle the error as needed
+      return ''; // Return an empty string if there's an error
     }
-    return orderID;
   }
 
-  Future<int> placePreOrder(int customerID, int restaurantID, int price) async {
-    int orderID = await placeOrder(customerID, restaurantID, price);
-    var conn = await getConnection();
-    await conn.connect();
-    var stmt = await conn.prepare(
-        'INSERT INTO Preschedule (order_id, time) VALUES (?, CONCAT(CONCAT(CURRENT_DATE, " "), ?))');
-    int hour = HomePage.preOrderHour;
-    if (HomePage.preOrderText.toLowerCase().contains("pm") &&
-        HomePage.preOrderHour != 12) {
-      hour = hour + 12;
-    } else if (HomePage.preOrderText.toLowerCase().contains("am") &&
-        HomePage.preOrderHour == 12) {
-      hour = 0;
-    }
-    String time = "$hour:${HomePage.preOrderMinute}";
-    await stmt.execute([orderID, time]);
-    await stmt.deallocate();
-    conn.close();
-    return orderID;
-  }
+  // Future<int> placePreOrder(int customerID, int restaurantID, int price) async {
+  //   int orderID = await placeOrder(customerID, restaurantID, price);
+  //   var conn = await getConnection();
+  //   await conn.connect();
+  //   var stmt = await conn.prepare(
+  //       'INSERT INTO Preschedule (order_id, time) VALUES (?, CONCAT(CONCAT(CURRENT_DATE, " "), ?))');
+  //   int hour = HomePage.preOrderHour;
+  //   if (HomePage.preOrderText.toLowerCase().contains("pm") &&
+  //       HomePage.preOrderHour != 12) {
+  //     hour = hour + 12;
+  //   } else if (HomePage.preOrderText.toLowerCase().contains("am") &&
+  //       HomePage.preOrderHour == 12) {
+  //     hour = 0;
+  //   }
+  //   String time = "$hour:${HomePage.preOrderMinute}";
+  //   await stmt.execute([orderID, time]);
+  //   await stmt.deallocate();
+  //   conn.close();
+  //   return orderID;
+  // }
 
   void addOrderDetail(int orderID, String productID, int quantity) async {
     var conn = await getConnection();
@@ -103,13 +129,30 @@ class Mysql {
     }
   }
 
-  Future<bool> alreadyOrdered(int customerID) async {
-    var db = Mysql();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT * FROM Orders WHERE customer_id=$customerID AND status IN ("pending", "preparing");');
-    if (rows.length == 1) {
-      return true;
+  Future<bool> alreadyOrdered() async {
+    // Step 1: Get the current user's UID
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+
+    if (uid != null) {
+      try {
+        // Step 2: Retrieve the customer document using the UID
+        DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
+            .collection('customers')
+            .doc(uid)
+            .get();
+
+        // Step 3: Access the "Placed Order" field from the customer document
+        bool placedOrder = customerSnapshot.get('Placed Order');
+
+        return placedOrder;
+      } catch (error) {
+        print('Error retrieving customer document: $error');
+        // Handle the error as needed
+        return false;
+      }
     } else {
+      // User is not authenticated
+      print('User is not authenticated.');
       return false;
     }
   }
@@ -169,7 +212,7 @@ class Mysql {
         'Category Name': product.categoryName,
         'Price': product.price,
         'Product ID': product.id,
-        'Prod Name': product.name,        
+        'Prod Name': product.name,
         'Restaurant ID': product.restaurantID
       };
       likedProducts.add(likedProduct);

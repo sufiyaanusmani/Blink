@@ -100,6 +100,7 @@ class SmallRestaurantCard extends StatelessWidget {
           Cart.addNewProduct(Product(
               id: productID,
               name: itemName,
+              restaurantName: restaurantName,
               restaurantID: restaurantID.toString(),
               categoryName: categoryName,
               price: price,
@@ -117,6 +118,7 @@ class SmallRestaurantCard extends StatelessWidget {
                 id: productID,
                 name: itemName,
                 restaurantID: restaurantID.toString(),
+                restaurantName: restaurantName,
                 categoryName: categoryName,
                 price: price,
                 liked: liked));
