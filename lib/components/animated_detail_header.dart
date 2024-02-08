@@ -29,54 +29,49 @@ String getImg(String resName) {
   return image;
 }
 
-class AnimatedDetailHeader extends StatelessWidget {
+class AnimatedDetailHeader extends StatefulWidget {
   const AnimatedDetailHeader({
     Key? key,
     required this.topPercent,
     required this.bottomPercent,
     required this.restaurants,
     required this.resIndex,
+    required this.updateResIndex,
+    required this.textWidgetsNotifier,
     // required this.menu,
   }) : super(key: key);
 
-  // final restraunt menu;
   final double topPercent;
   final double bottomPercent;
   final List<Restaurant> restaurants;
   final int resIndex;
+  final Function(int) updateResIndex;
+  final ValueNotifier<bool> textWidgetsNotifier;
+
+  @override
+  _AnimatedDetailHeaderState createState() => _AnimatedDetailHeaderState();
+}
+
+class _AnimatedDetailHeaderState extends State<AnimatedDetailHeader> {
+  late String image;
+  late String resName;
+
+  @override
+  void initState() {
+    super.initState();
+    resName = widget.restaurants[widget.resIndex].name;
+    image = getImg(resName);
+  }
 
   @override
   Widget build(BuildContext context) {
     final topPadding = MediaQuery.of(context).padding.top;
-    String image = "kfc.jpg";
-    String resName = restaurants[resIndex].name;
-    // resName = resName.toLowerCase();
-    // if (resName.contains("burger")) {
-    //   image = "burger.jpg";
-    // } else if (resName.contains("cafe")) {
-    //   image = "cafe.jpg";
-    // } else if (resName.contains("dhaba")) {
-    //   image = "dhaba.jpg";
-    // } else if (resName.contains("juice")) {
-    //   image = "juice.jpg";
-    // } else if (resName.contains("limca")) {
-    //   image = "limca.jpg";
-    // } else if (resName.contains("pathan")) {
-    //   image = "pathan.jpg";
-    // } else if (resName.contains("pizza")) {
-    //   image = "pizza.jpg";
-    // } else if (resName.contains("shawarma")) {
-    //   image = "shawarma.jpg";
-    // } else {
-    //   image = "kfc.jpg";
-    // }
-    image = getImg(resName);
 
     return Stack(
       fit: StackFit.expand,
       children: [
         Hero(
-          tag: restaurants[resIndex],
+          tag: widget.restaurants[widget.resIndex],
           child: Material(
             color: ui.val(0),
             child: ClipRect(
@@ -84,72 +79,78 @@ class AnimatedDetailHeader extends StatelessWidget {
                 children: [
                   Padding(
                     padding: EdgeInsets.only(
-                      top: (20 + topPadding) * (1 - bottomPercent),
-                      bottom: 160 * (1 - bottomPercent),
+                      top: (20 + topPadding) * (1 - widget.bottomPercent),
+                      bottom: 160 * (1 - widget.bottomPercent),
                     ),
                     child: Transform.scale(
-                      scale: lerpDouble(1, 1.3, bottomPercent)!,
+                      scale: lerpDouble(1, 1.3, widget.bottomPercent)!,
                       child: PlaceImagesPageView(
                         images: "images/$image",
-                        restaurants: restaurants,
-                        resIndex: resIndex,
+                        restaurants: widget.restaurants,
+                        resIndex: widget.resIndex,
+                        callback: widget.updateResIndex,
+                        callbackParent: widget.updateResIndex,
                       ),
                     ),
                   ),
                   Positioned(
-                      top: topPadding,
-                      left: -60 * (1 - bottomPercent),
-                      child: const BackButton(
-                        color: Colors.white,
-                      )),
+                    top: topPadding,
+                    left: -60 * (1 - widget.bottomPercent),
+                    child: const BackButton(
+                      color: Colors.white,
+                    ),
+                  ),
                   Positioned(
-                      top: topPadding,
-                      right: -60 * (1 - bottomPercent),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.shopping_bag_outlined,
+                    top: topPadding,
+                    right: -60 * (1 - widget.bottomPercent),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.shopping_bag_outlined,
+                        color: Colors.white,
+                      ),
+                      color: Colors.white,
+                    ),
+                  ),
+                  Positioned(
+                    top: lerpDouble(-30, 140, widget.topPercent)!
+                        .clamp(topPadding + 10, 140),
+                    left: lerpDouble(60, 20, widget.topPercent)!
+                        .clamp(20.0, 50.0),
+                    right: 20,
+                    child: AnimatedOpacity(
+                      duration: kThemeAnimationDuration,
+                      opacity: widget.bottomPercent < 1 ? 0 : 1,
+                      child: Text(
+                        resName,
+                        style: TextStyle(
                           color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              blurRadius: 5,
+                              offset: Offset(1, 1),
+                            ),
+                          ],
+                          fontSize: lerpDouble(30, 40, 2 * widget.topPercent),
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'britanic',
                         ),
-                        color: Colors.white,
-                      )),
-                  Positioned(
-                      top: lerpDouble(-30, 140, topPercent)!
-                          .clamp(topPadding + 10, 140),
-                      left: lerpDouble(60, 20, topPercent)!.clamp(20.0, 50.0),
-                      right: 20,
-                      child: AnimatedOpacity(
-                        duration: kThemeAnimationDuration,
-                        opacity: bottomPercent < 1 ? 0 : 1,
-                        child: Text(
-                          restaurants[resIndex].name,
-                          style: TextStyle(
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black,
-                                blurRadius: 5,
-                                offset: Offset(1, 1),
-                              ),
-                            ],
-                            fontSize: lerpDouble(30, 40, 2 * topPercent),
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'britanic',
-                          ),
-                        ),
-                      )),
+                      ),
+                    ),
+                  ),
                   Positioned(
                     left: 25,
                     top: 220,
                     child: AnimatedOpacity(
                       duration: kThemeAnimationDuration,
-                      opacity: bottomPercent < 1 ? 0 : 1,
+                      opacity: widget.bottomPercent < 1 ? 0 : 1,
                       child: Opacity(
-                        opacity: topPercent,
+                        opacity: widget.topPercent,
                         child: Container(
                           width: MediaQuery.of(context).size.width - 25,
                           child: Text(
-                            restaurants[resIndex].description,
+                            widget.restaurants[widget.resIndex].description,
                             style: TextStyle(
                               shadows: [
                                 Shadow(
@@ -173,10 +174,10 @@ class AnimatedDetailHeader extends StatelessWidget {
         ),
         Positioned.fill(
           top: null,
-          bottom: -140 * (1 - topPercent),
+          bottom: -140 * (1 - widget.topPercent),
           child: TranslateAnimation(
             child: MenuInfoContainer(
-              restaurant: restaurants[resIndex],
+              restaurant: widget.restaurants[widget.resIndex],
             ),
           ),
         ),
@@ -204,14 +205,276 @@ class AnimatedDetailHeader extends StatelessWidget {
   }
 }
 
-class MenuInfoContainer extends StatelessWidget {
+class AnimatedDetailHeaderShimmer extends StatefulWidget {
+  AnimatedDetailHeaderShimmer({
+    Key? key,
+    required this.topPercent,
+    required this.bottomPercent,
+    required this.restaurants,
+    required this.resIndex,
+    required this.updateResIndex,
+    required this.textWidgetsNotifier,
+  }) : super(key: key);
+
+  final double topPercent;
+  final double bottomPercent;
+  final List<Restaurant> restaurants;
+  int resIndex;
+  final Function(int) updateResIndex;
+  final ValueNotifier<bool> textWidgetsNotifier;
+
+  @override
+  _AnimatedDetailHeaderShimmerState createState() =>
+      _AnimatedDetailHeaderShimmerState();
+}
+
+class _AnimatedDetailHeaderShimmerState
+    extends State<AnimatedDetailHeaderShimmer> {
+  late String image;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize the image
+    image = getImg(widget.restaurants[widget.resIndex].name);
+  }
+
+  void updateResIndexParent(int newIndex) async {
+    widget.resIndex = newIndex;
+    print("new value: $newIndex");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final topPadding = MediaQuery.of(context).padding.top;
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Hero(
+          tag: widget.restaurants[widget.resIndex],
+          child: Material(
+            color: ui.val(0),
+            child: ClipRect(
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: (20 + topPadding) * (1 - widget.bottomPercent),
+                      bottom: 160 * (1 - widget.bottomPercent),
+                    ),
+                    child: Transform.scale(
+                      scale: lerpDouble(1, 1.3, widget.bottomPercent) ?? 1,
+                      child: PlaceImagesPageView(
+                        images: "images/$image",
+                        restaurants: widget.restaurants,
+                        resIndex: widget.resIndex,
+                        callback: widget.updateResIndex,
+                        callbackParent: updateResIndexParent,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: topPadding,
+                    left: -60 * (1 - widget.bottomPercent),
+                    child: const BackButton(
+                      color: Colors.white,
+                    ),
+                  ),
+                  Positioned(
+                    top: topPadding,
+                    right: -60 * (1 - widget.bottomPercent),
+                    child: IconButton(
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.shopping_bag_outlined,
+                        color: Colors.white,
+                      ),
+                      color: Colors.white,
+                    ),
+                  ),
+                  Positioned(
+                    top: lerpDouble(-30, 140, widget.topPercent)!
+                        .clamp(topPadding + 10, 140),
+                    left: lerpDouble(60, 20, widget.topPercent)!
+                        .clamp(20.0, 50.0),
+                    right: 20,
+                    child: AnimatedOpacity(
+                      duration: kThemeAnimationDuration,
+                      opacity: widget.bottomPercent < 1 ? 0 : 1,
+                      child: ValueListenableBuilder<bool>(
+                          valueListenable: widget.textWidgetsNotifier,
+                          builder: (context, value, child) {
+                            return Text(
+                              value == true
+                                  ? ""
+                                  : widget.restaurants[widget.resIndex].name,
+                              style: TextStyle(
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black,
+                                    blurRadius: 5,
+                                    offset: Offset(1, 1),
+                                  ),
+                                ],
+                                fontSize:
+                                    lerpDouble(30, 40, 2 * widget.topPercent),
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'britanic',
+                              ),
+                            );
+                          }),
+                    ),
+                  ),
+                  Positioned(
+                    left: 25,
+                    top: 220,
+                    child: AnimatedOpacity(
+                      duration: kThemeAnimationDuration,
+                      opacity: widget.bottomPercent < 1 ? 0 : 1,
+                      child: Opacity(
+                        opacity: widget.topPercent,
+                        child: Container(
+                          width: MediaQuery.of(context).size.width - 25,
+                          child: ValueListenableBuilder<bool>(
+                              valueListenable: widget.textWidgetsNotifier,
+                              builder: (context, value, child) {
+                                return Text(
+                                  value == true
+                                      ? ""
+                                      : widget.restaurants[widget.resIndex]
+                                          .description,
+                                  style: TextStyle(
+                                    shadows: [
+                                      Shadow(
+                                        color: Colors.black,
+                                        blurRadius: 20,
+                                        offset: Offset(1, 1),
+                                      ),
+                                    ],
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                  ),
+                                );
+                              }),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        Positioned.fill(
+          top: null,
+          bottom: -140 * (1 - widget.topPercent),
+          child: TranslateAnimation(
+            child: ValueListenableBuilder<bool>(
+                valueListenable: widget.textWidgetsNotifier,
+                builder: (context, value, child) {
+                  if (value == false)
+                    return MenuInfoContainer(
+                      restaurant: widget.restaurants[widget.resIndex],
+                    );
+                  else
+                    return Container(
+                        height: 70,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 33, 33, 33),
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(30),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  margin:
+                                      const EdgeInsets.only(top: 3, left: 3),
+                                  child: Text(
+                                    " ",
+                                    style: TextStyle(
+                                      color: ui.val(4),
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.only(top: 3),
+                                  child: Text(
+                                    " ",
+                                    style: TextStyle(
+                                      color: ui.val(4),
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    " ",
+                                    style: TextStyle(
+                                      color: ui.val(4),
+                                      fontSize: 17,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ));
+                }),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(color: ui.val(2), height: 10),
+        ),
+        Positioned.fill(
+          top: null,
+          child: TranslateAnimation(
+            child: Container(
+              height: 20,
+              decoration: BoxDecoration(
+                color: ui.val(2),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.elliptical(30, 10),
+                  topRight: Radius.elliptical(30, 10),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class MenuInfoContainer extends StatefulWidget {
   final Restaurant restaurant;
 
   const MenuInfoContainer({
-    super.key,
+    Key? key,
     required this.restaurant,
-  });
+  }) : super(key: key);
 
+  @override
+  _MenuInfoContainerState createState() => _MenuInfoContainerState();
+}
+
+class _MenuInfoContainerState extends State<MenuInfoContainer> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -233,7 +496,7 @@ class MenuInfoContainer extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.only(top: 3, left: 3),
                   child: Text(
-                    " ${restaurant.rating} ",
+                    " ${widget.restaurant.rating} ",
                     style: TextStyle(
                       color: ui.val(4),
                       fontSize: 20,
@@ -243,7 +506,7 @@ class MenuInfoContainer extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.only(top: 3),
                   child: Text(
-                    "(${restaurant.totalRatings})",
+                    "(${widget.restaurant.totalRatings})",
                     style: TextStyle(
                       color: ui.val(4),
                       fontSize: 15,
@@ -259,7 +522,7 @@ class MenuInfoContainer extends StatelessWidget {
                 children: [
                   Icon(Icons.access_time_rounded, color: Colors.grey, size: 17),
                   Text(
-                    " ${restaurant.estimatedTime}    100rs minimum",
+                    " ${widget.restaurant.estimatedTime}    100rs minimum",
                     style: TextStyle(
                       color: ui.val(4),
                       fontSize: 17,
@@ -301,12 +564,17 @@ class PlaceImagesPageView extends StatefulWidget {
     required this.images,
     required this.restaurants,
     required this.resIndex,
+    required this.callback,
+    required this.callbackParent,
   });
 
   // final List<String> images;
   final String images;
   final List<Restaurant> restaurants;
   final int resIndex;
+
+  final Function(int) callback;
+  final Function(int) callbackParent;
 
   @override
   State<PlaceImagesPageView> createState() => _PlaceImagesPageViewState();
@@ -333,6 +601,8 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
             itemCount: widget.restaurants.length,
             onPageChanged: (value) {
               setState(() => currentIndex = value);
+              widget.callback(value);
+              widget.callbackParent(value);
             },
             physics: const BouncingScrollPhysics(),
             controller: _pageController,

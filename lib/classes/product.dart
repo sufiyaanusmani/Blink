@@ -20,7 +20,7 @@ class Product {
       required this.restaurantID,
       required this.categoryName,
       required this.price,
-       required this.restaurantName,
+      required this.restaurantName,
       required this.liked});
 
   static Future<List<Product>> getProducts(Restaurant restaurant) async {
@@ -38,11 +38,11 @@ class Product {
             foodItem.data() as Map<String, dynamic>;
         products.add(Product(
           id: foodItem.id,
-          name: foodItemData['Prod Name'],
+          name: foodItemData['Prod Name'] ?? " ",
           restaurantID: restaurant.restaurantID,
           restaurantName: restaurant.name,
-          categoryName: foodItemData['Category Name'],
-          price: foodItemData['Price'],
+          categoryName: foodItemData['Category Name'] ?? " ",
+          price: foodItemData['Price'] ?? 0,
           liked: false,
         ));
       }
@@ -79,6 +79,7 @@ class Product {
       }
     } catch (error) {
       print('Error fetching products from getProducts(): $error');
+      print(products);
     }
 
     return products;
