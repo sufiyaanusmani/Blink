@@ -22,7 +22,7 @@ class RestaurantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        height: 310,
+        height: 311,
         // padding: EdgeInsets.only(bottom: 0, right: 10, left: 10, top: 10),
         margin: const EdgeInsets.symmetric(
           vertical: 10,
@@ -45,7 +45,7 @@ class RestaurantCard extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,8 +84,10 @@ class RestaurantCard extends StatelessWidget {
                                 color: Colors.blueGrey, size: 20),
                             Text(
                               "${restaurants[resIndex].rating} (${restaurants[resIndex].totalRatings})",
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 20,),
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 20,
+                              ),
                             ),
                           ],
                         ),
