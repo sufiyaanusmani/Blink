@@ -76,8 +76,6 @@ class RestaurantCard extends StatelessWidget {
                   Expanded(
                     flex: 1,
                     child: Column(
-                      // crossAxisAlignment: CrossAxisAlignment.stretch,
-                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,

@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/services.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:shimmer/shimmer.dart';
@@ -9,10 +10,10 @@ import 'package:food_delivery/user1.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/cart.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 import '../classes/trending_product.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'dart:math';
 
 late bool show = true;
@@ -501,57 +502,112 @@ class OrderNotification extends StatefulWidget {
 }
 
 class _OrderNotificationState extends State<OrderNotification> {
-  late int orderID = 0;
+  late String orderID = "";
   // late bool show = false;
   late String status = 'Pending';
 
   late String restaurantName = '';
-  late String time = "None";
+  late String time = "-";
   late List<FoodItem> foodItems = [];
   late int price = 0;
+
   void getOrderInfo() async {
-    var db = Mysql();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT O.order_id, O.status, R.name, O.price, P.time FROM Orders O INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) LEFT JOIN Preschedule P ON (O.order_id = P.order_id) WHERE O.customer_id=${widget.customerID} AND O.status IN ("pending", "preparing");');
-    if (rows.length == 1) {
-      for (var row in rows) {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+      // Get a reference to the Firestore instance
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Query Firestore for orders matching the customer ID and status
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
+          .collection('orders')
+          .where('customerid', isEqualTo: user!.uid)
+          .where('status', whereIn: ['pending', 'preparing'])
+          .limit(1) // Limit to 1 document
+          .get();
+
+      // Check if there is exactly one document found
+      if (querySnapshot.size == 1) {
+        // Access the first document
+        DocumentSnapshot<Map<String, dynamic>> doc = querySnapshot.docs.first;
+
+        // Extract data from the document
+        String orderId = doc.id;
+        String orderStatus = doc['status'];
+        String restaurant = doc['restaurant']['name'];
+        int orderPrice = doc['price'];
+        // String orderTime = doc['time'] ?? 'None';
+
+        // Update the state with the retrieved data
         setState(() {
-          orderID = int.parse(row.assoc()['order_id']!);
-          status = row.assoc()['status']!;
-          restaurantName = row.assoc()['name']!;
-          price = int.parse(row.assoc()['price']!);
-          var timeTemp = row.assoc()['time'] ?? 'None';
-          setState(() {
-            time = timeTemp;
-          });
+          orderID = orderId;
+          status = orderStatus;
+          restaurantName = restaurant;
+          price = orderPrice;
+          // time = orderTime;
+          show = true;
+        });
+      } else {
+        // No matching document found
+        setState(() {
+          show = false;
         });
       }
-      setState(() {
-        show = true;
-      });
-    } else {
-      setState(() {
-        show = false;
-      });
+    } catch (e) {
+      // Handle any errors that occur during the process
+      print('Error fetching order info: $e');
     }
   }
 
-  void getOrder() async {
-    var db = Mysql();
-    List<FoodItem> temp = [];
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT P.name, D.quantity, (D.quantity * P.price) AS price FROM Orders O INNER JOIN OrderDetail D ON (O.order_id = D.order_id) INNER JOIN Product P ON (D.product_id = P.product_id) WHERE O.customer_id = ${widget.customerID} AND O.status <> "completed";');
-    if (rows.isNotEmpty) {
-      for (var row in rows) {
-        temp.add(FoodItem(
-            name: row.assoc()['name']!,
-            price: int.parse(row.assoc()['price']!),
-            count: int.parse(row.assoc()['quantity']!)));
+  Future<void> getOrder() async {
+    try {
+      // Get a reference to the Firestore instance
+
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Query Firestore for orders where customerID matches
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
+          .collection('orders')
+          .where('customerid', isEqualTo: user!.uid)
+          .where('status', isNotEqualTo: 'completed')
+          .get();
+
+      // Initialize a temporary list to store FoodItem objects
+      List<FoodItem> temp = [];
+
+      // Iterate over the documents in the query snapshot
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc
+          in querySnapshot.docs) {
+        // Access the "Food items" array from the document
+        List<dynamic> foodItemsData = doc['Food items'];
+
+        for (var foodItemData in foodItemsData) {
+          // Access the data fields of the food item
+          String name = foodItemData.keys.first;
+          // Access the inner map containing price and quantity
+          Map<String, dynamic> innerMap = foodItemData[name];
+
+          print(foodItemData);
+          // Access the price and quantity from the inner map
+          int quantity = innerMap['Quantity'] ?? 0;
+          int price = innerMap['Price'] ?? 0;
+
+          // Create a FoodItem object and add it to the temporary list
+          temp.add(FoodItem(name: name, price: price, count: quantity));
+        }
       }
+
+      // Update the state with the new list of food items
+      setState(() {
+        foodItems = temp;
+      });
+    } catch (e) {
+      // Handle any errors that occur during the process
+      print('Error fetching getOrder(): $e');
     }
-    setState(() {
-      foodItems = temp;
-    });
   }
 
   @override
@@ -567,187 +623,196 @@ class _OrderNotificationState extends State<OrderNotification> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: ui.val(0),
     ));
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
-      // height: show ? 400 : 0,
-      // decoration: BoxDecoration(
-      //     color: ui.val(2),
-      //     borderRadius: BorderRadius.all(Radius.circular(20))),
-      // child: !show
-      //     ? SizedBox(width: 0)
-      //     : AnimatedContainer(
-      //         duration: Duration(milliseconds: 100),
-      //         // padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+    return RefreshIndicator(
+      displacement: 10,
+      backgroundColor: ui.val(2),
+      color: ui.val(4),
+      onRefresh: () async {
+        getOrderInfo();
+        getOrder();
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 150),
+        height: show ? 400 : 0,
+        decoration: BoxDecoration(
+            color: ui.val(1).withOpacity(0.8),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        child: !show
+            ? SizedBox(width: 0)
+            : AnimatedContainer(
+                duration: Duration(milliseconds: 100),
+                // padding: EdgeInsets.only(left: 10, right: 10, top: 5),
 
-      //         child: Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: [
-      //             SizedBox(height: 10),
-      //             Container(
-      //               padding: EdgeInsets.only(left: 10, right: 10, top: 5),
-      //               child: Row(
-      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                 children: [
-      //                   Text(
-      //                     "Order",
-      //                     style: TextStyle(
-      //                       fontSize: 30,
-      //                       color: ui.val(4),
-      //                     ),
-      //                   ),
-      //                   Text(
-      //                     "#$orderID",
-      //                     style: TextStyle(
-      //                       fontSize: 20,
-      //                       color: Colors.white,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             Container(
-      //               padding: EdgeInsets.only(left: 10, right: 10),
-      //               child: Row(
-      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                 children: [
-      //                   Row(
-      //                     children: [
-      //                       Icon(
-      //                         Icons.local_fire_department_sharp,
-      //                         color: Colors.red,
-      //                       ),
-      //                       SizedBox(width: 4),
-      //                       Text(
-      //                         "Status",
-      //                         style: TextStyle(
-      //                           fontSize: 20,
-      //                           color: ui.val(4),
-      //                         ),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                   Text(
-      //                     status,
-      //                     style: TextStyle(
-      //                       fontSize: 20,
-      //                       color: ui.val(4),
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             SizedBox(height: 3),
-      //             Container(
-      //               padding: EdgeInsets.only(left: 10, right: 10),
-      //               child: Row(
-      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                 children: [
-      //                   Row(
-      //                     children: [
-      //                       Icon(
-      //                         Icons.schedule,
-      //                         color: Colors.blue,
-      //                       ),
-      //                       SizedBox(width: 5),
-      //                       Text(
-      //                         "Expected",
-      //                         style: TextStyle(
-      //                           fontSize: 20,
-      //                           color: ui.val(4),
-      //                         ),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                   Text(
-      //                     time,
-      //                     style: TextStyle(
-      //                       fontSize: 20,
-      //                       color: ui.val(4),
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             SizedBox(height: 3),
-      //             Container(
-      //               padding: EdgeInsets.only(left: 10, right: 10),
-      //               child: Row(
-      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                 children: [
-      //                   Row(
-      //                     children: [
-      //                       Icon(
-      //                         Icons.restaurant,
-      //                         color: Colors.grey,
-      //                       ),
-      //                       SizedBox(width: 5),
-      //                       Text(
-      //                         "Restaurant",
-      //                         style: TextStyle(
-      //                           fontSize: 20,
-      //                           color: ui.val(4),
-      //                         ),
-      //                       ),
-      //                     ],
-      //                   ),
-      //                   Text(
-      //                     restaurantName,
-      //                     style: TextStyle(
-      //                       fontSize: 20,
-      //                       color: ui.val(4),
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             SizedBox(height: 10),
-      //             Expanded(
-      //               child: ListView.builder(
-      //                 itemCount: foodItems.length,
-      //                 itemBuilder: (context, index) {
-      //                   final foodItem = foodItems[index];
-      //                   return Container(
-      //                     margin: EdgeInsets.only(top: 2),
-      //                     // padding: EdgeInsets.all(5),
-      //                     child: Column(
-      //                       children: [
-      //                         if (index == 0) Divider(color: Colors.black87),
-      //                         OrderStatusProductRow(foodItem: foodItem),
-      //                         Divider(color: Colors.black87),
-      //                       ],
-      //                     ),
-      //                   );
-      //                 },
-      //               ),
-      //             ),
-      //             Container(
-      //               padding: EdgeInsets.only(left: 10, right: 10),
-      //               child: Row(
-      //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //                 children: [
-      //                   Text(
-      //                     'Total',
-      //                     style: TextStyle(
-      //                       fontSize: 20,
-      //                       color: ui.val(4),
-      //                     ),
-      //                   ),
-      //                   Text(
-      //                     'Rs. $price',
-      //                     style: TextStyle(
-      //                       fontSize: 20,
-      //                       color: ui.val(4),
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             SizedBox(
-      //               height: 20,
-      //             ),
-      //           ],
-      //         ),
-      //       ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Order",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: ui.val(4),
+                            ),
+                          ),
+                          Text(
+                            "#$orderID",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.local_fire_department_sharp,
+                                color: Colors.red.withOpacity(0.7),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "Status",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: ui.val(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            status,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.schedule,
+                                color: Colors.blue.withOpacity(0.7),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "Expected",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: ui.val(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            time,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.restaurant,
+                                color: Colors.grey.withOpacity(0.7),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "Restaurant",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: ui.val(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            restaurantName,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: foodItems.length,
+                        itemBuilder: (context, index) {
+                          final foodItem = foodItems[index];
+                          return Container(
+                            margin: EdgeInsets.only(top: 2),
+                            // padding: EdgeInsets.all(5),
+                            child: Column(
+                              children: [
+                                if (index == 0) Divider(color: Colors.black87),
+                                OrderStatusProductRow(foodItem: foodItem),
+                                Divider(color: Colors.black87),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                          Text(
+                            'Rs. $price',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
+              ),
+      ),
     );
   }
 }

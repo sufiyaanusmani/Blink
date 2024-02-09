@@ -213,7 +213,8 @@ class Mysql {
         'Price': product.price,
         'Product ID': product.id,
         'Prod Name': product.name,
-        'Restaurant ID': product.restaurantID
+        'Restaurant ID': product.restaurantID,
+        'Restaurant Name': product.restaurantName
       };
       likedProducts.add(likedProduct);
 

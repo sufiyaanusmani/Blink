@@ -265,7 +265,8 @@ class Shimmer extends StatelessWidget {
     required this.resIndex,
     // required this.widget,
     required this.restaurants,
-    required this.updateResIndex,required this.textWidgetsNotifier,
+    required this.updateResIndex,
+    required this.textWidgetsNotifier,
   }) : _controller = controller;
 
   // final SliverScrollController bloc;
@@ -493,16 +494,19 @@ class SliverBodyItemsShimmer extends StatelessWidget {
       delegate: SliverChildBuilderDelegate(
         (context, index) {
           return Container(
-            height: 150,
-            margin: EdgeInsets.all(10),
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: ui.val(2),
-                // borderRadius: BorderRadius.only(
-                //   topRight: Radius.circular(20),
-                //   topLeft: Radius.circular(20),
-                // ),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
+            decoration: BoxDecoration(color: ui.val(1)),
+            child: Container(
+              height: 150,
+              margin: EdgeInsets.all(10),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: ui.val(2),
+                  // borderRadius: BorderRadius.only(
+                  //   topRight: Radius.circular(20),
+                  //   topLeft: Radius.circular(20),
+                  // ),
+                  borderRadius: BorderRadius.all(Radius.circular(20))),
+            ),
           );
         },
         childCount: 1, // Three shimmering containers

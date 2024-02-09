@@ -90,7 +90,7 @@ class _SavedMealsScreenState extends State<SavedMealsScreen> {
             id: productData['Product ID'],
             name: productData['Prod Name'],
             restaurantID: productData['Restaurant ID'],
-            restaurantName: "Ali Ali Bakery",
+            restaurantName: productData['Restaurant Name'],
             categoryName: productData['Category Name'],
             price: productData['Price'],
             liked: true,

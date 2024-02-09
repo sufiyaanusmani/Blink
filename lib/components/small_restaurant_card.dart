@@ -29,6 +29,24 @@ class SmallRestaurantCard extends StatelessWidget {
       required this.categoryName,
       required this.liked});
 
+  void snackbar(String content, BuildContext context, bool error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor:
+            error == true ? Colors.red.shade400 : Colors.blue.shade800,
+        duration: Duration(seconds: 1),
+        content: Text(content, style: TextStyle(color: Colors.white)),
+        action: SnackBarAction(
+          label: 'Close',
+          textColor: Colors.white,
+          onPressed: () {
+            // Code to execute.
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -105,13 +123,8 @@ class SmallRestaurantCard extends StatelessWidget {
               categoryName: categoryName,
               price: price,
               liked: liked));
-          AnimatedSnackBar.material(
-            '$itemName added to cart',
-            borderRadius: BorderRadius.circular(10),
-            duration: const Duration(seconds: 4),
-            type: AnimatedSnackBarType.success,
-            mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-          ).show(context);
+
+          snackbar('$itemName added to cart', context, false);
         } else if (Cart.cart.isNotEmpty) {
           if (Cart.cart[0].product.restaurantID == restaurantID) {
             Cart.addNewProduct(Product(
@@ -122,22 +135,11 @@ class SmallRestaurantCard extends StatelessWidget {
                 categoryName: categoryName,
                 price: price,
                 liked: liked));
-            AnimatedSnackBar.material(
-              '$itemName added to cart',
-              borderRadius: BorderRadius.circular(10),
-              duration: const Duration(seconds: 4),
-              type: AnimatedSnackBarType.success,
-              mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-            ).show(context);
+            snackbar('$itemName added to cart', context, false);
           } else {
             if (Cart.cart[0].product.restaurantID != restaurantID) {
-              AnimatedSnackBar.material(
-                'Cannot add products from different restaurant',
-                borderRadius: BorderRadius.circular(10),
-                duration: const Duration(seconds: 4),
-                type: AnimatedSnackBarType.error,
-                mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-              ).show(context);
+              snackbar('Cannot add products from different restaurant', context,
+                  true);
             }
           }
         }

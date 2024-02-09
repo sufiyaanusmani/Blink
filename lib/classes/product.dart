@@ -42,7 +42,7 @@ class Product {
           restaurantID: restaurant.restaurantID,
           restaurantName: restaurant.name,
           categoryName: foodItemData['Category Name'] ?? " ",
-          price: foodItemData['Price'] ?? 0,
+          price: foodItemData['Price'] ?? 0,          
           liked: false,
         ));
       }
