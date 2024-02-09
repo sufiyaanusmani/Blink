@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class ResetPasswordScreen extends StatelessWidget {
+class ResetPasswordScreen extends StatefulWidget {
   final String email;
   const ResetPasswordScreen({super.key, required this.email});
 
+  @override
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+}
+
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     String password1 = "";
@@ -36,16 +42,22 @@ class ResetPasswordScreen extends StatelessWidget {
             SizedBox(height: 20.0),
             PasswordTextField(
               hintText: 'New Password',
-              onChange: (text) {},
+              onChange: (text) {
+                setState(() {
+                  password1 = text;
+                });
+              },
             ),
             SizedBox(height: 20.0),
             PasswordTextField(
               hintText: 'Confirm Password',
-              onChange: (text) {},
+              onChange: (text) {
+                password2 = text;
+              },
             ),
             SizedBox(height: 20.0),
             ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
                 // Add logic to update the password
                 // This is where you would call a backend service to update the password
                 // For demonstration purposes, we'll just navigate back to the login screen

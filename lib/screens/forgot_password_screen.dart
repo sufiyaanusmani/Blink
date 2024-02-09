@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/screens/reset_password_code.dart';
 import 'package:food_delivery/screens/reset_password_screen.dart';
@@ -48,6 +49,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               ),
               SizedBox(height: 20),
               TextFormField(
+                keyboardType: TextInputType.emailAddress,
                 onChanged: (text) {
                   setState(() {
                     email = text;
@@ -154,18 +156,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     setState(() {
       _isLoading = true; // Set isLoading to true to show loading indicator
     });
-    String code = generateRandomNumber();
+    await Future.delayed(const Duration(seconds: 2));
+    final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
+    if (emailRegex.hasMatch(email)) {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      try {
+        await auth.sendPasswordResetEmail(email: email);
+      } catch (e) {
+        print(e);
+      }
+    }
 
-    EmailSender.sendResetPasswordCode(email, code);
-    await Future.delayed(Duration(seconds: 2));
-
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ResetPassword(
-                  emailCode: code,
-                  email: email,
-                )));
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
 
     setState(() {
       _isLoading = false; // Reset isLoading back to false
