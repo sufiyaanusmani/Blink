@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/classes/order_history.dart';
 import 'package:food_delivery/components/setting_switch.dart';
@@ -39,24 +41,32 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late List<OrderHistory> orders = [];
 
   void loadName() async {
-    var db = Mysql();
-    String tempFirstName, tempLastName;
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT first_name, last_name FROM Customer WHERE customer_id=${widget.customerID}');
-    if (rows.length == 1) {
-      for (var row in rows) {
-        tempFirstName = row.assoc()['first_name']!;
-        tempLastName = row.assoc()['last_name']!;
+    try {
+      DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+          .collection("customers")
+          .doc(getCustomer())
+          .get();
+      if (documentSnapshot.exists) {
+        Map<String, dynamic> data =
+            documentSnapshot.data() as Map<String, dynamic>;
         setState(() {
-          name = '$tempFirstName $tempLastName';
+          name = '${data["firstname"]} ${data["lastname"]}';
         });
       }
+    } catch (e) {
+      print(e);
     }
+  }
+
+  String? getCustomer() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    return user!.uid;
   }
 
   void loadOrderHistory() async {
     List<OrderHistory> temp =
-        await OrderHistory.getOrderHistory(widget.customerID);
+        await OrderHistory.getOrderHistory(getCustomer().toString());
     setState(() {
       orders = temp;
     });
@@ -141,7 +151,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               style: ElevatedButton.styleFrom(
                 primary: ui.val(10),
               ),
-              onPressed: () {
+              onPressed: () async {
+                await FirebaseAuth.instance.signOut();
                 Navigator.pop(context);
               },
               child: Container(
@@ -246,12 +257,18 @@ class _OrdersPageState extends State<OrdersPage> {
   late List<OrderHistory> orderHistory = [];
   bool _loading = false;
 
+  String? getCustomer() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    return user!.uid;
+  }
+
   void getOrderHistory() async {
     setState(() {
       _loading = true;
     });
     List<OrderHistory> temp = [];
-    temp = await OrderHistory.getOrderHistory(widget.customerID);
+    temp = await OrderHistory.getOrderHistory(getCustomer().toString());
     setState(() {
       orderHistory = temp;
     });
@@ -316,10 +333,6 @@ class OrdersList extends StatelessWidget {
                               fontSize: 20,
                               fontWeight: FontWeight.w500,
                               color: ui.val(4)),
-                        ),
-                        Text(
-                          '${orderHistory[index].date}  ${orderHistory[index].time}',
-                          style: TextStyle(color: ui.val(4)),
                         ),
                       ],
                     ),

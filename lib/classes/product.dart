@@ -42,7 +42,7 @@ class Product {
           restaurantID: restaurant.restaurantID,
           restaurantName: restaurant.name,
           categoryName: foodItemData['Category Name'] ?? " ",
-          price: foodItemData['Price'] ?? 0,          
+          price: foodItemData['Price'] ?? 0,
           liked: false,
         ));
       }
@@ -88,9 +88,45 @@ class Product {
   static Future<List<Product>> getAllProducts() async {
     var db = Mysql();
     List<Product> products = [];
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT P.product_id, P.name, P.restaurant_id, P.category_id, P.price, C.name AS category_name FROM Product P INNER JOIN Category C ON P.category_id = C.category_id;');
+    List<Map<String, String>> restaurants = [];
 
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection("restaurants").get();
+      for (QueryDocumentSnapshot restaurantData in querySnapshot.docs) {
+        Map<String, dynamic> res =
+            restaurantData.data() as Map<String, dynamic>;
+        restaurants.add({
+          "id": restaurantData.id.toString(),
+          "name": res["name"].toString()
+        });
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    try {
+      for (Map<String, String> restaurant in restaurants) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection("restaurants")
+            .doc(restaurant["id"])
+            .collection("foodItems")
+            .get();
+        for (QueryDocumentSnapshot foodData in querySnapshot.docs) {
+          Map<String, dynamic> food = foodData.data() as Map<String, dynamic>;
+          products.add(Product(
+              id: foodData.id.toString(),
+              name: food["Prod Name"].toString() ?? " ",
+              restaurantID: restaurant["id"].toString(),
+              categoryName: food["Category Name"].toString(),
+              price: food["Price"] ?? 0,
+              restaurantName: restaurant["name"].toString(),
+              liked: false));
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
     // for (var row in rows) {
     //   // firstName = row.assoc()['first_name']!;
     //   Product product = Product(
@@ -102,18 +138,6 @@ class Product {
     //       liked: false);
     //   products.add(product);
     // }
-
-    rows = await db.getResults(
-        'SELECT product_id FROM Favourites WHERE customer_id=${Cart.customerID}');
-
-    for (var row in rows) {
-      int prod = int.parse(row.assoc()['product_id']!);
-      for (int i = 0; i < products.length; i++) {
-        if (prod == products[i].id) {
-          products[i].liked = true;
-        }
-      }
-    }
 
     return products;
   }
