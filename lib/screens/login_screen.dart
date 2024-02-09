@@ -340,7 +340,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   arguments: HomeScreenArguments(
                                     user: User1(id: 1, firstName: "Sufiyaan"),
                                     restaurants: restaurants,
-                                  ));
+                                  ),);
                             }
                           } catch (e) {
                             print(e);

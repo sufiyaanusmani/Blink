@@ -1,4 +1,3 @@
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/services.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:shimmer/shimmer.dart';
@@ -14,6 +13,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 import '../classes/trending_product.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'dart:math';
 
 late bool show = true;
@@ -184,6 +184,14 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
   }
+
+  String? getCustomer() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    return user!.uid;
+  }
+
+  bool isBottomSheetDisplayed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -363,10 +371,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     iconSize: 25,
                     color: Colors.grey,
                     onPressed: toggle,
-                    // onPressed: () {
-                    //   print('pressed');
-                    //   print('pressed');
-                    // },
                   ),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(110, 33, 33, 33),
@@ -382,6 +386,219 @@ class _HomeScreenState extends State<HomeScreen> {
           // itemCount: 5,
           padding: EdgeInsets.all(10.0),
           children: [
+            StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('customers')
+                  .doc(getCustomer())
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var customerData = snapshot.data!.data();
+                  if (customerData != null) {
+                    // Explicitly cast customerData to a Map<String, dynamic>
+                    var customerMap = customerData as Map<String, dynamic>;
+                    var reviewData = customerMap['Review'];
+                    if (reviewData != null &&
+                        reviewData['Placed'] == false &&
+                        !isBottomSheetDisplayed) {
+                      var restaurantId = reviewData['Restaurant ID'];
+                      var restaurantName = reviewData['Restaurant Name'];
+
+                      isBottomSheetDisplayed = true;
+                      // Show bottom modal in a separate microtask
+                      Future.microtask(() {
+                        showModalBottomSheet(
+                          context: context,
+                          // isDismissible: false,
+                          barrierColor: const Color.fromARGB(101, 0, 0, 0),
+                          backgroundColor: ui.val(0),
+                          builder: (BuildContext context) {
+                            double resRating = 3.00;
+
+                            return Container(
+                              // height: MediaQuery.of(context).size.height * 0.4,
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                // mainAxisAlignment:
+                                //     MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    height: 3,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.3),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                  ),
+
+                                  SizedBox(height: 30),
+                                  Text(
+                                    'Rate your experience at',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: ui.val(4),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 5, bottom: 5),
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 1, bottom: 1),
+                                    decoration: BoxDecoration(
+                                        color: Colors.purple.shade200
+                                            .withOpacity(0.2),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: Center(
+                                      child: Text(
+                                        '$restaurantName',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: ui.val(4),
+                                          // fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 40),
+                                  // Text(
+                                  //   'Restaurant ID: $restaurantId',
+                                  //   style: TextStyle(fontSize: 16),
+                                  // ),
+
+                                  RatingBar.builder(
+                                    glowColor: Colors.black,
+                                    glowRadius: 1,
+                                    initialRating: 3,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    itemCount: 5,
+                                    unratedColor: ui.val(10).withOpacity(0.1),
+                                    itemPadding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star_rate_rounded,
+                                      color: ui.val(10),
+                                    ),
+                                    onRatingUpdate: (rating) {
+                                      // print(rating);
+                                      setState(() {
+                                        resRating = rating;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(height: 35),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: ui.val(10).withOpacity(0.8),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20))),
+                                    height: 50,
+                                    width:
+                                        MediaQuery.of(context).size.width * 1,
+                                    child: InkWell(
+                                      onTap: () async {
+                                        Navigator.of(context).pop();
+
+                                        DocumentReference restaurantRef =
+                                            FirebaseFirestore.instance
+                                                .collection('restaurants')
+                                                .doc(restaurantId);
+
+                                        // Get the restaurant document
+                                        DocumentSnapshot restaurantSnapshot =
+                                            await restaurantRef.get();
+
+                                        // Access the "Review" map
+                                        Map<String, dynamic>? reviewMap =
+                                            restaurantSnapshot['Review'];
+
+                                        if (reviewMap != null) {
+                                          // Extract "Stars" and "Rating Count" from the "Review" map
+                                          double resStars =
+                                              reviewMap['Stars'].toDouble() ??
+                                                  0.0;
+                                          print("ddsa");
+                                          double resRatingCount =
+                                              reviewMap['Rating Count']
+                                                      .toDouble() ??
+                                                  0.0;
+
+                                          // Calculate the new rating
+                                          double newRating =
+                                              ((resStars * resRatingCount) +
+                                                      resRating) /
+                                                  (resRatingCount + 1.0);
+                                          // Update the "Review" map with new values
+                                          reviewMap['Stars'] = double.parse(
+                                              newRating.toStringAsFixed(2));
+                                          reviewMap['Rating Count'] =
+                                              resRatingCount + 1.0;
+
+                                          // Update the restaurant document with the modified "Review" map
+                                          restaurantRef.update({
+                                            'Review': reviewMap,
+                                          }).then((value) {
+                                            print(
+                                                'Restaurant rating updated successfully');
+
+                                            FirebaseFirestore.instance
+                                                .collection('customers')
+                                                .doc(getCustomer())
+                                                .update({
+                                              'Review.Placed': true,
+                                              'Review.Restaurant ID': "",
+                                              'Review.Restaurant Name': "",
+                                            }).then((value) {
+                                              print(
+                                                  'Review Placed updated successfully');
+                                            }).catchError((error) {
+                                              print(
+                                                  'Error updating Review Placed: $error');
+                                            });
+                                          }).catchError((error) {
+                                            print(
+                                                'Error updating restaurant rating: $error');
+                                          });
+                                        } else {
+                                          print(
+                                              'Review map not found in restaurant document');
+                                        }
+                                      },
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(20)),
+                                      child: Container(
+                                        child: Center(
+                                          child: Text(
+                                            "Submit",
+                                            style: TextStyle(
+                                              color: ui.val(1),
+                                              // fontWeight: FontWeight.w400,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      });
+                    }
+                  }
+                }
+                return SizedBox(); // Return an empty container if no review is placed
+              },
+            ),
+
             OrderNotification(customerID: widget.user.id),
 
             SizedBox(height: 35),
@@ -428,7 +645,62 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Column(
               children: restaurantCards,
-            )
+            ),
+//
+//
+//
+            // StreamBuilder<DocumentSnapshot>(
+            //   stream: FirebaseFirestore.instance
+            //       .collection('customers')
+            //       .doc(getCustomer()) // Replace with the actual document ID
+            //       .snapshots(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData) {
+            //       var customerData =
+            //           snapshot.data!.data()! as Map<String, dynamic>;
+            //       var reviewPlaced =
+            //           (customerData['Review'] as Map<String, dynamic>?) ?? {};
+
+            //       // Check if review has been placed for any restaurant
+            //       if (reviewPlaced['Placed'] == false) {
+            //         // Get the restaurant ID and name from the reviewPlaced map
+            //         var restaurantId = reviewPlaced['Restaurant ID'];
+            //         var restaurantName = reviewPlaced['Restaurant Name'];
+
+            //         // Show bottom modal
+            //         showModalBottomSheet(
+            //           context: context,
+            //           builder: (BuildContext context) {
+            //             return Container(
+            //               padding: EdgeInsets.all(16),
+            //               child: Column(
+            //                 mainAxisSize: MainAxisSize.min,
+            //                 children: [
+            //                   Text(
+            //                     'Review has been placed for:',
+            //                     style: TextStyle(fontSize: 18),
+            //                   ),
+            //                   SizedBox(height: 8),
+            //                   Text(
+            //                     'Restaurant ID: $restaurantId',
+            //                     style: TextStyle(fontSize: 16),
+            //                   ),
+            //                   Text(
+            //                     'Restaurant Name: $restaurantName',
+            //                     style: TextStyle(fontSize: 16),
+            //                   ),
+            //                 ],
+            //               ),
+            //             );
+            //           },
+            //         );
+            //       }
+            //     }
+            //     return Center(child: CircularProgressIndicator());
+            //   },
+            // ),
+            //
+            //
             // ListView.builder(
             //   itemBuilder: (context, index) {
             //     return RestaurantCard(restaurant: restaurants[index]);
