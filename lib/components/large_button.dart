@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/classes/UIColor.dart';
 
 class LargeButton extends StatefulWidget {
   final Color color;
@@ -21,14 +22,15 @@ class _LargeButtonState extends State<LargeButton> {
   @override
   Widget build(BuildContext context) {
     return Material(
-      borderRadius: BorderRadius.circular(20),
+      color: ui.val(2).withOpacity(0.3),
+      borderRadius: BorderRadius.circular(15),
       elevation: 2,
       child: TextButton(
         onPressed: widget.onPressed,
         style: TextButton.styleFrom(
           backgroundColor: widget.color,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(15),
           ),
         ),
         child: Container(

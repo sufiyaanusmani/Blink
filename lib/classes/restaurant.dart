@@ -1,33 +1,53 @@
-import 'package:food_delivery/mysql.dart';
-
-import 'package:mysql_client/mysql_client.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Restaurant {
-  int restaurantID;
+  String restaurantID;
   String name;
   String ownerName;
   String image = '';
+  String rating;
+  String totalRatings;
+  String estimatedTime;
+  String description;
 
   Restaurant(
       {required this.restaurantID,
       required this.name,
-      required this.ownerName});
+      required this.ownerName,
+      required this.rating,
+      required this.totalRatings,
+      required this.description,
+      required this.estimatedTime});
 
   static Future<List<Restaurant>> getRestaurants() async {
-    var db = Mysql();
     List<Restaurant> restaurants = [];
-    Iterable<ResultSetRow> rows = await db
-        .getResults('SELECT restaurant_id, name, owner_name FROM Restaurant;');
+    try {
+      Query<Map<String, dynamic>> restaurantsQuery =
+          FirebaseFirestore.instance.collection('restaurants');
+      QuerySnapshot restaurantsSnapshot = await restaurantsQuery.get();
+      for (QueryDocumentSnapshot restaurant in restaurantsSnapshot.docs) {
+        Map<String, dynamic> restaurantData =
+            restaurant.data() as Map<String, dynamic>;
 
-    for (var row in rows) {
-      // firstName = row.assoc()['first_name']!;
-      Restaurant restaurant = Restaurant(
-          restaurantID: int.parse(row.assoc()['restaurant_id']!),
-          name: row.assoc()['name']!,
-          ownerName: row.assoc()['owner_name']!);
-      restaurants.add(restaurant);
+        Map<String, dynamic> reviewData = restaurantData['Review'];
+        int ratingCount = (reviewData['Rating Count'] ?? 0).toInt();
+        double stars = (reviewData['Stars'] ?? 0.0).toDouble();
+
+        print('bbbb');
+        restaurants.add(Restaurant(
+          restaurantID: restaurant.id,
+          name: restaurantData['name'],
+          ownerName: restaurantData['ownername'],
+          description: restaurantData['description'],
+          rating: stars.toString(),
+          totalRatings: ratingCount.toString(),
+          estimatedTime: restaurantData['Estimated Time'].toString() + " mins",
+        ));
+        print('aaaa');
+      }
+    } catch (e) {
+      print("error: ${e}");
     }
-
     return restaurants;
   }
 }

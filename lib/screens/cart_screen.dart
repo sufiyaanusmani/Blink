@@ -18,7 +18,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: ui.val(0),
+      statusBarColor: Color.fromARGB(255, 15, 15, 15), // 0
     ));
     return SafeArea(
       child: DefaultTabController(
@@ -32,6 +32,7 @@ class _CartScreenState extends State<CartScreen> {
                 children: [
                   Expanded(
                     child: Container(
+                      // width: double.infinity,
                       margin: EdgeInsets.symmetric(horizontal: 15),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
@@ -47,18 +48,21 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                           Tab(
                             child: Text(
-                              'Recent',
+                              'Liked',
                               style: TextStyle(),
                             ),
                           ),
                         ],
-                        splashBorderRadius: BorderRadius.circular(30),
+                        // splashBorderRadius: BorderRadius.circular(30),
+                        dividerColor: Colors.transparent,
                         labelColor: ui.val(4),
                         unselectedLabelColor: Color.fromARGB(255, 0, 0, 0),
                         isScrollable: false,
+                        indicatorSize: TabBarIndicatorSize.tab,
                         indicator: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30),
-                            color: ui.val(1)),
+                          borderRadius: BorderRadius.circular(30),
+                          color: ui.val(1),
+                        ),
                       ),
                     ),
                   ),

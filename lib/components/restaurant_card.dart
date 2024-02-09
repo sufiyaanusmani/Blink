@@ -6,24 +6,26 @@ import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 
 class RestaurantCard extends StatelessWidget {
-  final Restaurant restaurant;
+  final List<Restaurant> restaurants;
+  final int resIndex;
   final int customerID;
   final String imageName;
 
   const RestaurantCard(
       {super.key,
-      required this.restaurant,
+      required this.restaurants,
       required this.customerID,
+      required this.resIndex,
       required this.imageName});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       child: Container(
-        height: 330,
+        height: 310,
         // padding: EdgeInsets.only(bottom: 0, right: 10, left: 10, top: 10),
         margin: const EdgeInsets.symmetric(
-          vertical: 2,
+          vertical: 10,
           horizontal: 5,
         ),
         decoration: BoxDecoration(
@@ -44,64 +46,77 @@ class RestaurantCard extends StatelessWidget {
             const SizedBox(height: 15),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        restaurant.name,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 25,
-                          color: Colors.white,
+                  // const SizedBox(height: 10),
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          restaurants[resIndex].name,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 25,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      const Row(
-                        children: [
-                          Icon(Icons.star_border_rounded,
-                              color: Colors.blueGrey, size: 20),
-                          Text(
-                            '4.3 (5.6k)',
-                            style: TextStyle(color: Colors.grey, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ],
+                        Text(
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          restaurants[resIndex].description,
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        restaurant.ownerName,
-                        style: const TextStyle(color: Colors.grey),
-                      ),
-                      const Row(
-                        children: [
-                          Icon(Icons.access_time,
-                              color: Colors.blueGrey, size: 17),
-                          Text(
-                            ' 60 min',
-                            style: TextStyle(color: Colors.grey, fontSize: 20),
-                          ),
-                        ],
-                      ),
-                    ],
+                  Expanded(
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.star_border_rounded,
+                                color: Colors.blueGrey, size: 20),
+                            Text(
+                              "${restaurants[resIndex].rating} (${restaurants[resIndex].totalRatings})",
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 20,),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Icon(Icons.access_time,
+                                color: Colors.blueGrey, size: 17),
+                            Text(
+                              ' ${restaurants[resIndex].estimatedTime}',
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 20),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 10),
+                  // const SizedBox(height: 10),
+                  // const SizedBox(height: 10),
                 ],
               ),
             ),
-            const Divider(),
+            // const Divider(),
           ],
         ),
       ),
       onTap: () {
         var db = Mysql();
-        db.incrementViewCount(restaurant.restaurantID);
+        print(restaurants[resIndex].restaurantID);
+        db.incrementViewCount(restaurants[resIndex].restaurantID);
         Navigator.push(
           context,
           PageRouteBuilder(
@@ -109,7 +124,8 @@ class RestaurantCard extends StatelessWidget {
               opacity: animation,
               child: RestaurantScreen(
                 screenHeight: MediaQuery.of(context).size.height.toDouble(),
-                restaurant: restaurant,
+                restaurants: restaurants,
+                resIndex: resIndex,
                 customerID: customerID,
               ),
             ),

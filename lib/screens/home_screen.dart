@@ -5,20 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/mysql.dart';
-import 'package:food_delivery/user.dart';
+import 'package:food_delivery/user1.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/cart.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 import '../classes/trending_product.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'dart:math';
 
 late bool show = true;
 
 class HomeScreen extends StatefulWidget {
   static const String id = 'home_screen';
   int loginID = -1;
-  User user;
+  User1 user;
   List<Restaurant> restaurants;
 
   HomeScreen({super.key, required this.user, required this.restaurants});
@@ -84,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     List<Restaurant> r = await Restaurant.getRestaurants();
     List<RestaurantCard> tempRestaurantCards = [];
-    for (Restaurant res in r) {
+    for (int index = 0; index < r.length; index++) {
+      Restaurant res = r[index];
       String imageName = "kfc.jpg";
       String resName = res.name;
       resName = resName.toLowerCase();
@@ -107,8 +111,10 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         imageName = "kfc.jpg";
       }
+      print(r);
       tempRestaurantCards.add(RestaurantCard(
-        restaurant: res,
+        restaurants: r,
+        resIndex: index,
         customerID: widget.user.id,
         imageName: imageName,
       ));
@@ -123,15 +129,25 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  List<String> imageNames = ['yellow', 'blue', 'green', 'bleen', 'purple'];
+
+  String getRandomImageName() {
+    Random random = Random();
+    int index = random.nextInt(imageNames.length);
+    return imageNames[index];
+  }
+
   void getTrendingProducts() async {
     List<TrendingProduct> temp = [];
     List<SmallRestaurantCard> cards = [];
     temp = await TrendingProduct.getTrendingProducts();
+
     for (TrendingProduct product in temp) {
+      String randomImageName = getRandomImageName();
       cards.add(SmallRestaurantCard(
-          imageID: 'kfc',
+          imageID: randomImageName,
           itemName: product.productName,
-          productID: product.productID,
+          productID: product.productID.toString(),
           restaurantName: product.restaurantName,
           restaurantID: product.restaurantID,
           liked: product.liked,
@@ -169,12 +185,24 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
+  String? getCustomer() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    return user!.uid;
+  }
+
+  bool isBottomSheetDisplayed = false;
+
   @override
   Widget build(BuildContext context) {
     if (loading == true) {
       return Scaffold(
         backgroundColor: ui.val(0),
         appBar: AppBar(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            systemNavigationBarColor: ui.val(0),
+            statusBarColor: ui.val(0),
+          ),
           backgroundColor: const Color.fromARGB(255, 20, 20, 20),
           shadowColor: ui.val(0),
           automaticallyImplyLeading: false,
@@ -249,7 +277,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            Divider(),
+            Divider(color: ui.val(1)),
             SizedBox(height: 20),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -343,10 +371,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     iconSize: 25,
                     color: Colors.grey,
                     onPressed: toggle,
-                    // onPressed: () {
-                    //   print('pressed');
-                    //   print('pressed');
-                    // },
                   ),
                   decoration: BoxDecoration(
                     color: Color.fromARGB(110, 33, 33, 33),
@@ -362,10 +386,222 @@ class _HomeScreenState extends State<HomeScreen> {
           // itemCount: 5,
           padding: EdgeInsets.all(10.0),
           children: [
-            OrderNotification(customerID: widget.user.id),
-            SizedBox(height: 5),
+            StreamBuilder<DocumentSnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('customers')
+                  .doc(getCustomer())
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  var customerData = snapshot.data!.data();
+                  if (customerData != null) {
+                    // Explicitly cast customerData to a Map<String, dynamic>
+                    var customerMap = customerData as Map<String, dynamic>;
+                    var reviewData = customerMap['Review'];
+                    if (reviewData != null &&
+                        reviewData['Placed'] == false &&
+                        !isBottomSheetDisplayed) {
+                      var restaurantId = reviewData['Restaurant ID'];
+                      var restaurantName = reviewData['Restaurant Name'];
 
-            SizedBox(height: 30),
+                      isBottomSheetDisplayed = true;
+                      // Show bottom modal in a separate microtask
+                      Future.microtask(() {
+                        showModalBottomSheet(
+                          context: context,
+                          // isDismissible: false,
+                          barrierColor: const Color.fromARGB(101, 0, 0, 0),
+                          backgroundColor: ui.val(0),
+                          builder: (BuildContext context) {
+                            double resRating = 3.00;
+
+                            return Container(
+                              // height: MediaQuery.of(context).size.height * 0.4,
+                              width: MediaQuery.of(context).size.width,
+                              padding: EdgeInsets.all(16),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                // mainAxisAlignment:
+                                //     MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.2,
+                                    height: 3,
+                                    decoration: BoxDecoration(
+                                        color: Colors.white.withOpacity(0.3),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(10))),
+                                  ),
+
+                                  SizedBox(height: 30),
+                                  Text(
+                                    'Rate your experience at',
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: ui.val(4),
+                                    ),
+                                  ),
+                                  Container(
+                                    margin: EdgeInsets.only(top: 5, bottom: 5),
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.4,
+                                    padding: EdgeInsets.only(
+                                        left: 5, right: 5, top: 1, bottom: 1),
+                                    decoration: BoxDecoration(
+                                        color: Colors.purple.shade200
+                                            .withOpacity(0.2),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: Center(
+                                      child: Text(
+                                        '$restaurantName',
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                          color: ui.val(4),
+                                          // fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 40),
+                                  // Text(
+                                  //   'Restaurant ID: $restaurantId',
+                                  //   style: TextStyle(fontSize: 16),
+                                  // ),
+
+                                  RatingBar.builder(
+                                    glowColor: Colors.black,
+                                    glowRadius: 1,
+                                    initialRating: 3,
+                                    minRating: 1,
+                                    direction: Axis.horizontal,
+                                    itemCount: 5,
+                                    unratedColor: ui.val(10).withOpacity(0.1),
+                                    itemPadding:
+                                        EdgeInsets.symmetric(horizontal: 4.0),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star_rate_rounded,
+                                      color: ui.val(10),
+                                    ),
+                                    onRatingUpdate: (rating) {
+                                      // print(rating);
+                                      setState(() {
+                                        resRating = rating;
+                                      });
+                                    },
+                                  ),
+                                  SizedBox(height: 35),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                        color: ui.val(10).withOpacity(0.8),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(20))),
+                                    height: 50,
+                                    width:
+                                        MediaQuery.of(context).size.width * 1,
+                                    child: InkWell(
+                                      onTap: () async {
+                                        Navigator.of(context).pop();
+
+                                        DocumentReference restaurantRef =
+                                            FirebaseFirestore.instance
+                                                .collection('restaurants')
+                                                .doc(restaurantId);
+
+                                        // Get the restaurant document
+                                        DocumentSnapshot restaurantSnapshot =
+                                            await restaurantRef.get();
+
+                                        // Access the "Review" map
+                                        Map<String, dynamic>? reviewMap =
+                                            restaurantSnapshot['Review'];
+
+                                        if (reviewMap != null) {
+                                          // Extract "Stars" and "Rating Count" from the "Review" map
+                                          double resStars =
+                                              reviewMap['Stars'].toDouble() ??
+                                                  0.0;
+                                          print("ddsa");
+                                          double resRatingCount =
+                                              reviewMap['Rating Count']
+                                                      .toDouble() ??
+                                                  0.0;
+
+                                          // Calculate the new rating
+                                          double newRating =
+                                              ((resStars * resRatingCount) +
+                                                      resRating) /
+                                                  (resRatingCount + 1.0);
+                                          // Update the "Review" map with new values
+                                          reviewMap['Stars'] = double.parse(
+                                              newRating.toStringAsFixed(2));
+                                          reviewMap['Rating Count'] =
+                                              resRatingCount + 1.0;
+
+                                          // Update the restaurant document with the modified "Review" map
+                                          restaurantRef.update({
+                                            'Review': reviewMap,
+                                          }).then((value) {
+                                            print(
+                                                'Restaurant rating updated successfully');
+
+                                            FirebaseFirestore.instance
+                                                .collection('customers')
+                                                .doc(getCustomer())
+                                                .update({
+                                              'Review.Placed': true,
+                                              'Review.Restaurant ID': "",
+                                              'Review.Restaurant Name': "",
+                                            }).then((value) {
+                                              print(
+                                                  'Review Placed updated successfully');
+                                            }).catchError((error) {
+                                              print(
+                                                  'Error updating Review Placed: $error');
+                                            });
+                                          }).catchError((error) {
+                                            print(
+                                                'Error updating restaurant rating: $error');
+                                          });
+                                        } else {
+                                          print(
+                                              'Review map not found in restaurant document');
+                                        }
+                                      },
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(20)),
+                                      child: Container(
+                                        child: Center(
+                                          child: Text(
+                                            "Submit",
+                                            style: TextStyle(
+                                              color: ui.val(1),
+                                              // fontWeight: FontWeight.w400,
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      });
+                    }
+                  }
+                }
+                return SizedBox(); // Return an empty container if no review is placed
+              },
+            ),
+
+            OrderNotification(customerID: widget.user.id),
+
+            SizedBox(height: 35),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Text(
@@ -390,7 +626,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: trendingProducts,
               ),
             ),
-            Divider(),
+            Divider(
+              color: ui.val(1),
+            ),
             SizedBox(height: 20),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
@@ -407,7 +645,62 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Column(
               children: restaurantCards,
-            )
+            ),
+//
+//
+//
+            // StreamBuilder<DocumentSnapshot>(
+            //   stream: FirebaseFirestore.instance
+            //       .collection('customers')
+            //       .doc(getCustomer()) // Replace with the actual document ID
+            //       .snapshots(),
+            //   builder: (context, snapshot) {
+            //     if (snapshot.hasData) {
+            //       var customerData =
+            //           snapshot.data!.data()! as Map<String, dynamic>;
+            //       var reviewPlaced =
+            //           (customerData['Review'] as Map<String, dynamic>?) ?? {};
+
+            //       // Check if review has been placed for any restaurant
+            //       if (reviewPlaced['Placed'] == false) {
+            //         // Get the restaurant ID and name from the reviewPlaced map
+            //         var restaurantId = reviewPlaced['Restaurant ID'];
+            //         var restaurantName = reviewPlaced['Restaurant Name'];
+
+            //         // Show bottom modal
+            //         showModalBottomSheet(
+            //           context: context,
+            //           builder: (BuildContext context) {
+            //             return Container(
+            //               padding: EdgeInsets.all(16),
+            //               child: Column(
+            //                 mainAxisSize: MainAxisSize.min,
+            //                 children: [
+            //                   Text(
+            //                     'Review has been placed for:',
+            //                     style: TextStyle(fontSize: 18),
+            //                   ),
+            //                   SizedBox(height: 8),
+            //                   Text(
+            //                     'Restaurant ID: $restaurantId',
+            //                     style: TextStyle(fontSize: 16),
+            //                   ),
+            //                   Text(
+            //                     'Restaurant Name: $restaurantName',
+            //                     style: TextStyle(fontSize: 16),
+            //                   ),
+            //                 ],
+            //               ),
+            //             );
+            //           },
+            //         );
+            //       }
+            //     }
+            //     return Center(child: CircularProgressIndicator());
+            //   },
+            // ),
+            //
+            //
             // ListView.builder(
             //   itemBuilder: (context, index) {
             //     return RestaurantCard(restaurant: restaurants[index]);
@@ -481,57 +774,112 @@ class OrderNotification extends StatefulWidget {
 }
 
 class _OrderNotificationState extends State<OrderNotification> {
-  late int orderID = 0;
+  late String orderID = "";
   // late bool show = false;
   late String status = 'Pending';
 
   late String restaurantName = '';
-  late String time = "None";
+  late String time = "-";
   late List<FoodItem> foodItems = [];
   late int price = 0;
+
   void getOrderInfo() async {
-    var db = Mysql();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT O.order_id, O.status, R.name, O.price, P.time FROM Orders O INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) LEFT JOIN Preschedule P ON (O.order_id = P.order_id) WHERE O.customer_id=${widget.customerID} AND O.status IN ("pending", "preparing");');
-    if (rows.length == 1) {
-      for (var row in rows) {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+      // Get a reference to the Firestore instance
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Query Firestore for orders matching the customer ID and status
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
+          .collection('orders')
+          .where('customerid', isEqualTo: user!.uid)
+          .where('status', whereIn: ['pending', 'preparing'])
+          .limit(1) // Limit to 1 document
+          .get();
+
+      // Check if there is exactly one document found
+      if (querySnapshot.size == 1) {
+        // Access the first document
+        DocumentSnapshot<Map<String, dynamic>> doc = querySnapshot.docs.first;
+
+        // Extract data from the document
+        String orderId = doc.id;
+        String orderStatus = doc['status'];
+        String restaurant = doc['restaurant']['name'];
+        int orderPrice = doc['price'];
+        // String orderTime = doc['time'] ?? 'None';
+
+        // Update the state with the retrieved data
         setState(() {
-          orderID = int.parse(row.assoc()['order_id']!);
-          status = row.assoc()['status']!;
-          restaurantName = row.assoc()['name']!;
-          price = int.parse(row.assoc()['price']!);
-          var timeTemp = row.assoc()['time'] ?? 'None';
-          setState(() {
-            time = timeTemp;
-          });
+          orderID = orderId;
+          status = orderStatus;
+          restaurantName = restaurant;
+          price = orderPrice;
+          // time = orderTime;
+          show = true;
+        });
+      } else {
+        // No matching document found
+        setState(() {
+          show = false;
         });
       }
-      setState(() {
-        show = true;
-      });
-    } else {
-      setState(() {
-        show = false;
-      });
+    } catch (e) {
+      // Handle any errors that occur during the process
+      print('Error fetching order info: $e');
     }
   }
 
-  void getOrder() async {
-    var db = Mysql();
-    List<FoodItem> temp = [];
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT P.name, D.quantity, (D.quantity * P.price) AS price FROM Orders O INNER JOIN OrderDetail D ON (O.order_id = D.order_id) INNER JOIN Product P ON (D.product_id = P.product_id) WHERE O.customer_id = ${widget.customerID} AND O.status <> "completed";');
-    if (rows.isNotEmpty) {
-      for (var row in rows) {
-        temp.add(FoodItem(
-            name: row.assoc()['name']!,
-            price: int.parse(row.assoc()['price']!),
-            count: int.parse(row.assoc()['quantity']!)));
+  Future<void> getOrder() async {
+    try {
+      // Get a reference to the Firestore instance
+
+      FirebaseAuth auth = FirebaseAuth.instance;
+      User? user = auth.currentUser;
+
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+      // Query Firestore for orders where customerID matches
+      QuerySnapshot<Map<String, dynamic>> querySnapshot = await firestore
+          .collection('orders')
+          .where('customerid', isEqualTo: user!.uid)
+          .where('status', isNotEqualTo: 'completed')
+          .get();
+
+      // Initialize a temporary list to store FoodItem objects
+      List<FoodItem> temp = [];
+
+      // Iterate over the documents in the query snapshot
+      for (QueryDocumentSnapshot<Map<String, dynamic>> doc
+          in querySnapshot.docs) {
+        // Access the "Food items" array from the document
+        List<dynamic> foodItemsData = doc['Food items'];
+
+        for (var foodItemData in foodItemsData) {
+          // Access the data fields of the food item
+          String name = foodItemData.keys.first;
+          // Access the inner map containing price and quantity
+          Map<String, dynamic> innerMap = foodItemData[name];
+
+          print(foodItemData);
+          // Access the price and quantity from the inner map
+          int quantity = innerMap['Quantity'] ?? 0;
+          int price = innerMap['Price'] ?? 0;
+
+          // Create a FoodItem object and add it to the temporary list
+          temp.add(FoodItem(name: name, price: price, count: quantity));
+        }
       }
+
+      // Update the state with the new list of food items
+      setState(() {
+        foodItems = temp;
+      });
+    } catch (e) {
+      // Handle any errors that occur during the process
+      print('Error fetching getOrder(): $e');
     }
-    setState(() {
-      foodItems = temp;
-    });
   }
 
   @override
@@ -547,187 +895,196 @@ class _OrderNotificationState extends State<OrderNotification> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: ui.val(0),
     ));
-    return AnimatedContainer(
-      duration: Duration(milliseconds: 150),
-      height: show ? 400 : 0,
-      decoration: BoxDecoration(
-          color: ui.val(2),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
-      child: !show
-          ? SizedBox(width: 0)
-          : AnimatedContainer(
-              duration: Duration(milliseconds: 100),
-              // padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+    return RefreshIndicator(
+      displacement: 10,
+      backgroundColor: ui.val(2),
+      color: ui.val(4),
+      onRefresh: () async {
+        getOrderInfo();
+        getOrder();
+      },
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 150),
+        height: show ? 400 : 0,
+        decoration: BoxDecoration(
+            color: ui.val(1).withOpacity(0.8),
+            borderRadius: BorderRadius.all(Radius.circular(20))),
+        child: !show
+            ? SizedBox(width: 0)
+            : AnimatedContainer(
+                duration: Duration(milliseconds: 100),
+                // padding: EdgeInsets.only(left: 10, right: 10, top: 5),
 
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 10),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10, top: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Order",
-                          style: TextStyle(
-                            fontSize: 30,
-                            color: ui.val(4),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 10),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Order",
+                            style: TextStyle(
+                              fontSize: 30,
+                              color: ui.val(4),
+                            ),
                           ),
-                        ),
-                        Text(
-                          "#$orderID",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.white,
+                          Text(
+                            "#$orderID",
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.local_fire_department_sharp,
-                              color: Colors.red,
-                            ),
-                            SizedBox(width: 4),
-                            Text(
-                              "Status",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: ui.val(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          status,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.schedule,
-                              color: Colors.blue,
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "Expected",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: ui.val(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          time,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 3),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.restaurant,
-                              color: Colors.grey,
-                            ),
-                            SizedBox(width: 5),
-                            Text(
-                              "Restaurant",
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: ui.val(4),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          restaurantName,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: foodItems.length,
-                      itemBuilder: (context, index) {
-                        final foodItem = foodItems[index];
-                        return Container(
-                          margin: EdgeInsets.only(top: 2),
-                          // padding: EdgeInsets.all(5),
-                          child: Column(
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
                             children: [
-                              if (index == 0) Divider(color: Colors.black87),
-                              OrderStatusProductRow(foodItem: foodItem),
-                              Divider(color: Colors.black87),
+                              Icon(
+                                Icons.local_fire_department_sharp,
+                                color: Colors.red.withOpacity(0.7),
+                              ),
+                              SizedBox(width: 4),
+                              Text(
+                                "Status",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: ui.val(4),
+                                ),
+                              ),
                             ],
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(left: 10, right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Total',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
+                          Text(
+                            status,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Rs. $price',
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                ],
+                    SizedBox(height: 3),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.schedule,
+                                color: Colors.blue.withOpacity(0.7),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "Expected",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: ui.val(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            time,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 3),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.restaurant,
+                                color: Colors.grey.withOpacity(0.7),
+                              ),
+                              SizedBox(width: 5),
+                              Text(
+                                "Restaurant",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: ui.val(4),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Text(
+                            restaurantName,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: foodItems.length,
+                        itemBuilder: (context, index) {
+                          final foodItem = foodItems[index];
+                          return Container(
+                            margin: EdgeInsets.only(top: 2),
+                            // padding: EdgeInsets.all(5),
+                            child: Column(
+                              children: [
+                                if (index == 0) Divider(color: Colors.black87),
+                                OrderStatusProductRow(foodItem: foodItem),
+                                Divider(color: Colors.black87),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Total',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                          Text(
+                            'Rs. $price',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: ui.val(4),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                  ],
+                ),
               ),
-            ),
+      ),
     );
   }
 }

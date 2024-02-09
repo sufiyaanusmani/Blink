@@ -6,7 +6,11 @@ import 'package:food_delivery/components/password_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
 import 'package:food_delivery/mysql.dart';
+import 'package:flutter/services.dart';
+import '../classes/UiColor.dart';
 import 'package:food_delivery/classes/restaurant.dart';
+
+import '../classes/customer.dart';
 
 class CreateNewAccountScreen extends StatefulWidget {
   static const id = 'create_new_account_screen';
@@ -18,7 +22,6 @@ class CreateNewAccountScreen extends StatefulWidget {
 }
 
 class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
-  var username = '';
   List<Restaurant> restaurants = [];
   var password = '';
   bool loginValid = true;
@@ -65,9 +68,13 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      systemNavigationBarColor: ui.val(0),
+      statusBarColor: ui.val(0),
+    ));
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Color(0xfff1eff6),
+      backgroundColor: ui.val(0),
       body: SafeArea(
         child: Form(
           child: Container(
@@ -87,6 +94,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                         textStyle: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 30,
+                          color: ui.val(4),
                         ),
                       ),
                     ),
@@ -95,18 +103,8 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 SizedBox(
                   height: 40,
                 ),
-                PlainTextField(
-                  hintText: 'Enter Username',
-                  onChange: (text) {
-                    username = text;
-                  },
-                  labelText: 'Username',
-                  controller: TextEditingController(),
-                ),
-                SizedBox(
-                  height: 15,
-                ),
-                PlainTextField(
+                PlainTextField2(
+                  background: ui.val(3).withOpacity(0.1),
                   hintText: 'First Name',
                   onChange: (text) {
                     firstName = text;
@@ -117,7 +115,8 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 SizedBox(
                   height: 15,
                 ),
-                PlainTextField(
+                PlainTextField2(
+                  background: ui.val(2).withOpacity(0.1),
                   hintText: 'Last Name',
                   onChange: (text) {
                     lastName = text;
@@ -128,7 +127,8 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 SizedBox(
                   height: 15,
                 ),
-                PlainTextField(
+                PlainTextField2(
+                  background: ui.val(0).withOpacity(0.1),
                   hintText: 'Email',
                   onChange: (text) {
                     email = text;
@@ -165,58 +165,43 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 ),
                 LargeButton(
                   onPressed: () async {
-                    if (username == '' ||
-                        firstName == '' ||
-                        lastName == '' ||
-                        email == '' ||
-                        password == '') {
-                      setState(() {
-                        loginFailedMessage = 'Enter all fields';
-                      });
-                    } else if (!isValidUsername(username)) {
-                      setState(() {
-                        loginFailedMessage = 'Invalid Username Format';
-                      });
-                    } else if (!isValidName(firstName)) {
-                      setState(() {
-                        loginFailedMessage = 'Invalid First Name Format';
-                      });
-                    } else if (!isValidName(lastName)) {
-                      setState(() {
-                        loginFailedMessage = 'Invalid Name Format';
-                      });
-                    } else if (!isValidEmail(email)) {
-                      setState(() {
-                        loginFailedMessage = 'Invalid Email Format';
-                      });
-                    } else if (!isValidPassword(password)) {
-                      setState(() {
-                        loginFailedMessage = 'Invalid Password Format';
-                      });
-                    } else {
-                      setState(() {
-                        loginFailedMessage = '';
-                      });
-                      int customerID = await db.createNewAccount(
-                          firstName, lastName, email, username, password);
-                      if (customerID == -1) {
-                        setState(() {
-                          loginFailedMessage = 'Account already exists';
-                        });
-                      } else {
-                        setState(() {
-                          loginFailedMessage = '';
-                          username = '';
-                          firstName = '';
-                          lastName = '';
-                          email = '';
-                          password = '';
-                        });
-                        Navigator.pop(context);
-                      }
-                    }
+                    // if (firstName == '' ||
+                    //     lastName == '' ||
+                    //     email == '' ||
+                    //     password == '') {
+                    //   setState(() {
+                    //     loginFailedMessage = 'Enter all fields';
+                    //   });
+                    // } else if (!isValidName(firstName)) {
+                    //   setState(() {
+                    //     loginFailedMessage = 'Invalid First Name Format';
+                    //   });
+                    // } else if (!isValidName(lastName)) {
+                    //   setState(() {
+                    //     loginFailedMessage = 'Invalid Name Format';
+                    //   });
+                    // } else if (!isValidEmail(email)) {
+                    //   setState(() {
+                    //     loginFailedMessage = 'Invalid Email Format';
+                    //   });
+                    // } else if (!isValidPassword(password)) {
+                    //   setState(() {
+                    //     loginFailedMessage = 'Invalid Password Format';
+                    //   });
+                    // } else {
+                    setState(() {
+                      loginFailedMessage = '';
+                    });
+                    Customer customer = Customer(
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        password: password);
+                    customer.registerUser(email, password, firstName, lastName);
+                    print(customer.uid);
+                    // }
                   },
-                  color: Colors.lightBlue,
+                  color: ui.val(10),
                   verticalPadding: 15,
                   buttonChild: Text(
                     'Register',
@@ -225,7 +210,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                       textStyle: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
-                        color: Colors.white,
+                        color: ui.val(1),
                       ),
                     ),
                   ),

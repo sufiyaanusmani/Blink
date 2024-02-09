@@ -12,6 +12,8 @@ import 'package:food_delivery/classes/cart.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 import 'package:food_delivery/services/email_send.dart';
 
+import 'dart:math';
+
 class YourCartScreen extends StatefulWidget {
   const YourCartScreen({super.key});
 
@@ -45,6 +47,20 @@ class _YourCartScreenState extends State<YourCartScreen> {
 
   @override
   Widget build(BuildContext context) {
+    List<String> imageNames = [
+      'yellow.jpg',
+      'blue.jpg',
+      'green.jpg',
+      'bleen.jpg',
+      'purple.jpg'
+    ];
+
+    String getRandomImageName() {
+      Random random = Random();
+      int index = random.nextInt(imageNames.length);
+      return imageNames[index];
+    }
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: ui.val(0),
@@ -103,7 +119,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                               child: Opacity(
                                 opacity: 0.8,
                                 child: Image.asset(
-                                  'images/kfc.jpg',
+                                  "images/${getRandomImageName()}",
                                   width: 120.0,
                                   height: 120.0,
                                   fit: BoxFit.cover,
@@ -146,7 +162,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
                                       }
                                       if (Cart.cart.isEmpty) {
                                         Cart.cart = [];
-                                        Cart.restaurantID = -1;
+                                        Cart.restaurantID = "-1";
                                       }
                                       totalPrice = Cart.getTotalPrice();
                                     });
@@ -359,7 +375,7 @@ class _YourCartScreenState extends State<YourCartScreen> {
 
             // bottom Slider
             AbsorbPointer(
-              absorbing: Cart.cart.isNotEmpty ? false : true,
+              absorbing: (Cart.cart.isNotEmpty) ? false : true,
               child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 5.0),
                 //https://pub.dev/packages/slide_to_act_reborn
@@ -388,66 +404,97 @@ class _YourCartScreenState extends State<YourCartScreen> {
                       ).show(context);
                     } else {
                       var db = Mysql();
-                      if (await db.alreadyOrdered(Cart.customerID)) {
-                        AnimatedSnackBar.material(
-                          'You can only place one order at a time',
-                          borderRadius: BorderRadius.circular(10),
-                          duration: const Duration(seconds: 4),
-                          type: AnimatedSnackBarType.error,
-                          mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-                        ).show(context);
+                      if (await db.alreadyOrdered()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.red.shade400,
+                            duration: Duration(seconds: 2),
+                            content: Text("Order Already in Queue!",
+                                style: TextStyle(color: Colors.white)),
+                            action: SnackBarAction(
+                              label: 'Close',
+                              textColor: Colors.white,
+                              onPressed: () {
+                                // Code to execute.
+                              },
+                            ),
+                          ),
+                        );
                       } else {
-                        int orderID = 0;
+                        String orderID = "";
                         if (HomePage.preOrder == false) {
                           orderID = await db.placeOrder(
-                              Cart.customerID, Cart.restaurantID, totalPrice);
-                        } else {
-                          orderID = await db.placePreOrder(
-                              Cart.customerID, Cart.restaurantID, totalPrice);
-                          HomePage.preOrder = false;
+                              itemList,
+                              Cart.restaurantID,
+                              Cart.restaurantName,
+                              totalPrice);
                         }
-                        Iterable<ResultSetRow> rows = await db.getResults(
-                            'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
-                        int price = 0;
-                        String restaurantName = '';
-                        String status = '';
-                        if (rows.length == 1) {
-                          for (var row in rows) {
-                            restaurantName = row.assoc()['name']!;
-                            status = row.assoc()['status']!;
-                            price = int.parse(row.assoc()['price']!);
-                          }
-                          Order order = Order(
-                              orderID: orderID,
-                              restaurantName: restaurantName,
-                              status: status,
-                              price: price);
-                          for (CartProduct product in Cart.cart) {
-                            db.addOrderDetail(
-                                orderID, product.product.id, product.quantity);
-                          }
-                          setState(() {
-                            Cart.cart = [];
-                            itemList = [];
-                            totalPrice = 0;
-                            HomePage.preOrderHour = 8;
-                            HomePage.preOrderMinute = 0;
-                            HomePage.preOrder = false;
-                            HomePage.preOrderText = "08:00 am";
-                          });
-                          EmailSender email = EmailSender();
-                          email.sendEmail(orderID);
+                        /*Pre-order */
+                        // else {
+                        //   orderID = await db.placePreOrder(
+                        //       Cart.customerID, Cart.restaurantID, totalPrice);
+                        //   HomePage.preOrder = false;
+                        // }
 
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (_, animation, __) => FadeTransition(
-                                opacity: animation,
-                                child: OrderStatusScreen(order: order),
-                              ),
+                        // Iterable<ResultSetRow> rows = await db.getResults(
+                        //     'SELECT order_id, name, status, price FROM Orders INNER JOIN Restaurant ON Orders.restaurant_id=Restaurant.restaurant_id WHERE customer_id=${Cart.customerID} ORDER BY placed_at DESC LIMIT 1;');
+                        // int price = 0;
+                        // String restaurantName = '';
+                        // String status = '';
+                        // if (rows.length == 1) {
+                        // for (var row in rows) {
+                        //   restaurantName = row.assoc()['name']!;
+                        //   status = row.assoc()['status']!;
+                        //   price = int.parse(row.assoc()['price']!);
+                        // }
+                        // Order order = Order(
+                        //     orderID: orderID,
+                        //     restaurantName: restaurantName,
+                        //     status: status,
+                        //     price: price);
+                        // for (CartProduct product in Cart.cart) {
+                        //   db.addOrderDetail(
+                        //       orderID, product.product.id, product.quantity);
+                        // }
+                        setState(() {
+                          Cart.cart = [];
+                          itemList = [];
+                          totalPrice = 0;
+                          HomePage.preOrderHour = 8;
+                          HomePage.preOrderMinute = 0;
+                          HomePage.preOrder = false;
+                          HomePage.preOrderText = "08:00 am";
+                        });
+                        // EmailSender email = EmailSender();
+                        // email.sendEmail(orderID);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            backgroundColor: Colors.blue.shade800,
+                            duration: Duration(seconds: 2),
+                            content: Text("Order placed ${orderID}",
+                                style: TextStyle(color: Colors.white)),
+                            action: SnackBarAction(
+                              label: 'Close',
+                              textColor: Colors.white,
+                              onPressed: () {
+                                // Code to execute.
+                              },
                             ),
-                          );
-                        }
+                          ),
+                        );
+
+                        // _showPopup(context, order);
+
+                        // Navigator.push(
+                        //   context,
+                        //   PageRouteBuilder(
+                        //     pageBuilder: (_, animation, __) => FadeTransition(
+                        //       opacity: animation,
+                        //       child: OrderStatusScreen(order: order),
+                        //     ),
+                        //   ),
+                        // );
+                        // }
                       }
                     }
                   },
@@ -486,6 +533,52 @@ class _YourCartScreenState extends State<YourCartScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showPopup(BuildContext context, Order order) async {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        String capitalizedString = order.status.substring(0, 1).toUpperCase() +
+            order.status.substring(1);
+        return AlertDialog(
+          backgroundColor: ui.val(2),
+          title: Text(
+            'Order Details',
+            style: TextStyle(color: ui.val(4), fontWeight: FontWeight.w600),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(
+                  'Order ID: ${order.orderID}',
+                  style:
+                      TextStyle(color: ui.val(4), fontWeight: FontWeight.w600),
+                ),
+                Text(
+                  'Order status: ${capitalizedString}',
+                  style:
+                      TextStyle(color: ui.val(4), fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Close the popup
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Close',
+                style:
+                    TextStyle(color: ui.val(10), fontWeight: FontWeight.w600),
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 

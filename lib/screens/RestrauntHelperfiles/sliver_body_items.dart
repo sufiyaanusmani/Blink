@@ -5,6 +5,7 @@ import 'package:food_delivery/classes/cart.dart';
 
 import '../../classes/product.dart';
 import 'package:food_delivery/classes/UIColor.dart';
+import 'dart:math';
 // class ProductCategory {
 //   ProductCategory({
 //     required this.category,
@@ -30,10 +31,14 @@ import 'package:food_delivery/classes/UIColor.dart';
 // }
 
 class SliverBodyItems extends StatefulWidget {
-  const SliverBodyItems(
-      {Key? key, required this.listItem, required this.customerID})
-      : super(key: key);
+  const SliverBodyItems({
+    Key? key,
+    required this.listItem,
+    required this.customerID,
+    required this.scaffold,
+  }) : super(key: key);
 
+  final BuildContext scaffold;
   final List<Product> listItem;
   final int customerID;
 
@@ -42,6 +47,38 @@ class SliverBodyItems extends StatefulWidget {
 }
 
 class _SliverBodyItemsState extends State<SliverBodyItems> {
+  List<String> imageNames = [
+    'yellow.jpg',
+    'blue.jpg',
+    'green.jpg',
+    'bleen.jpg',
+    'purple.jpg'
+  ];
+
+  String getRandomImageName() {
+    Random random = Random();
+    int index = random.nextInt(imageNames.length);
+    return imageNames[index];
+  }
+
+  void snackbar(String content, BuildContext context, bool error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor:
+            error == true ? Colors.red.shade400 : Colors.blue.shade800,
+        duration: Duration(seconds: 2),
+        content: Text(content, style: TextStyle(color: Colors.white)),
+        action: SnackBarAction(
+          label: 'Close',
+          textColor: Colors.white,
+          onPressed: () {
+            // Code to execute.
+          },
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverList(
@@ -54,34 +91,38 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
               onTap: () {
                 if (Cart.cart.length == 0) {
                   Cart.addNewProduct(product);
-                  AnimatedSnackBar.material(
-                    '${product.name} added to cart',
-                    borderRadius: BorderRadius.circular(10),
-                    duration: Duration(seconds: 4),
-                    type: AnimatedSnackBarType.success,
-                    mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-                  ).show(context);
+                  // AnimatedSnackBar.material(
+                  //   '${product.name} added to cart',
+                  //   borderRadius: BorderRadius.circular(10),
+                  //   duration: Duration(seconds: 4),
+                  //   type: AnimatedSnackBarType.success,
+                  //   mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                  // ).show(context);
+                  snackbar('${product.name} added to cart', context, false);
                 } else if (Cart.cart.length > 0) {
                   if (Cart.cart[0].product.restaurantID ==
                       product.restaurantID) {
                     Cart.addNewProduct(product);
-                    AnimatedSnackBar.material(
-                      '${product.name} added to cart',
-                      borderRadius: BorderRadius.circular(10),
-                      duration: Duration(seconds: 4),
-                      type: AnimatedSnackBarType.success,
-                      mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-                    ).show(context);
+                    // AnimatedSnackBar.material(
+                    //   '${product.name} added to cart',
+                    //   borderRadius: BorderRadius.circular(10),
+                    //   duration: Duration(seconds: 4),
+                    //   type: AnimatedSnackBarType.success,
+                    //   mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                    // ).show(context);
+                    snackbar('${product.name} added to cart', context, false);
                   } else {
                     if (Cart.cart[0].product.restaurantID !=
                         product.restaurantID) {
-                      AnimatedSnackBar.material(
-                        'Cannot add products from different restaurant',
-                        borderRadius: BorderRadius.circular(10),
-                        duration: Duration(seconds: 4),
-                        type: AnimatedSnackBarType.error,
-                        mobileSnackBarPosition: MobileSnackBarPosition.bottom,
-                      ).show(context);
+                      // AnimatedSnackBar.material(
+                      //   'Cannot add products from different restaurant',
+                      //   borderRadius: BorderRadius.circular(10),
+                      //   duration: Duration(seconds: 4),
+                      //   type: AnimatedSnackBarType.error,
+                      //   mobileSnackBarPosition: MobileSnackBarPosition.bottom,
+                      // ).show(context);
+                      snackbar('Cannot add products from different restaurant',
+                          context, true);
                     }
                   }
                 }
@@ -143,7 +184,7 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
                                   image: DecorationImage(
                                     fit: BoxFit.cover,
                                     image: AssetImage(
-                                      "images/kfc.jpg",
+                                      "images/${getRandomImageName()}",
                                     ),
                                   ),
                                 ),
@@ -161,16 +202,16 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
                                     color: Color.fromARGB(171, 255, 255, 255),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5)),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(
-                                            0.5), // Color of the shadow
-                                        spreadRadius: 5, // Spread radius
-                                        blurRadius: 7, // Blur radius
-                                        offset: Offset(
-                                            0, 3), // Offset of the shadow
-                                      ),
-                                    ],
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //     color: Colors.grey.withOpacity(
+                                    //         0.5), // Color of the shadow
+                                    //     spreadRadius: 5, // Spread radius
+                                    //     blurRadius: 7, // Blur radius
+                                    //     offset: Offset(
+                                    //         0, 3), // Offset of the shadow
+                                    //   ),
+                                    // ],
                                   ),
                                   child: InkWell(
                                     onTap: () {
@@ -180,13 +221,13 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
                                           product.liked = true;
                                         });
                                         db.likeProduct(
-                                            widget.customerID, product.id);
+                                            product);
                                       } else {
                                         setState(() {
                                           product.liked = false;
                                         });
                                         db.dislikeProduct(
-                                            widget.customerID, product.id);
+                                            product);
                                       }
                                     },
                                     child: product.liked == true
@@ -196,7 +237,7 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
                                           )
                                         : Icon(
                                             Icons.favorite_outline,
-                                            color: Colors.black,
+                                            color: ui.val(1),
                                           ),
                                   ),
                                 ),
