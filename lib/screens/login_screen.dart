@@ -199,225 +199,222 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: ui.val(0),
-      body: _user == null
-          ? SafeArea(
-              child: Form(
-                child: Container(
-                  margin: EdgeInsets.symmetric(
-                    horizontal: 30,
+      body: SafeArea(
+        child: Form(
+          child: Container(
+            margin: EdgeInsets.symmetric(
+              horizontal: 30,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                AnimatedTextKit(
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      'Hello Again!',
+                      textAlign: TextAlign.center,
+                      textStyle: GoogleFonts.lato(
+                        textStyle: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          color: ui.val(4),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 15,
+                ),
+                Text(
+                  'Welcome back, you\'ve been missed',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.lato(
+                    textStyle: TextStyle(
+                      fontSize: 20,
+                      color: ui.val(4),
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                SizedBox(
+                  height: 50,
+                ),
+                PlainTextField(
+                  hintText: 'Enter Email',
+                  onChange: (text) {
+                    email = text;
+                  },
+                  labelText: 'Email',
+                  controller: _usernameTextController,
+                  errorText: loginFailedMessage.isNotEmpty
+                      ? loginFailedMessage
+                      : null, // Pass error message
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                PasswordTextField(
+                  error: loginFailedMessage.isNotEmpty ? true : false,
+                  hintText: 'Enter Password',
+                  onChange: (text) {
+                    password = text;
+                  },
+                  controller: _passwordTextController,
+                  errorText: null,
+                ),
+                SizedBox(
+                  height: 20,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 5),
+                    child: Text(
+                      loginFailedMessage.isNotEmpty ? loginFailedMessage : "",
+                      style: TextStyle(color: Colors.red.withOpacity(0.7)),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: 5, right: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      AnimatedTextKit(
-                        animatedTexts: [
-                          TypewriterAnimatedText(
-                            'Hello Again!',
-                            textAlign: TextAlign.center,
-                            textStyle: GoogleFonts.lato(
-                              textStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 40,
-                                color: ui.val(4),
-                              ),
+                      GestureDetector(
+                        child: Text(
+                          'Create new Account',
+                          textAlign: TextAlign.end,
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: ui.val(4).withOpacity(0.5),
                             ),
                           ),
-                        ],
+                        ),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      CreateNewAccountScreen()));
+                        },
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Text(
-                        'Welcome back, you\'ve been missed',
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.lato(
-                          textStyle: TextStyle(
-                            fontSize: 20,
-                            color: ui.val(4),
+                      GestureDetector(
+                        child: Text(
+                          'Forgot Password',
+                          textAlign: TextAlign.end,
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: ui.val(4).withOpacity(0.3),
+                            ),
                           ),
                         ),
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      PlainTextField(
-                        hintText: 'Enter Email',
-                        onChange: (text) {
-                          email = text;
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context, builder: buildBottomSheet);
                         },
-                        labelText: 'Email',
-                        controller: _usernameTextController,
-                        errorText: loginFailedMessage.isNotEmpty
-                            ? loginFailedMessage
-                            : null, // Pass error message
-                      ),
-                      SizedBox(
-                        height: 25,
-                      ),
-                      PasswordTextField(
-                        error: loginFailedMessage.isNotEmpty ? true : false,
-                        hintText: 'Enter Password',
-                        onChange: (text) {
-                          password = text;
-                        },
-                        controller: _passwordTextController,
-                        errorText: null,
-                      ),
-                      SizedBox(
-                        height: 20,
-                        child: Padding(
-                          padding: EdgeInsets.only(left: 5),
-                          child: Text(
-                            loginFailedMessage.isNotEmpty
-                                ? loginFailedMessage
-                                : "",
-                            style:
-                                TextStyle(color: Colors.red.withOpacity(0.7)),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: 5, right: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              child: Text(
-                                'Create new Account',
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    color: ui.val(4).withOpacity(0.5),
-                                  ),
-                                ),
-                              ),
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            CreateNewAccountScreen()));
-                              },
-                            ),
-                            GestureDetector(
-                              child: Text(
-                                'Forgot Password',
-                                textAlign: TextAlign.end,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 15,
-                                    color: ui.val(4).withOpacity(0.3),
-                                  ),
-                                ),
-                              ),
-                              onTap: () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: buildBottomSheet);
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      LargeButton(
-                        onPressed: () async {
-                          setState(() {
-                            _isLoadingSignIn = true;
-                          });
-                          try {
-                            final user = await _auth.signInWithEmailAndPassword(
-                                email: email, password: password);
-                            if (user != null) {
-                              getRestaurants();
-                              Navigator.pushNamed(context, MainNavigator.id,
-                                  arguments: HomeScreenArguments(
-                                    user: User1(id: 1, firstName: "Sufiyaan"),
-                                    restaurants: restaurants,
-                                  ),);
-                            }
-                          } catch (e) {
-                            print(e);
-                            setState(() {
-                              loginFailedMessage =
-                                  'Email or password incorrect'; // Set error message
-                            });
-                          } finally {
-                            setState(() {
-                              _isLoadingSignIn = false;
-                            });
-                          }
-                        },
-                        color: ui.val(10),
-                        verticalPadding: 15,
-                        buttonChild: _isLoadingSignIn
-                            ? SizedBox(
-                                height: 23,
-                                width: 23,
-                                child: CircularProgressIndicator(
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.white),
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : Text(
-                                'Sign In',
-                                textAlign: TextAlign.center,
-                                style: GoogleFonts.lato(
-                                  textStyle: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: ui.val(1),
-                                  ),
-                                ),
-                              ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      LargeButton(
-                        color: ui.val(1).withOpacity(0.3),
-                        verticalPadding: 10,
-                        onPressed: () {
-                          setState(() {
-                            _isLoadingGoogle = true;
-                          });
-                          _handleGoogleSignIn();
-                        },
-                        buttonChild: _isLoadingGoogle
-                            ? SizedBox(
-                                height: 40,
-                                width: 40,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: CircularProgressIndicator(
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                    strokeWidth: 2,
-                                  ),
-                                ),
-                              )
-                            : Image.asset(
-                                'images/google.png',
-                                height: 40,
-                                color: ui.val(4).withOpacity(0.5),
-                              ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            )
-          : h(),
+                SizedBox(
+                  height: 20,
+                ),
+                LargeButton(
+                  onPressed: () async {
+                    setState(() {
+                      _isLoadingSignIn = true;
+                    });
+                    try {
+                      final user = await _auth.signInWithEmailAndPassword(
+                          email: email, password: password);
+                      if (user != null) {
+                        getRestaurants();
+                        Navigator.pushNamed(
+                          context,
+                          MainNavigator.id,
+                          arguments: HomeScreenArguments(
+                            user: User1(id: 1, firstName: "Sufiyaan"),
+                            restaurants: restaurants,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      print(e);
+                      setState(() {
+                        loginFailedMessage =
+                            'Email or password incorrect'; // Set error message
+                      });
+                    } finally {
+                      setState(() {
+                        _isLoadingSignIn = false;
+                      });
+                    }
+                  },
+                  color: ui.val(10),
+                  verticalPadding: 15,
+                  buttonChild: _isLoadingSignIn
+                      ? SizedBox(
+                          height: 23,
+                          width: 23,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : Text(
+                          'Sign In',
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.lato(
+                            textStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: ui.val(1),
+                            ),
+                          ),
+                        ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                LargeButton(
+                  color: ui.val(1).withOpacity(0.3),
+                  verticalPadding: 10,
+                  onPressed: () {
+                    setState(() {
+                      _isLoadingGoogle = true;
+                    });
+                    _handleGoogleSignIn();
+                  },
+                  buttonChild: _isLoadingGoogle
+                      ? SizedBox(
+                          height: 40,
+                          width: 40,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        )
+                      : Image.asset(
+                          'images/google.png',
+                          height: 40,
+                          color: ui.val(4).withOpacity(0.5),
+                        ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 

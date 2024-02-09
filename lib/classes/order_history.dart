@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:mysql_client/mysql_client.dart';
 
 class OrderHistory {
-  final int orderID;
+  final String orderID;
   final String date;
-  final String time;
   final String status;
   final int price;
   final String restaurantName;
@@ -12,25 +12,29 @@ class OrderHistory {
   OrderHistory(
       {required this.orderID,
       required this.date,
-      required this.time,
       required this.status,
       required this.price,
       required this.restaurantName});
 
-  static Future<List<OrderHistory>> getOrderHistory(int customerID) async {
+  static Future<List<OrderHistory>> getOrderHistory(String customerID) async {
     List<OrderHistory> orders = [];
-    var db = Mysql();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT O.order_id, DATE(O.placed_at) AS date, DATE_ADD(TIME(O.placed_at), INTERVAL 5 HOUR) AS time, O.status, O.price, R.name FROM Orders O INNER JOIN Restaurant R ON (O.restaurant_id = R.restaurant_id) WHERE O.customer_id=$customerID AND O.status="completed";');
 
-    for (var row in rows) {
-      orders.add(OrderHistory(
-          orderID: int.parse(row.assoc()['order_id']!),
-          date: row.assoc()['date']!,
-          time: row.assoc()['time']!,
-          status: row.assoc()['status']!,
-          price: int.parse(row.assoc()['price']!),
-          restaurantName: row.assoc()['name']!));
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection("orders")
+          .where("customerid", isEqualTo: customerID)
+          .get();
+      for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+        Map<String, dynamic> order = doc.data() as Map<String, dynamic>;
+        orders.add(OrderHistory(
+            orderID: doc.id,
+            date: order["placedat"].toString(),
+            status: order["status"],
+            price: order["price"],
+            restaurantName: order["restaurant"]["name"]));
+      }
+    } catch (e) {
+      print(e);
     }
 
     return orders;
