@@ -381,79 +381,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                LargeButton(
-                  color: ui.val(1).withOpacity(0.3),
-                  verticalPadding: 10,
-                  onPressed: () {
-                    setState(() {
-                      _isLoadingGoogle = true;
-                    });
-                    _handleGoogleSignIn();
-                  },
-                  buttonChild: _isLoadingGoogle
-                      ? SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: Padding(
-                            padding: const EdgeInsets.all(10),
-                            child: CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                              strokeWidth: 2,
-                            ),
-                          ),
-                        )
-                      : Image.asset(
-                          'images/google.png',
-                          height: 40,
-                          color: ui.val(4).withOpacity(0.5),
-                        ),
-                ),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  Widget h() {
-    return Center(
-        child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text("${_user?.uid}"),
-        MaterialButton(
-            child: Text("Sign Out"),
-            onPressed: () {
-              _auth.signOut();
-            })
-      ],
-    ));
-  }
-
-  void _handleGoogleSignIn() {
-    try {
-      // Implement your Google sign-in logic here
-      // For example:
-      // GoogleAuthProvider _googleAuthProvider = GoogleAuthProvider();
-      // _auth.signInWithProvider(_googleAuthProvider);
-      // Set a delay to simulate the Google sign-in process
-      Future.delayed(Duration(seconds: 2), () {
-        setState(() {
-          _isLoadingGoogle = false;
-        });
-        // After sign-in, redirect to Google
-        // For demonstration, navigate back to the login screen after a short delay
-        Future.delayed(Duration(seconds: 2), () {
-          Navigator.pop(context); // Close the login screen
-          // Navigate to Google or handle redirection as required
-          // Example:
-          // Navigator.push(context, MaterialPageRoute(builder: (context) => GoogleScreen()));
-        });
-      });
-    } catch (error) {
-      print(error);
-    }
   }
 }
