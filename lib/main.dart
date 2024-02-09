@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/api/firebase_api.dart';
+// import 'package:food_delivery/services/foreground_service.dart';
+// import 'package:food_delivery/api/firebase_api.dart';
 import 'package:food_delivery/services/navigator.dart';
 import 'package:food_delivery/screens/forgot_password_screen.dart';
 import 'package:food_delivery/screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+// import 'package:permission_handler/permission_handler.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -11,7 +13,13 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseApi().initNotifications();
+  // await Permission.notification.isDenied.then((value) {
+  //   if (value) {
+  //     Permission.notification.request();
+  //   }
+  // });
+  // await initializeService();
+  // await FirebaseApi().initNotifications();
   runApp(FoodDelivery());
 }
 

@@ -59,6 +59,11 @@ dependencies:
   sign_in_button: ^3.0.0
   flutter_rating_bar: ^4.0.1
   firebase_messaging: ^14.7.15
+  http:
+  flutter_local_notifications: ^16.3.2
+  flutter_background_service: ^5.0.5
+  flutter_background_service_android: ^6.2.2
+  permission_handler: ^11.2.1
 
 dev_dependencies:
   flutter_test:

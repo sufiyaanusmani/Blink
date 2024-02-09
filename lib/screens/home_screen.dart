@@ -1,4 +1,5 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
@@ -224,7 +225,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     iconSize: 25,
                     color: Colors.grey,
                     // onPressed: toggle,
-                    onPressed: toggleshow,
+                    onPressed: () {
+                      toggleshow();
+
+                      // FlutterBackgroundService().invoke('setAsForeground');
+                      // print("foreground");
+                    },
                     // onPressed: () {
                     //   print('pressed');
                     //   print('pressed');
