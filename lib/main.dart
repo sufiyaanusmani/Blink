@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/services/navigator.dart';
+import 'package:food_delivery/screens/forgot_password_screen.dart';
 import 'package:food_delivery/screens/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -32,7 +33,9 @@ class FoodDelivery extends StatelessWidget {
       initialRoute: LoginScreen.id,
       routes: {
         LoginScreen.id: (context) => LoginScreen(),
-        MainNavigator.id: (context) => MainNavigator(),
+        MainNavigator.id: (context) => const MainNavigator(),
+        '/': (context) => LoginScreen(),
+        ForgotPassword.id: (context) => const ForgotPassword()
         // HomeScreen.id: (context) => HomeScreen(loginID: -1),
         // RestaurantScreen.id: (context) => RestaurantScreen(),
         // SettingsScreen.id: (context) => SettingsScreen(),

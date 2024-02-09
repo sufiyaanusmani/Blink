@@ -13,7 +13,7 @@ import 'package:food_delivery/arguments/home_screen_arguments.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/services.dart';
 import 'package:food_delivery/classes/UIColor.dart';
-import 'package:sign_in_button/sign_in_button.dart';
+import 'package:food_delivery/screens/forgot_password_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/navigator.dart';
 
@@ -311,8 +311,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         onTap: () {
-                          showModalBottomSheet(
-                              context: context, builder: buildBottomSheet);
+                          Navigator.pushNamed(context, ForgotPassword.id);
                         },
                       ),
                     ],

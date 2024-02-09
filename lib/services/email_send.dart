@@ -4,8 +4,8 @@ import 'package:mailer/smtp_server.dart';
 import 'package:mysql_client/mysql_client.dart';
 
 class EmailSender {
-  final String email = "suffiyaanusmani@gmail.com";
-  final String password = "ksfuybxbaqqzgqxd";
+  static const String email = "suffiyaanusmani@gmail.com";
+  static const String password = "ksfuybxbaqqzgqxd";
 
   void sendEmail(String orderID) async {
     var db = Mysql();
@@ -38,6 +38,25 @@ class EmailSender {
       ..subject = '#$orderID - Thank You for your Order'
       ..html =
           "<h1>Order Confirmation</h1>\n<p>Dear $firstName $lastName</p><p>Thank you for placing an order. Your order details are as follows:</p><p>Order ID: $orderID</p><p>Restaurant Name: $restaurantName</p><p>Price: Rs. $price</p><p>Time: ${DateTime.now()}</p><p>&copy; 2023 Blink. All rights reserved.</p>";
+
+    try {
+      final sendReport = await send(message, smtpServer);
+    } on MailerException catch (e) {
+      print("Message not sent");
+      for (var p in e.problems) {
+        print('Problem: ${p.code}: ${p.msg}');
+      }
+    }
+  }
+
+  static void sendResetPasswordCode(String email, String code) async {
+    final smtpServer = gmail(email, password);
+    final message = Message()
+      ..from = Address(email, 'Blink')
+      ..recipients.add(email)
+      ..subject = 'Blink - Password Reset Code'
+      ..html =
+          "<h1>Dear Blink User,</h1>\n<p>You have requested to reset your password. Below is your password reset code:</p><strong>$code</strong></string><p>Please enter this code in the app to proceed with the password reset. If you did not request this, you can safely ignore this email.</p><p>&copy; 2023 Blink. All rights reserved.</p>";
 
     try {
       final sendReport = await send(message, smtpServer);
