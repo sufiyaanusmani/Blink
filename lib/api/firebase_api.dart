@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -127,14 +129,40 @@ class NotificationServices {
     String? token = await messaging.getToken();
     return token!;
   }
+    void updateFCMToken(String customerId, String newToken) {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Get a reference to the document within the "customers" collection
+    DocumentReference customerRef =
+        firestore.collection('customers').doc(customerId);
+
+    // Update the document with the new fcmToken value
+    customerRef.update({
+      'fcmToken': newToken,
+    }).then((_) {
+      print('FCM token updated successfully');
+    }).catchError((error) {
+      print('Error updating FCM token: $error');
+    });
+  }
 
   void isTokenRefresh() async {
-    messaging.onTokenRefresh.listen((event) {
+    messaging.onTokenRefresh.listen((event) async {
       event.toString();
       if (kDebugMode) {
         print('zzz: refresh');
       }
+      // update in database once the token depreciates
+      String token = await getDeviceToken();
+      updateFCMToken(getCustomer()!, token);
     });
+  }
+
+
+String? getCustomer() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    return user!.uid;
   }
 
   //handle tap on notification when app is in background or terminated
