@@ -1,4 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:food_delivery/api/firebase_api.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +17,7 @@ import 'package:food_delivery/classes/UIColor.dart';
 import '../classes/trending_product.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 
 late bool show = true;
@@ -137,11 +141,28 @@ class _HomeScreenState extends State<HomeScreen> {
     return imageNames[index];
   }
 
+  void updateFCMToken(String customerId, String newToken) {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Get a reference to the document within the "customers" collection
+    DocumentReference customerRef =
+        firestore.collection('customers').doc(customerId);
+
+    // Update the document with the new fcmToken value
+    customerRef.update({
+      'fcmToken': newToken,
+    }).then((_) {
+      print('FCM token updated successfully');
+    }).catchError((error) {
+      print('Error updating FCM token: $error');
+    });
+  }
+
   void getTrendingProducts() async {
     List<TrendingProduct> temp = [];
     List<SmallRestaurantCard> cards = [];
     temp = await TrendingProduct.getTrendingProducts();
-
+    print("hanji");
     for (TrendingProduct product in temp) {
       String randomImageName = getRandomImageName();
       cards.add(SmallRestaurantCard(
@@ -172,16 +193,33 @@ class _HomeScreenState extends State<HomeScreen> {
   //   }
   // }
 
+  NotificationServices notificationServices = NotificationServices();
+
   @override
   void initState() {
+    notificationServices.requestNotificationPermission();
+    notificationServices.forgroundMessage();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
+
+    notificationServices.getDeviceToken().then((value) {
+      if (kDebugMode) {
+        print('device token');
+        print(value);
+      }
+      updateFCMToken(getCustomer()!, value);
+    });
+
     if (restaurantCards.isEmpty) {
       getRestaurants();
     }
-    if (trendingProducts.isEmpty) {
-      getTrendingProducts();
-    }
+    // if (trendingProducts.isEmpty) {
+    //   getTrendingProducts();
+    // }
+
     Cart.customerID = widget.user.id;
-    // TODO: implement initState
+
     super.initState();
   }
 
@@ -224,7 +262,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     iconSize: 25,
                     color: Colors.grey,
                     // onPressed: toggle,
-                    onPressed: toggleshow,
+                    onPressed: () {
+                      toggleshow();
+
+                      // FlutterBackgroundService().invoke('setAsForeground');
+                      // print("foreground");
+                    },
                     // onPressed: () {
                     //   print('pressed');
                     //   print('pressed');
