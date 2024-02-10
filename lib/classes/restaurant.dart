@@ -33,7 +33,6 @@ class Restaurant {
         int ratingCount = (reviewData['Rating Count'] ?? 0).toInt();
         double stars = (reviewData['Stars'] ?? 0.0).toDouble();
 
-        print('bbbb');
         restaurants.add(Restaurant(
           restaurantID: restaurant.id,
           name: restaurantData['name'],
@@ -43,7 +42,6 @@ class Restaurant {
           totalRatings: ratingCount.toString(),
           estimatedTime: restaurantData['Estimated Time'].toString() + " mins",
         ));
-        print('aaaa');
       }
     } catch (e) {
       print("error: ${e}");
