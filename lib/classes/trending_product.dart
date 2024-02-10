@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:food_delivery/mysql.dart';
 import 'package:mysql_client/mysql_client.dart';
 
 class TrendingProduct {
-  final int productID;
+  final String productID;
   final String productName;
-  final int restaurantID;
+  final String restaurantID;
   final String restaurantName;
   final int categoryID;
   final int price;
@@ -22,25 +23,67 @@ class TrendingProduct {
       required this.liked});
 
   static Future<List<TrendingProduct>> getTrendingProducts() async {
-    List<TrendingProduct> products = [];
-    var db = Mysql();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        "SELECT P.product_id, P.name AS product_name, R.restaurant_id as restaurant_id, R.name AS restaurant_name, SUM(D.quantity) AS quantity, C.category_id, C.name AS category_name, P.price FROM OrderDetail D INNER JOIN Product P ON (D.product_id = P.product_id) INNER JOIN Restaurant R ON (P.restaurant_id = R.restaurant_id) INNER JOIN Category C ON (P.category_id = C.category_id) GROUP BY P.product_id ORDER BY quantity DESC LIMIT 3;");
+    List<TrendingProduct> trendingProducts = [];
+    List<Map<String, dynamic>> products = [];
+    List<Map<String, String>> restaurants = [];
 
-    for (var row in rows) {
-      products.add(
-        TrendingProduct(
-          productID: int.parse(row.assoc()['product_id']!),
-          productName: row.assoc()['product_name']!,
-          restaurantID: int.parse(row.assoc()['restaurant_id']!),
-          restaurantName: row.assoc()['restaurant_name']!,
-          categoryName: row.assoc()['category_name']!,
-          price: int.parse(row.assoc()['price']!),
-          categoryID: int.parse(row.assoc()['category_id']!),
-          liked: false,
-        ),
-      );
+    // get all restaurants
+    try {
+      QuerySnapshot querySnapshot =
+          await FirebaseFirestore.instance.collection("restaurants").get();
+      for (QueryDocumentSnapshot restaurantData in querySnapshot.docs) {
+        Map<String, dynamic> res =
+            restaurantData.data() as Map<String, dynamic>;
+        restaurants.add({
+          "id": restaurantData.id.toString(),
+          "name": res["name"].toString()
+        });
+      }
+    } catch (e) {
+      print(e);
     }
-    return products;
+
+    // get all products
+    try {
+      for (Map<String, String> restaurant in restaurants) {
+        QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+            .collection("restaurants")
+            .doc(restaurant["id"])
+            .collection("foodItems")
+            .get();
+        for (QueryDocumentSnapshot foodData in querySnapshot.docs) {
+          Map<String, dynamic> food = foodData.data() as Map<String, dynamic>;
+          products.add({
+            "id": foodData.id,
+            "name": food["Prod Name"].toString() ?? " ",
+            "restaurantID": restaurant["id"].toString(),
+            "categoryName": food["Category Name"].toString(),
+            "price": food["Price"] ?? 0,
+            "restaurantName": restaurant["name"].toString(),
+            "liked": false,
+            "likeCount": int.parse(food["Like Count"])
+          });
+        }
+      }
+    } catch (e) {
+      print(e);
+    }
+
+    products.sort((a, b) => b["likeCount"].compareTo(a["likeCount"]));
+    List<Map<String, dynamic>> top5 = products.sublist(0, 5);
+
+    for (Map<String, dynamic> product in top5) {
+      trendingProducts.add(TrendingProduct(
+          productID: product["id"],
+          productName: product["name"],
+          restaurantID: product["restaurantID"],
+          restaurantName: product["restaurantName"],
+          categoryName: product["categoryName"],
+          price: product["price"],
+          categoryID: 1,
+          liked: product["liked"]));
+    }
+
+    return trendingProducts;
   }
 }

@@ -46,6 +46,7 @@ class Mysql {
       List<Map<String, dynamic>> foodItemsData = foodItems.map((cartProduct) {
         return {
           cartProduct.product.name: {
+            'id': cartProduct.product.id,
             'Price': cartProduct.product.price,
             'Quantity': cartProduct.quantity,
           }

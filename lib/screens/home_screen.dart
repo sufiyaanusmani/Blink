@@ -115,7 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
       } else {
         imageName = "kfc.jpg";
       }
-      print(r);
       tempRestaurantCards.add(RestaurantCard(
         restaurants: r,
         resIndex: index,
@@ -162,7 +161,6 @@ class _HomeScreenState extends State<HomeScreen> {
     List<TrendingProduct> temp = [];
     List<SmallRestaurantCard> cards = [];
     temp = await TrendingProduct.getTrendingProducts();
-    print("hanji");
     for (TrendingProduct product in temp) {
       String randomImageName = getRandomImageName();
       cards.add(SmallRestaurantCard(
@@ -170,7 +168,7 @@ class _HomeScreenState extends State<HomeScreen> {
           itemName: product.productName,
           productID: product.productID.toString(),
           restaurantName: product.restaurantName,
-          restaurantID: product.restaurantID,
+          restaurantID: product.restaurantID.toString(),
           liked: product.liked,
           categoryID: product.categoryID,
           categoryName: product.categoryName,
@@ -180,18 +178,6 @@ class _HomeScreenState extends State<HomeScreen> {
       trendingProducts = cards;
     });
   }
-
-  // void getRestaurantsCards() {
-  //   for (Restaurant r in widget.restaurants) {
-  //     setState(() {
-  //       restaurantCards.add(
-  //         RestaurantCard(
-  //           restaurant: r,
-  //         ),
-  //       );
-  //     });
-  //   }
-  // }
 
   NotificationServices notificationServices = NotificationServices();
 
@@ -214,9 +200,10 @@ class _HomeScreenState extends State<HomeScreen> {
     if (restaurantCards.isEmpty) {
       getRestaurants();
     }
-    // if (trendingProducts.isEmpty) {
-    //   getTrendingProducts();
-    // }
+
+    if (trendingProducts.isEmpty) {
+      getTrendingProducts();
+    }
 
     Cart.customerID = widget.user.id;
 

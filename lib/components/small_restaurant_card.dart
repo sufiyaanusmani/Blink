@@ -11,7 +11,7 @@ class SmallRestaurantCard extends StatelessWidget {
   final String itemName;
   final String restaurantName;
   final String productID;
-  final int restaurantID;
+  final String restaurantID;
   final int categoryID;
   final String categoryName;
   final int price;

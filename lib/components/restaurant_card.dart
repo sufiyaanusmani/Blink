@@ -86,7 +86,7 @@ class RestaurantCard extends StatelessWidget {
                               "${restaurants[resIndex].rating} (${restaurants[resIndex].totalRatings})",
                               style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 20,
+                                fontSize: 18,
                               ),
                             ),
                           ],
