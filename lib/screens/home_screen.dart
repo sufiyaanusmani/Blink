@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:food_delivery/api/firebase_api.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
@@ -173,8 +175,27 @@ class _HomeScreenState extends State<HomeScreen> {
   //   }
   // }
 
+ NotificationServices notificationServices = NotificationServices();
+
   @override
   void initState() {
+
+
+    notificationServices.requestNotificationPermission();
+    notificationServices.forgroundMessage();
+    notificationServices.firebaseInit(context);
+    notificationServices.setupInteractMessage(context);
+    notificationServices.isTokenRefresh();
+
+    notificationServices.getDeviceToken().then((value){
+      if (kDebugMode) {
+        print('device token');
+        print(value);
+      }
+    });
+
+
+    
     if (restaurantCards.isEmpty) {
       getRestaurants();
     }
