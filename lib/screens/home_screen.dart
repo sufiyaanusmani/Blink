@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
 import 'package:food_delivery/firebase_services.dart';
-import 'package:food_delivery/user1.dart';
+import 'package:food_delivery/classes/user1.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/classes/cart.dart';

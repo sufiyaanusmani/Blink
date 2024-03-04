@@ -6,7 +6,7 @@ import 'package:food_delivery/components/plain_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
 import 'package:food_delivery/firebase_services.dart';
-import 'package:food_delivery/user1.dart';
+import 'package:food_delivery/classes/user1.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:food_delivery/arguments/home_screen_arguments.dart';
