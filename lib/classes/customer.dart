@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class Customer {
   String uid = "";
@@ -9,6 +10,20 @@ class Customer {
   final String password;
   final _firestore = FirebaseFirestore.instance;
 
+  /// Constructor for [Customer]
+  ///
+  /// Parameters:
+  ///   - firstName: [String]
+  ///   - lastName: [String]
+  ///   - email: [String]
+  ///   - password: [String]
+  ///   - uid: [String]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// Customer obj = Customer(firstName, lastName, email, password, uid);
+  /// ```
   Customer(
       {required this.firstName,
       required this.lastName,
@@ -16,6 +31,20 @@ class Customer {
       required this.password,
       this.uid = ""});
 
+  /// Helper function for [registerUser] function
+  ///
+  /// This function inserts a new document in [customers] collection
+  ///
+  /// Parameters:
+  ///   - uid: [String]
+  ///   - firstName: [String]
+  ///   - lastName: [String]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// customer._createUser(uid, firstName, lastName);
+  /// ```
   Future<void> _createUser(
       String uid, String firstName, String lastName) async {
     await _firestore
@@ -24,17 +53,30 @@ class Customer {
         .set({"firstname": firstName, "lastname": lastName});
   }
 
+  /// Registers a new user in Firebase Authentication
+  ///
+  /// Parameters:
+  ///   - email: [String]
+  ///   - password: [String]
+  ///   - firstName: [String]
+  ///   - lastName: [String]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// customer.registerUser(email, password, firstName, lastName);
+  /// ```
   Future<void> registerUser(
       String email, String password, String firstName, String lastName) async {
-    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final FirebaseAuth auth = FirebaseAuth.instance;
     try {
-      final UserCredential result = await _auth.createUserWithEmailAndPassword(
+      final UserCredential result = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      if (result != null) {
-        _createUser(result.user!.uid, firstName, lastName);
-      }
+      _createUser(result.user!.uid, firstName, lastName);
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 }
