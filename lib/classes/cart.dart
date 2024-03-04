@@ -7,6 +7,16 @@ class Cart {
   static int customerID = -1;
   static String restaurantName = "";
 
+  /// Adds a product to the cart
+  ///
+  /// Parameters:
+  ///   - product: [Product]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// Cart.addNewProduct(product);
+  /// ```
   static void addNewProduct(Product product) {
     bool exists = false;
     if (cart.isEmpty) {
@@ -27,6 +37,16 @@ class Cart {
     }
   }
 
+  /// Returns total price of products stored in cart
+  ///
+  /// Returns:
+  ///   [int]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// Cart.getTotalPrice();
+  /// ```
   static int getTotalPrice() {
     int total = 0;
     for (CartProduct product in cart) {
