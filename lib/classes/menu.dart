@@ -1,6 +1,6 @@
 import 'package:food_delivery/classes/product.dart';
 
-// a re-implementaion of restraunt.dart
+// a re-implementation of restaurant.dart
 // this class is wes never used
 
 class Menu {
@@ -10,6 +10,20 @@ class Menu {
   int time;
   List<Product> products;
 
+  /// Constructor for [Menu]
+  ///
+  /// Parameters:
+  ///   - rating: [int]
+  ///   - restaurantName: [String]
+  ///   - description: [String]
+  ///   - time: [int]
+  ///   - products: [List<Product>]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// Customer obj = Menu(rating, restaurantName, description, time, products);
+  /// ```
   Menu(
       {required this.rating,
       required this.restaurantName,
