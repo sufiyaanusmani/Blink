@@ -22,7 +22,7 @@ class Menu {
   /// Example:
   /// ```dart
   /// // Usage example of the function.
-  /// Customer obj = Menu(rating, restaurantName, description, time, products);
+  /// Menu obj = Menu(rating, restaurantName, description, time, products);
   /// ```
   Menu(
       {required this.rating,
