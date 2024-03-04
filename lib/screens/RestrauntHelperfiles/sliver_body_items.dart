@@ -1,6 +1,6 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/firebase_services.dart';
 import 'package:food_delivery/classes/cart.dart';
 
 import '../../classes/product.dart';
@@ -215,19 +215,17 @@ class _SliverBodyItemsState extends State<SliverBodyItems> {
                                   ),
                                   child: InkWell(
                                     onTap: () {
-                                      var db = Mysql();
+                                      var db = FirebaseServices();
                                       if (product.liked == false) {
                                         setState(() {
                                           product.liked = true;
                                         });
-                                        db.likeProduct(
-                                            product);
+                                        db.likeProduct(product);
                                       } else {
                                         setState(() {
                                           product.liked = false;
                                         });
-                                        db.dislikeProduct(
-                                            product);
+                                        db.dislikeProduct(product);
                                       }
                                     },
                                     child: product.liked == true

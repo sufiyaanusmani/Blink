@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/firebase_services.dart';
 import 'package:food_delivery/screens/restaurant_screen.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 
@@ -116,7 +116,7 @@ class RestaurantCard extends StatelessWidget {
         ),
       ),
       onTap: () {
-        var db = Mysql();
+        var db = FirebaseServices();
         print(restaurants[resIndex].restaurantID);
         db.incrementViewCount(restaurants[resIndex].restaurantID);
         Navigator.push(

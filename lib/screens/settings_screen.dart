@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:food_delivery/classes/order_history.dart';
 import 'package:food_delivery/components/setting_switch.dart';
 import 'package:food_delivery/components/title_button.dart';
-import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/firebase_services.dart';
 import 'package:food_delivery/screens/privacy_policy_screen.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:mysql_client/mysql_client.dart';

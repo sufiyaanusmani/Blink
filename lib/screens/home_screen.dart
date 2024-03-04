@@ -7,7 +7,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/components/small_restaurant_card.dart';
 import 'package:food_delivery/components/restaurant_card.dart';
-import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/firebase_services.dart';
 import 'package:food_delivery/user1.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:food_delivery/classes/restaurant.dart';
@@ -43,7 +43,7 @@ class FoodItem {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var db = Mysql();
+  var db = FirebaseServices();
   String firstName = '';
   List<RestaurantCard> restaurantCards = [];
   List<SmallRestaurantCard> trendingProducts = [];

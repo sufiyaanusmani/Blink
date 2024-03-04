@@ -5,7 +5,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:food_delivery/components/plain_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
-import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/firebase_services.dart';
 import 'package:food_delivery/user1.dart';
 import 'package:mysql_client/mysql_client.dart';
 import 'package:food_delivery/classes/restaurant.dart';
@@ -118,39 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return BottomContainer();
   }
 
-  var db = Mysql();
-
-  Future<bool> _login(String username, String password) async {
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT * FROM Customer C INNER JOIN Account A ON (C.username = A.username) WHERE C.username="$username" AND A.password="$password";');
-    if (rows.length == 1) {
-      for (var row in rows) {
-        loginID = int.parse(row.assoc()['customer_id']!);
-        firstName = row.assoc()['first_name']!;
-      }
-      return true;
-    } else {
-      setState(() {
-        loginFailedMessage = 'Email or password incorrect'; // Set error message
-      });
-      return false;
-    }
-  }
-
-  void getRestaurants() async {
-    Iterable<ResultSetRow> rows = await db
-        .getResults('SELECT restaurant_id, name, owner_name FROM Restaurant;');
-    for (var row in rows) {
-      restaurants.add(Restaurant(
-          restaurantID: "1",
-          name: row.assoc()['name']!,
-          ownerName: row.assoc()['owner_name']!,
-          rating: "5",
-          totalRatings: "69",
-          description: "hello",
-          estimatedTime: "420 mins"));
-    }
-  }
+  var db = FirebaseServices();
 
   TextEditingController _usernameTextController = TextEditingController();
   TextEditingController _passwordTextController = TextEditingController();
@@ -329,7 +297,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       final user = await _auth.signInWithEmailAndPassword(
                           email: email, password: password);
                       if (user != null) {
-                        getRestaurants();
                         Navigator.pushNamed(
                           context,
                           MainNavigator.id,

@@ -5,7 +5,7 @@ import 'package:food_delivery/components/plain_text_field.dart';
 import 'package:food_delivery/components/password_text_field.dart';
 import 'package:food_delivery/components/large_button.dart';
 import 'package:food_delivery/components/bottom_container.dart';
-import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/firebase_services.dart';
 import 'package:flutter/services.dart';
 import '../classes/UiColor.dart';
 import 'package:food_delivery/classes/restaurant.dart';
@@ -35,7 +35,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
     return BottomContainer();
   }
 
-  var db = Mysql();
+  var db = FirebaseServices();
 
   @override
   void initState() {

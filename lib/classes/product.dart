@@ -1,7 +1,7 @@
 import 'package:food_delivery/classes/cart.dart';
 import 'package:food_delivery/classes/restaurant.dart';
 import 'package:mysql_client/mysql_client.dart';
-import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/firebase_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -86,7 +86,7 @@ class Product {
   }
 
   static Future<List<Product>> getAllProducts() async {
-    var db = Mysql();
+    var db = FirebaseServices();
     List<Product> products = [];
     List<Map<String, String>> restaurants = [];
 

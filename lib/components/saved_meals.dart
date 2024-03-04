@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 import 'package:food_delivery/classes/cart.dart';
-import 'package:food_delivery/mysql.dart';
+import 'package:food_delivery/firebase_services.dart';
 import 'dart:math';
 import '../../classes/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -235,7 +235,7 @@ class _SavedMealsScreenState extends State<SavedMealsScreen> {
                                     ),
                                     child: InkWell(
                                       onTap: () {
-                                        var db = Mysql();
+                                        var db = FirebaseServices();
                                         db.dislikeProduct(product);
                                         // remove this product here
                                         setState(() {

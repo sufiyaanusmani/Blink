@@ -1,38 +1,9 @@
 import 'package:food_delivery/classes/cart_product.dart';
 import 'package:food_delivery/classes/product.dart';
-import 'package:food_delivery/components/time_selector.dart';
-import 'package:mysql_client/mysql_client.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class Mysql {
-  static String host = 'bqquhv7hiskomx4izkti-mysql.services.clever-cloud.com';
-  static String user = 'ucavnwuvwpt2fdby';
-  static String password = 'V8PQZ8r0QlbmEJriBE5f';
-  static String db = 'bqquhv7hiskomx4izkti';
-
-  static int port = 3306;
-
-  Mysql();
-
-  Future<MySQLConnection> getConnection() async {
-    return await MySQLConnection.createConnection(
-      host: host,
-      port: port,
-      userName: user,
-      password: password,
-      databaseName: db,
-    );
-  }
-
-  Future<Iterable<ResultSetRow>> getResults(String query) async {
-    var conn = await getConnection();
-    await conn.connect();
-    var results = await conn.execute(query);
-    conn.close();
-    return results.rows;
-  }
-
+class FirebaseServices {
   Future<String> placeOrder(List<CartProduct> foodItems, String restaurantID,
       String restaurantName, int price) async {
     String? uid = FirebaseAuth.instance.currentUser?.uid;
@@ -105,16 +76,6 @@ class Mysql {
   //   return orderID;
   // }
 
-  void addOrderDetail(int orderID, String productID, int quantity) async {
-    var conn = await getConnection();
-    await conn.connect();
-    var stmt = await conn.prepare(
-        'INSERT INTO OrderDetail (order_id, product_id, quantity) VALUES (?, ?, ?)');
-    await stmt.execute([orderID, productID, quantity]);
-    await stmt.deallocate();
-    conn.close();
-  }
-
   void incrementViewCount(String restaurantID) {
     try {
       // Reference to the specific restaurant document using the provided ID
@@ -156,36 +117,6 @@ class Mysql {
       print('User is not authenticated.');
       return false;
     }
-  }
-
-  Future<int> createNewAccount(String firstName, String lastName, String email,
-      String username, String password) async {
-    int customerID = -1;
-    var db = Mysql();
-    var conn = await getConnection();
-    Iterable<ResultSetRow> rows = await db.getResults(
-        'SELECT * FROM Customer WHERE email="$email" OR username="$username";');
-    if (rows.length > 0) {
-      return -1;
-    }
-    conn = await getConnection();
-    await conn.connect();
-    await conn.transactional((conn) async {
-      await conn.execute(
-          'INSERT INTO Account (username, password) VALUES ("$username", "$password");');
-      await conn.execute(
-          'INSERT INTO Customer (first_name, last_name, email, username) VALUES ("$firstName", "$lastName", "$email", "$username");');
-    });
-    conn.close();
-    rows = await db.getResults(
-        'SELECT customer_id FROM Customer WHERE first_name="$firstName" AND last_name="$lastName" AND email="$email"S AND username=$username;');
-
-    if (rows.length == 1) {
-      for (var row in rows) {
-        customerID = int.parse(row.assoc()['customer_id']!);
-      }
-    }
-    return customerID;
   }
 
   void likeProduct(Product product) async {
