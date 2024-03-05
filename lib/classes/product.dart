@@ -12,6 +12,22 @@ class Product {
   int price;
   bool liked;
 
+  /// Constructor for [Product]
+  ///
+  /// Parameters:
+  ///   - id: [String]
+  ///   - name: [String]
+  ///   - restaurantID: [String]
+  ///   - restaurantName: [String]
+  ///   - categoryName: [String]
+  ///   - price: [int]
+  ///   - liked: [bool]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// Product obj = Product(id, name, restaurantID, categoryName, price, restaurantName, liked);
+  /// ```
   Product(
       {required this.id,
       required this.name,
@@ -21,6 +37,19 @@ class Product {
       required this.restaurantName,
       required this.liked});
 
+  /// Gets all product of a particular restaurant
+  ///
+  /// Parameters:
+  ///   - restaurant: [Resturant]
+  ///
+  /// Returns:
+  ///   Future<List<Product>>
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// await getProducts(restaurant);
+  /// ```
   static Future<List<Product>> getProducts(Restaurant restaurant) async {
     List<Product> products = [];
 
@@ -86,6 +115,16 @@ class Product {
     return products;
   }
 
+  /// Get products of all restaurants
+  ///
+  /// Returns:
+  ///   Future<List<Product>>
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// await getAllProducts();
+  /// ```
   static Future<List<Product>> getAllProducts() async {
     List<Product> products = [];
     List<Map<String, String>> restaurants = [];
