@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
 class Restaurant {
   String restaurantID;
@@ -10,6 +11,23 @@ class Restaurant {
   String estimatedTime;
   String description;
 
+  /// Constructor for [Restaurant]
+  ///
+  /// Parameters:
+  ///   - restaurantID: [String]
+  ///   - name: [String]
+  ///   - ownerName: [String]
+  ///   - image: [String]
+  ///   - rating: [String]
+  ///   - totalRatings: [String]
+  ///   - estimatedTime: [String]
+  ///   - description: [String]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// Restaurant obj = Restaurant(restaurantID, name, ownerName, rating, totalRatings, description, estimatedTime);
+  /// ```
   Restaurant(
       {required this.restaurantID,
       required this.name,
@@ -19,6 +37,16 @@ class Restaurant {
       required this.description,
       required this.estimatedTime});
 
+  /// Gets all restaurants
+  ///
+  /// Returns:
+  ///   Future<List<Restaurant>>
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// await getRestaurants();
+  /// ```
   static Future<List<Restaurant>> getRestaurants() async {
     List<Restaurant> restaurants = [];
     try {
@@ -40,11 +68,13 @@ class Restaurant {
           description: restaurantData['description'],
           rating: stars.toString(),
           totalRatings: ratingCount.toString(),
-          estimatedTime: restaurantData['Estimated Time'].toString() + " mins",
+          estimatedTime: "${restaurantData['Estimated Time']} mins",
         ));
       }
     } catch (e) {
-      print("error: ${e}");
+      if (kDebugMode) {
+        print("error: $e");
+      }
     }
     return restaurants;
   }
