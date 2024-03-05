@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:food_delivery/firebase_services.dart';
-import 'package:mysql_client/mysql_client.dart';
+import 'package:flutter/foundation.dart';
 
 class TrendingProduct {
   final String productID;
@@ -12,6 +11,23 @@ class TrendingProduct {
   final String categoryName;
   final bool liked;
 
+  /// Constructor for [TrendingProduct]
+  ///
+  /// Parameters:
+  ///   - productID: [String]
+  ///   - productName: [String]
+  ///   - restaurantID: [String]
+  ///   - restaurantName: [String]
+  ///   - categoryID: [int]
+  ///   - price: [int]
+  ///   - categoryName: [String]
+  ///   - liked: [bool]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// TrendingProduct obj = TrendingProduct(productID, productName, restaurantName, restaurantName, categoryName, price, categoryID, liked);
+  /// ```
   TrendingProduct(
       {required this.productID,
       required this.productName,
@@ -22,6 +38,16 @@ class TrendingProduct {
       required this.categoryID,
       required this.liked});
 
+  /// Gets trending products
+  ///
+  /// Returns:
+  ///   Future<List<TrendingProduct>>
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// await getTrendingProducts();
+  /// ```
   static Future<List<TrendingProduct>> getTrendingProducts() async {
     List<TrendingProduct> trendingProducts = [];
     List<Map<String, dynamic>> products = [];
@@ -40,7 +66,9 @@ class TrendingProduct {
         });
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
 
     // get all products
@@ -66,7 +94,9 @@ class TrendingProduct {
         }
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
 
     products.sort((a, b) => b["likeCount"].compareTo(a["likeCount"]));
