@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:food_delivery/firebase_services.dart';
-import 'package:mysql_client/mysql_client.dart';
+import 'package:flutter/foundation.dart';
 
 class OrderHistory {
   final String orderID;
@@ -9,6 +8,20 @@ class OrderHistory {
   final int price;
   final String restaurantName;
 
+  /// Constructor for [OrderHistory]
+  ///
+  /// Parameters:
+  ///   - orderID: [String]
+  ///   - date: [String]
+  ///   - status: [String]
+  ///   - price: [int]
+  ///   - restaurantName: [String]
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// OrderHistory obj = OrderHistory(orderID, date, status, price, restaurantName);
+  /// ```
   OrderHistory(
       {required this.orderID,
       required this.date,
@@ -16,6 +29,19 @@ class OrderHistory {
       required this.price,
       required this.restaurantName});
 
+  /// Fetches order history of logged in customer
+  ///
+  /// Parameters:
+  ///   - customerID: [String]
+  ///
+  /// Returns:
+  ///   Future<List<OrderHistory>>
+  ///
+  /// Example:
+  /// ```dart
+  /// // Usage example of the function.
+  /// List<OrderHistory> orderHistory = await OrderHistory.getOrderHistory(customerID);
+  /// ```
   static Future<List<OrderHistory>> getOrderHistory(String customerID) async {
     List<OrderHistory> orders = [];
 
@@ -34,7 +60,9 @@ class OrderHistory {
             restaurantName: order["restaurant"]["name"]));
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
 
     return orders;

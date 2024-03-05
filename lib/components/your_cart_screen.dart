@@ -4,8 +4,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:food_delivery/classes/cart_product.dart';
 import 'package:food_delivery/classes/order.dart';
 import 'package:food_delivery/firebase_services.dart';
-import 'package:food_delivery/screens/order_status_screen.dart';
-import 'package:mysql_client/mysql_client.dart';
 import 'package:slide_to_act_reborn/slide_to_act_reborn.dart';
 import 'package:food_delivery/components/time_selector.dart';
 import 'package:food_delivery/classes/cart.dart';
