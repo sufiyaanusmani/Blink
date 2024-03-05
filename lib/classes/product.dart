@@ -1,7 +1,5 @@
-import 'package:food_delivery/classes/cart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:food_delivery/classes/restaurant.dart';
-import 'package:mysql_client/mysql_client.dart';
-import 'package:food_delivery/firebase_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -59,7 +57,6 @@ class Product {
         // Get liked products array
         List<dynamic> likedProducts = customerSnapshot['Liked Products'];
 
-        // print("cust: $likedProducts");
         // Iterate through products and mark liked if found in likedProducts
         for (Product product in products) {
           // Iterate through likedProducts to check if the product is liked
@@ -78,15 +75,18 @@ class Product {
         }
       }
     } catch (error) {
-      print('Error fetching products from getProducts(): $error');
-      print(products);
+      if (kDebugMode) {
+        print('Error fetching products from getProducts(): $error');
+      }
+      if (kDebugMode) {
+        print(products);
+      }
     }
 
     return products;
   }
 
   static Future<List<Product>> getAllProducts() async {
-    var db = FirebaseServices();
     List<Product> products = [];
     List<Map<String, String>> restaurants = [];
 
@@ -102,7 +102,9 @@ class Product {
         });
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
 
     try {
@@ -125,19 +127,10 @@ class Product {
         }
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
-    // for (var row in rows) {
-    //   // firstName = row.assoc()['first_name']!;
-    //   Product product = Product(
-    //       id: (row.assoc()['product_id']!),
-    //       name: row.assoc()['name']!,
-    //       restaurantID: (row.assoc()['restaurant_id']!),
-    //       categoryName: row.assoc()['category_name']!,
-    //       price: int.parse(row.assoc()['price']!),
-    //       liked: false);
-    //   products.add(product);
-    // }
 
     return products;
   }
