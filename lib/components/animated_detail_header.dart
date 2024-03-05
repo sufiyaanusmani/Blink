@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:food_delivery/classes/UIColor.dart';
 import 'dart:ui';
 import 'package:food_delivery/classes/restaurant.dart';
@@ -25,7 +26,9 @@ String getImg(String resName) {
   } else {
     image = "kfc.jpg";
   }
-  print("image: $image");
+  if (kDebugMode) {
+    print("image: $image");
+  }
   return image;
 }
 
@@ -125,7 +128,7 @@ class _AnimatedDetailHeaderState extends State<AnimatedDetailHeader> {
                         resName,
                         style: TextStyle(
                           color: Colors.white,
-                          shadows: [
+                          shadows: const [
                             Shadow(
                               color: Colors.black,
                               blurRadius: 5,
@@ -147,11 +150,11 @@ class _AnimatedDetailHeaderState extends State<AnimatedDetailHeader> {
                       opacity: widget.bottomPercent < 1 ? 0 : 1,
                       child: Opacity(
                         opacity: widget.topPercent,
-                        child: Container(
+                        child: SizedBox(
                           width: MediaQuery.of(context).size.width - 25,
                           child: Text(
                             widget.restaurants[widget.resIndex].description,
-                            style: TextStyle(
+                            style: const TextStyle(
                               shadows: [
                                 Shadow(
                                   color: Colors.black,
@@ -192,7 +195,7 @@ class _AnimatedDetailHeaderState extends State<AnimatedDetailHeader> {
               height: 20,
               decoration: BoxDecoration(
                 color: ui.val(2),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.elliptical(30, 10),
                   topRight: Radius.elliptical(30, 10),
                 ),
@@ -241,7 +244,9 @@ class _AnimatedDetailHeaderShimmerState
 
   void updateResIndexParent(int newIndex) async {
     widget.resIndex = newIndex;
-    print("new value: $newIndex");
+    if (kDebugMode) {
+      print("new value: $newIndex");
+    }
   }
 
   @override
@@ -311,7 +316,7 @@ class _AnimatedDetailHeaderShimmerState
                                   : widget.restaurants[widget.resIndex].name,
                               style: TextStyle(
                                 color: Colors.white,
-                                shadows: [
+                                shadows: const [
                                   Shadow(
                                     color: Colors.black,
                                     blurRadius: 5,
@@ -335,7 +340,7 @@ class _AnimatedDetailHeaderShimmerState
                       opacity: widget.bottomPercent < 1 ? 0 : 1,
                       child: Opacity(
                         opacity: widget.topPercent,
-                        child: Container(
+                        child: SizedBox(
                           width: MediaQuery.of(context).size.width - 25,
                           child: ValueListenableBuilder<bool>(
                               valueListenable: widget.textWidgetsNotifier,
@@ -345,7 +350,7 @@ class _AnimatedDetailHeaderShimmerState
                                       ? ""
                                       : widget.restaurants[widget.resIndex]
                                           .description,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     shadows: [
                                       Shadow(
                                         color: Colors.black,
@@ -374,17 +379,17 @@ class _AnimatedDetailHeaderShimmerState
             child: ValueListenableBuilder<bool>(
                 valueListenable: widget.textWidgetsNotifier,
                 builder: (context, value, child) {
-                  if (value == false)
+                  if (value == false) {
                     return MenuInfoContainer(
                       restaurant: widget.restaurants[widget.resIndex],
                     );
-                  else
+                  } else {
                     return Container(
                         height: 70,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 33, 33, 33),
+                        decoration: const BoxDecoration(
+                          color: Color.fromARGB(255, 33, 33, 33),
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(30),
                           ),
@@ -435,6 +440,7 @@ class _AnimatedDetailHeaderShimmerState
                             ),
                           ],
                         ));
+                  }
                 }),
           ),
         ),
@@ -449,7 +455,7 @@ class _AnimatedDetailHeaderShimmerState
               height: 20,
               decoration: BoxDecoration(
                 color: ui.val(2),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.elliptical(30, 10),
                   topRight: Radius.elliptical(30, 10),
                 ),
@@ -480,8 +486,8 @@ class _MenuInfoContainerState extends State<MenuInfoContainer> {
     return Container(
         height: 70,
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          color: const Color.fromARGB(255, 33, 33, 33),
+        decoration: const BoxDecoration(
+          color: Color.fromARGB(255, 33, 33, 33),
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(30),
           ),
@@ -520,7 +526,8 @@ class _MenuInfoContainerState extends State<MenuInfoContainer> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.access_time_rounded, color: Colors.grey, size: 17),
+                  const Icon(Icons.access_time_rounded,
+                      color: Colors.grey, size: 17),
                   Text(
                     " ${widget.restaurant.estimatedTime}    100rs minimum",
                     style: TextStyle(
@@ -628,8 +635,8 @@ class _PlaceImagesPageViewState extends State<PlaceImagesPageView> {
                     image: AssetImage(
                         "images/${getImg(widget.restaurants[currentIndex].name)}"),
                     fit: BoxFit.cover,
-                    colorFilter:
-                        ColorFilter.mode(Colors.black26, BlendMode.darken),
+                    colorFilter: const ColorFilter.mode(
+                        Colors.black26, BlendMode.darken),
                   ),
                 ),
                 child: GestureDetector(
