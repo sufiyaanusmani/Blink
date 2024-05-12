@@ -132,13 +132,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  List<String> imageNames = ['yellow', 'blue', 'green', 'bleen', 'purple'];
-
-  String getRandomImageName() {
-    Random random = Random();
-    int index = random.nextInt(imageNames.length);
-    return imageNames[index];
-  }
 
   void updateFCMToken(String customerId, String newToken) {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -157,10 +150,23 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  List<String> imageNames = ['yellow', 'blue', 'green', 'bleen', 'purple'];
+
+  String getRandomImageName() {
+    Random random = Random();
+    int index = random.nextInt(imageNames.length);
+    return imageNames[index];
+  }
   void getTrendingProducts() async {
     List<TrendingProduct> temp = [];
     List<SmallRestaurantCard> cards = [];
-    temp = await TrendingProduct.getTrendingProducts();
+    try {
+      temp = await TrendingProduct.getTrendingProducts();
+    } catch (e) {
+      // Handle the error (e.g., show an error message)
+      print('Error fetching trending products: $e');
+      return; // Exit the method early
+    }
     for (TrendingProduct product in temp) {
       String randomImageName = getRandomImageName();
       cards.add(SmallRestaurantCard(

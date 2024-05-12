@@ -39,7 +39,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Enter Your Email',
+                'Enter Your Email                      (If Recieved click on link)',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 30,
@@ -88,22 +88,22 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
                 child: _isLoading
                     ? CircularProgressIndicator(
-                        // Show loading indicator if isLoading is true
-                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                      )
+                  // Show loading indicator if isLoading is true
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                )
                     : Container(
-                        width: double.infinity,
-                        alignment: Alignment.center,
-                        child: Text(
-                          'Send Email',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Send Email',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
               ),
               SizedBox(height: 20),
               SizedBox(height: 10), // Added sized box
@@ -156,7 +156,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     setState(() {
       _isLoading = true; // Set isLoading to true to show loading indicator
     });
+
+    // Delay to simulate network request
     await Future.delayed(const Duration(seconds: 2));
+
     final emailRegex = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
     if (emailRegex.hasMatch(email)) {
       FirebaseAuth auth = FirebaseAuth.instance;
@@ -165,6 +168,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       } catch (e) {
         print(e);
       }
+    } else {
+      // Email is in incorrect format
+      // Provide feedback to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Email is in incorrect format'),
+        ),
+      );
     }
 
     if (context.mounted) {
@@ -176,5 +187,4 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     });
   }
 
-  // Function to simulate sending email
 }

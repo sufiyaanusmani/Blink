@@ -65,6 +65,25 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
         RegExp(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}|":;<>,.?/~`]).*$')
             .hasMatch(value); // Complex password requirements
   }
+  void _showAccountCreatedDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Account Created"),
+          content: Text("Your account has been successfully created."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: Text("OK"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -110,7 +129,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                     firstName = text;
                   },
                   labelText: 'First Name',
-                  controller: TextEditingController(),
+                  controller: TextEditingController(text: firstName),
                 ),
                 SizedBox(
                   height: 15,
@@ -122,7 +141,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                     lastName = text;
                   },
                   labelText: 'Last Name',
-                  controller: TextEditingController(),
+                  controller: TextEditingController(text:lastName),
                 ),
                 SizedBox(
                   height: 15,
@@ -134,7 +153,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                     email = text;
                   },
                   labelText: 'Email',
-                  controller: TextEditingController(),
+                  controller: TextEditingController(text:email),
                 ),
                 SizedBox(
                   height: 15,
@@ -144,7 +163,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                   onChange: (text) {
                     password = text;
                   },
-                  controller: TextEditingController(),
+                  controller: TextEditingController(text:password),
                 ),
                 SizedBox(
                   height: 20,
@@ -165,41 +184,40 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                 ),
                 LargeButton(
                   onPressed: () async {
-                    // if (firstName == '' ||
-                    //     lastName == '' ||
-                    //     email == '' ||
-                    //     password == '') {
-                    //   setState(() {
-                    //     loginFailedMessage = 'Enter all fields';
-                    //   });
-                    // } else if (!isValidName(firstName)) {
-                    //   setState(() {
-                    //     loginFailedMessage = 'Invalid First Name Format';
-                    //   });
-                    // } else if (!isValidName(lastName)) {
-                    //   setState(() {
-                    //     loginFailedMessage = 'Invalid Name Format';
-                    //   });
-                    // } else if (!isValidEmail(email)) {
-                    //   setState(() {
-                    //     loginFailedMessage = 'Invalid Email Format';
-                    //   });
-                    // } else if (!isValidPassword(password)) {
-                    //   setState(() {
-                    //     loginFailedMessage = 'Invalid Password Format';
-                    //   });
-                    // } else {
-                    setState(() {
-                      loginFailedMessage = '';
-                    });
-                    Customer customer = Customer(
+                    if (firstName == '' ||
+                        lastName == '' ||
+                        email == '' ||
+                        password == '') {
+                      setState(() {
+                        loginFailedMessage = 'Enter all fields';
+                      });
+                    } else if (!isValidName(firstName)) {
+                      setState(() {
+                        loginFailedMessage = 'Invalid First Name Format';
+                      });
+                    } else if (!isValidName(lastName)) {
+                      setState(() {
+                        loginFailedMessage = 'Invalid Last Name Format';
+                      });
+                    } else if (!isValidEmail(email)) {
+                      setState(() {
+                        loginFailedMessage = 'Invalid Email Format';
+                      });
+                    } else {
+                      setState(() {
+                        loginFailedMessage = '';
+                      });
+
+                      Customer customer = Customer(
                         firstName: firstName,
                         lastName: lastName,
                         email: email,
-                        password: password);
-                    customer.registerUser(email, password, firstName, lastName);
-                    print(customer.uid);
-                    // }
+                        password: password,
+                      );
+                      await customer.registerUser(email, password, firstName, lastName);
+                      print(customer.uid);
+                      _showAccountCreatedDialog();
+                    }
                   },
                   color: ui.val(10),
                   verticalPadding: 15,
@@ -215,6 +233,7 @@ class _CreateNewAccountScreenState extends State<CreateNewAccountScreen> {
                     ),
                   ),
                 ),
+
                 SizedBox(
                   height: 20,
                 ),

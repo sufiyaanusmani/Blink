@@ -133,8 +133,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           Divider(color: Colors.transparent, thickness: 2),
           TitleButton(
-            title: "FAQs",
-            subtitle: "Answer to your frequently asked questions",
+            title: "Logout",
+            subtitle: "Press to logout",
             onPressed: () {
               Navigator.pop(context);
             },
