@@ -81,12 +81,12 @@ class RestaurantCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Icon(Icons.star_border_rounded,
-                                color: Colors.blueGrey, size: 20),
+                                color: Colors.blueGrey, size: 12),
                             Text(
                               "${restaurants[resIndex].rating} (${restaurants[resIndex].totalRatings})",
                               style: TextStyle(
                                 color: Colors.grey,
-                                fontSize: 18,
+                                fontSize: 15,
                               ),
                             ),
                           ],
@@ -95,11 +95,11 @@ class RestaurantCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Icon(Icons.access_time,
-                                color: Colors.blueGrey, size: 17),
+                                color: Colors.blueGrey, size: 12),
                             Text(
                               ' ${restaurants[resIndex].estimatedTime}',
                               style:
-                                  TextStyle(color: Colors.grey, fontSize: 20),
+                                  TextStyle(color: Colors.grey, fontSize: 15),
                             ),
                           ],
                         ),
